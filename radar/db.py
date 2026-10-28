@@ -112,6 +112,21 @@ class Database:
             out.append(d)
         return out
 
+    def purge_closed(self, older_than_days: int) -> int:
+        """마감일(없으면 마지막으로 목록에서 본 날)이 older_than_days 보다 오래된 공고를 지운다."""
+        from datetime import timedelta
+        now_utc = datetime.now(timezone.utc)
+        cutoff_seen = (now_utc - timedelta(days=older_than_days)).isoformat(timespec="seconds")
+        # end_at 은 사이트 기준(KST) 자연 시각이라 KST 로 비교한다
+        cutoff_end = (now_utc + timedelta(hours=9) - timedelta(days=older_than_days)).replace(tzinfo=None).isoformat(timespec="minutes")
+        cur = self.conn.execute(
+            """DELETE FROM postings
+               WHERE (end_at IS NOT NULL AND end_at < ?)
+                  OR (end_at IS NULL AND last_seen < ?)""",
+            (cutoff_end, cutoff_seen),
+        )
+        return cur.rowcount
+
     # --- runs ---------------------------------------------------------------
     def start_run(self, source: str) -> int:
         cur = self.conn.execute("INSERT INTO runs (started_at, source) VALUES (?, ?)", (_now(), source))

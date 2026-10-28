@@ -72,8 +72,13 @@ def cmd_run(args: argparse.Namespace) -> int:
         print(f"[notify] 미알림 {len(pending)}건 (--no-notify)")
     db.commit()
 
+    purged = db.purge_closed(settings.purge_after_days)
+    if purged:
+        print(f"[purge] 마감 후 {settings.purge_after_days}일 지난 공고 {purged}건 삭제")
+    db.commit()
+
     if not args.no_site:
-        out = build_site(db, settings.site_dir)
+        out = build_site(db, settings.site_dir, settings.hide_closed_after_days)
         print(f"[site] {out}")
     db.close()
     return 1 if had_error else 0
@@ -82,7 +87,7 @@ def cmd_run(args: argparse.Namespace) -> int:
 def cmd_build_site(args: argparse.Namespace) -> int:
     settings = load_settings()
     db = Database(settings.db_path)
-    print(build_site(db, settings.site_dir))
+    print(build_site(db, settings.site_dir, settings.hide_closed_after_days))
     return 0
 
 

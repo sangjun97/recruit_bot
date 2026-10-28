@@ -20,6 +20,8 @@ class Settings:
     llm_model: str
     user_agent: str
     request_delay_sec: float
+    hide_closed_after_days: int   # 마감 후 이 일수가 지나면 사이트에서 숨긴다
+    purge_after_days: int         # 마감 후 이 일수가 지나면 DB에서 지운다
 
 
 def load_settings() -> Settings:
@@ -37,4 +39,6 @@ def load_settings() -> Settings:
             "Chrome/130.0 Safari/537.36 RecruitRadar/0.1 (personal job-alert bot)",
         ),
         request_delay_sec=float(os.getenv("RADAR_REQUEST_DELAY", "1.5")),
+        hide_closed_after_days=int(os.getenv("RADAR_HIDE_CLOSED_DAYS", "7")),
+        purge_after_days=int(os.getenv("RADAR_PURGE_DAYS", "90")),
     )
