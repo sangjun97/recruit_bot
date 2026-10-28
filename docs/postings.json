@@ -1,5 +1,101 @@
 [
  {
+  "id": "samsung:23364",
+  "company": "에스원",
+  "title": "경력사원 채용(오피스데스크, 안전관리자)",
+  "url": "https://www.samsungcareers.com/hr/?no=23364",
+  "start_at": "2026-10-20T00:00",
+  "end_at": "2026-11-06T23:59",
+  "career_type": "경력",
+  "employment_type": null,
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "서초구"
+   },
+   {
+    "sido": "서울특별시",
+    "sigungu": "강남구"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "수원시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "용인시"
+   },
+   {
+    "sido": "전북특별자치도",
+    "sigungu": "고창군"
+   },
+   {
+    "sido": "경상북도",
+    "sigungu": "구미시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:15:35+00:00"
+ },
+ {
+  "id": "samsung:23343",
+  "company": "삼성중공업",
+  "title": "경력사원 채용(보건관리자)",
+  "url": "https://www.samsungcareers.com/hr/?no=23343",
+  "start_at": "2026-10-21T00:00",
+  "end_at": "2026-11-03T23:59",
+  "career_type": "경력",
+  "employment_type": null,
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:15:32+00:00"
+ },
+ {
+  "id": "samsung:23384",
+  "company": "삼성문화재단",
+  "title": "경력사원 채용(대외협력, 홍보)",
+  "url": "https://www.samsungcareers.com/hr/?no=23384",
+  "start_at": "2026-10-23T00:00",
+  "end_at": "2026-11-05T23:59",
+  "career_type": "경력",
+  "employment_type": null,
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "용산구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:15:29+00:00"
+ },
+ {
+  "id": "samsung:23386",
+  "company": "삼성E&A",
+  "title": "경력사원 채용(연구개발, 분석)",
+  "url": "https://www.samsungcareers.com/hr/?no=23386",
+  "start_at": "2026-10-28T00:00",
+  "end_at": "2026-11-10T23:59",
+  "career_type": "경력",
+  "employment_type": null,
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강동구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:15:26+00:00"
+ },
+ {
   "id": "hyundaicard:121257",
   "company": "현대카드/현대커머셜",
   "title": "[현대카드/커머셜] 사내 변호사",

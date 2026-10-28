@@ -3,9 +3,12 @@ from __future__ import annotations
 
 from .base import Source
 from .recruiter_co_kr import RecruiterCoKrSource
+from .samsung_careers import SamsungCareersSource
 
 SOURCES: list[Source] = [
     RecruiterCoKrSource(key="hyundaicard", company="현대카드/현대커머셜", subdomain="careerhyundai"),
+    # 삼성 관계사 전체. 삼성전자만 보려면 companies={"삼성전자 DX부문", "삼성전자 DS부문"}
+    SamsungCareersSource(key="samsung"),
 ]
 
 
