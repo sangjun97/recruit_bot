@@ -108,18 +108,17 @@ class RegionDict:
                 found.setdefault((sido, sgg), Region(sido=sido, sigungu=sgg, method="rule"))
                 consumed.append(m.span())
 
-        # 4) 시·도만 언급된 경우 (예: '서울 본사', '세종')
-        if not found:
-            for tok in self._sido_tokens:
-                for m in re.finditer(re.escape(tok), text):
-                    if overlaps(*m.span()):
-                        continue
-                    if followed_by_hangul(m) and tok not in self.sido:
-                        continue  # '서울대', '경기장' 같은 오탐 방지
-                    sido = self.canonical_sido(tok)
-                    if sido:
-                        found.setdefault((sido, None), Region(sido=sido, sigungu=None, method="rule"))
-                        consumed.append(m.span())
+        # 4) 시·도만 언급된 경우 (예: '서울 본사', '세종', '대전광역시'). 이미 그 시·도의 시·군·구가 잡혔으면 생략
+        for tok in self._sido_tokens:
+            for m in re.finditer(re.escape(tok), text):
+                if overlaps(*m.span()):
+                    continue
+                if followed_by_hangul(m) and tok not in self.sido:
+                    continue  # '서울대', '경기장' 같은 오탐 방지
+                sido = self.canonical_sido(tok)
+                if sido and not any(k[0] == sido for k in found):
+                    found.setdefault((sido, None), Region(sido=sido, sigungu=None, method="rule"))
+                    consumed.append(m.span())
         return list(found.values())
 
 

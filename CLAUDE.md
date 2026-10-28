@@ -21,7 +21,7 @@
   - 웹: Jinja2로 정적 HTML 생성. 지역 필터는 브라우저 측 JS로 처리.
 - 근무지 추출: 시·군 사전 기반 규칙을 먼저 적용하고, 실패하면 LLM(Claude Haiku)으로 추출한 뒤 사전으로 검증하는 혼합 방식.
 - 지역 분류 단위: 시·군.
-- 첫 대상 기업: 현대카드(careerhyundai.recruiter.co.kr), 삼성커리어스(samsungcareers.com). 둘 다 구현 완료.
+- 대상 기업: 현대카드(careerhyundai.recruiter.co.kr), 삼성커리어스(samsungcareers.com), LG Careers(careers.lg.com). 모두 구현 완료.
   삼성커리어스는 관계사 전체를 수집하며, 삼성전자만 보려면 `SamsungCareersSource(companies=...)` 로 좁힌다.
 - 수집 데이터 범위: 공고 제목·기간·전형 구분·원문 링크·근무지 관련 문장만 저장한다. 본문 전체는 저장하지 않고,
   웹 페이지는 원문 링크로 보낸다. 비영리 개인 용도.
@@ -33,6 +33,9 @@
 |---|---|---|---|---|
 | 현대카드 | careerhyundai.recruiter.co.kr | 공고 목록 허용, 첨부파일·게시판 금지 | Next.js, 목록은 브라우저에서 로드 | recruiter.co.kr는 여러 기업이 쓰는 채용 솔루션. 수집기 재사용 가능 |
 | 삼성전자 | samsungcareers.com/hr/ | robots.txt 없음 | 목록은 내부 API(POST /hr/list.data)로 로드, 상세는 /recruit/detail.data | 이용약관(2026-08-13 개정)은 회원(가입자) 대상 약관. 자동 수집 금지 조항은 없으나 제12조·제15조에 "서비스에서 취득한 정보를 회사 사전 승낙 없이 복제·제3자 제공·영리 이용 금지" 조항 있음. 로그인 없이 공개 공고만 보되 제목·링크·근무지 수준 메타데이터만 저장하면 위험이 낮다고 판단. 2026-10-28 사용자 결정으로 추가 |
+| LG Careers | careers.lg.com | robots.txt 없음(앱 페이지가 돌아옴) | 목록·상세 모두 JSON API. 목록에 시·도, 상세에 근무지 서술과 직무별 근무지 | 계열사 14곳·공고 81건(2026-10-28). 약관 페이지는 지원자 개인정보 동의문뿐이라 수집·재배포 제한 조항 없음. 지역 분포가 넓어 추가 |
+| 포스코 | recruit.posco.com | 전체 Disallow (Yeti만 허용) | - | 원칙 충돌로 제외 |
+| 현대자동차 | talent.hyundai.com | 전체 허용 | 미조사 | 다음 후보 |
 | 세메스 | semes.recruiter.co.kr | 전체 Disallow (`User-agent: * / Disallow: /`) | recruiter.co.kr 솔루션 | 원칙 충돌로 제외 |
 | 하나카드 | hanacard.incruit.com | 공고 목록 경로(/Hire/) Disallow | 정적 HTML (EUC-KR) | 신입 공채 전용 사이트. 수시채용은 포털에만 게시. 원칙 충돌로 제외 |
 
@@ -53,4 +56,5 @@
 - 2026-10-28: 세메스는 robots.txt가 사이트 전체를 금지해 제외. 삼성전자는 약관 검토 결과를 사용자에게 보고하고 결정 대기.
 - 2026-10-28: 현대카드 수집기 구현·첫 수집 완료(15건). recruiter.co.kr 수집기는 같은 솔루션을 쓰는 다른 기업에 재사용 가능.
 - 2026-10-28: 사용자가 약관 검토 결과를 보고 삼성커리어스 추가를 결정. 수집기 구현·첫 수집 완료(4건). 메타데이터만 저장하는 원칙 유지.
-- 2026-10-28: GitHub 저장소 github.com/sangjun97/recruit_bot 사용.
+- 2026-10-28: GitHub 저장소 github.com/sangjun97/recruit_bot 사용. Pages·Actions 무료 한도 때문에 공개 저장소로 전환.
+- 2026-10-28: 지역 분포가 넓은 기업으로 LG Careers 추가(사용자 위임). 포스코는 robots.txt 전체 금지로 제외.

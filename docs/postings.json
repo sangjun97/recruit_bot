@@ -1,5 +1,1564 @@
 [
  {
+  "id": "lg:1000020",
+  "company": "LG화학",
+  "title": "[상시접수]LG화학 여수공장 공정지원 계약직(현장) 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1000020",
+  "start_at": "2025-03-05T06:00",
+  "end_at": "2026-12-31T18:00",
+  "career_type": "신입/경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "전라남도",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:51+00:00"
+ },
+ {
+  "id": "lg:1000409",
+  "company": "LG CNS",
+  "title": "[LG CNS] Global 해외 석박사 AX 인재 상시 등록 공고",
+  "url": "https://careers.lg.com/apply/detail?id=1000409",
+  "start_at": "2025-05-07T06:00",
+  "end_at": "2026-12-31T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:49+00:00"
+ },
+ {
+  "id": "lg:1000834",
+  "company": "LG CNS",
+  "title": "[인턴] LG CNS Global Internship(외국인) 상시 인재 등록 공고",
+  "url": "https://careers.lg.com/apply/detail?id=1000834",
+  "start_at": "2025-09-01T06:00",
+  "end_at": "2026-12-31T18:00",
+  "career_type": "인턴",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:48+00:00"
+ },
+ {
+  "id": "lg:1001237",
+  "company": "LG Magna",
+  "title": "해외 및 국내 인재 상시 DB 등록용 (`26년)",
+  "url": "https://careers.lg.com/apply/detail?id=1001237",
+  "start_at": "2026-01-01T06:00",
+  "end_at": "2026-12-31T18:00",
+  "career_type": "신입/경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "인천광역시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:46+00:00"
+ },
+ {
+  "id": "lg:1001414",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] SAP 모듈(CO·FI·SD) 컨설턴트 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001414",
+  "start_at": "2026-03-05T15:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:44+00:00"
+ },
+ {
+  "id": "lg:1001432",
+  "company": "LG CNS",
+  "title": "[LG CNS] 어플리케이션 아키텍트/AI 아키텍트 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001432",
+  "start_at": "2026-03-11T09:00",
+  "end_at": "2026-10-31T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:42+00:00"
+ },
+ {
+  "id": "lg:1001503",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 공정물류 기구설계 엔지니어 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001503",
+  "start_at": "2026-03-23T16:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "충청북도",
+    "sigungu": "청주시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:41+00:00"
+ },
+ {
+  "id": "lg:1001499",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] SAP SM 모듈 운영 담당자 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001499",
+  "start_at": "2026-03-24T16:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:39+00:00"
+ },
+ {
+  "id": "lg:1001514",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] SAP 물류 모듈(eWM, TM) 컨설턴트 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001514",
+  "start_at": "2026-03-26T13:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:37+00:00"
+ },
+ {
+  "id": "lg:1001506",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] AI 엔지니어(PM/PL) 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001506",
+  "start_at": "2026-03-26T13:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:35+00:00"
+ },
+ {
+  "id": "lg:1001508",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] SAP ABAP 개발자 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001508",
+  "start_at": "2026-03-26T14:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:34+00:00"
+ },
+ {
+  "id": "lg:1001568",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] M365 구축·운영(SI·SM) 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001568",
+  "start_at": "2026-04-03T09:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:32+00:00"
+ },
+ {
+  "id": "lg:1001678",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 서버 인프라 엔지니어(TA/SM) 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001678",
+  "start_at": "2026-04-29T09:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경상북도",
+    "sigungu": "구미시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:30+00:00"
+ },
+ {
+  "id": "lg:1001677",
+  "company": "LG CNS",
+  "title": "[LG CNS] 생명보험/손해보험/증권부문 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001677",
+  "start_at": "2026-04-29T09:00",
+  "end_at": "2026-10-31T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:28+00:00"
+ },
+ {
+  "id": "lg:1001799",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] Web 기반 솔루션 개발 및 운영 담당자 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001799",
+  "start_at": "2026-06-05T16:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:27+00:00"
+ },
+ {
+  "id": "lg:1001798",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] Web 기반 솔루션 운영 및 PM/PL 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001798",
+  "start_at": "2026-06-05T18:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:25+00:00"
+ },
+ {
+  "id": "lg:1001420",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] SCP In-house  프로젝트 개발 PM/PL(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001420",
+  "start_at": "2026-06-10T09:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:23+00:00"
+ },
+ {
+  "id": "lg:1001854",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 구매 시스템 운영 및 온보딩 담당자(SAP BTP / Fiori) 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001854",
+  "start_at": "2026-06-22T06:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:21+00:00"
+ },
+ {
+  "id": "lg:1001890",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 데이터베이스 담당자 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001890",
+  "start_at": "2026-07-01T18:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:20+00:00"
+ },
+ {
+  "id": "lg:1001888",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 네트워크 운영 담당자 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001888",
+  "start_at": "2026-07-01T18:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "충청북도",
+    "sigungu": "청주시"
+   },
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:18+00:00"
+ },
+ {
+  "id": "lg:1002044",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 공정물류 전장/제어 엔지니어 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002044",
+  "start_at": "2026-08-06T15:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "충청북도",
+    "sigungu": "청주시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:16+00:00"
+ },
+ {
+  "id": "lg:1002046",
+  "company": "LG CNS",
+  "title": "[LG CNS] SAP ERP 분야 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002046",
+  "start_at": "2026-08-07T11:00",
+  "end_at": "2026-10-31T18:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "마포구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:14+00:00"
+ },
+ {
+  "id": "lg:1002072",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 금융IT PM/PL, 분석•설계•개발, 사업관리 담당자 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002072",
+  "start_at": "2026-08-14T17:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:12+00:00"
+ },
+ {
+  "id": "lg:1002107",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 어플리케이션 아키텍트(클라우드·컨테이너) 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002107",
+  "start_at": "2026-08-25T10:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:11+00:00"
+ },
+ {
+  "id": "lg:1002184",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 클라우드 운영 담당자 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002184",
+  "start_at": "2026-09-07T18:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:09+00:00"
+ },
+ {
+  "id": "lg:1002187",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] MES 구축/운영 프로젝트 PL 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002187",
+  "start_at": "2026-09-10T12:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경상북도",
+    "sigungu": "구미시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:07+00:00"
+ },
+ {
+  "id": "lg:1002199",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] AI 엔지니어 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002199",
+  "start_at": "2026-09-10T17:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:05+00:00"
+ },
+ {
+  "id": "lg:1002219",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] VDI TA·인프라 운영 담당자 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002219",
+  "start_at": "2026-09-17T14:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:04+00:00"
+ },
+ {
+  "id": "lg:1002243",
+  "company": "LG CNS",
+  "title": "[LG CNS] 통신 BSS / SAP ERP 분야 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002243",
+  "start_at": "2026-10-02T09:00",
+  "end_at": "2026-10-31T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:02+00:00"
+ },
+ {
+  "id": "lg:1002063",
+  "company": "LG CNS",
+  "title": "[LG CNS] 클라우드 데이터센터 구축/운영 분야 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002063",
+  "start_at": "2026-10-07T15:00",
+  "end_at": "2026-10-30T18:00",
+  "career_type": "경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경상남도",
+    "sigungu": "창원시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": null
+   },
+   {
+    "sido": "부산광역시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:31:00+00:00"
+ },
+ {
+  "id": "lg:1002288",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] QMS 구축 프로젝트 분석/설계 담당자 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002288",
+  "start_at": "2026-10-12T17:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:58+00:00"
+ },
+ {
+  "id": "lg:1002287",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] QMS 구축 프로젝트  PM/PL 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002287",
+  "start_at": "2026-10-12T17:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:57+00:00"
+ },
+ {
+  "id": "lg:1002306",
+  "company": "LG이노텍",
+  "title": "[광학솔루션] 개발기획 및 AI ISP 분야 경력사원 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002306",
+  "start_at": "2026-10-15T06:00",
+  "end_at": "2026-10-29T18:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "안산시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:55+00:00"
+ },
+ {
+  "id": "lg:1002307",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 경영기획 담당자 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002307",
+  "start_at": "2026-10-15T14:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:53+00:00"
+ },
+ {
+  "id": "lg:1002317",
+  "company": "D&O",
+  "title": "[D&O CM]  PJT계약직 경력사원 채용(해외현장 / 본사)",
+  "url": "https://careers.lg.com/apply/detail?id=1002317",
+  "start_at": "2026-10-19T06:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:51+00:00"
+ },
+ {
+  "id": "lg:1002311",
+  "company": "LG전자",
+  "title": "[LG전자 전국서비스센터] 기능직 기간제 신입사원 채용(6개월)",
+  "url": "https://careers.lg.com/apply/detail?id=1002311",
+  "start_at": "2026-10-20T10:00",
+  "end_at": "2026-11-09T07:00",
+  "career_type": "신입",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "남양주시"
+   },
+   {
+    "sido": "제주특별자치도",
+    "sigungu": "서귀포시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "안양시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "부천시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "광명시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "평택시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "안산시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "고양시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "구리시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "오산시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "용인시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "김포시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "화성시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "양주시"
+   },
+   {
+    "sido": "강원특별자치도",
+    "sigungu": "원주시"
+   },
+   {
+    "sido": "강원특별자치도",
+    "sigungu": "강릉시"
+   },
+   {
+    "sido": "충청북도",
+    "sigungu": "청주시"
+   },
+   {
+    "sido": "충청북도",
+    "sigungu": "충주시"
+   },
+   {
+    "sido": "충청남도",
+    "sigungu": "천안시"
+   },
+   {
+    "sido": "충청남도",
+    "sigungu": "서산시"
+   },
+   {
+    "sido": "전북특별자치도",
+    "sigungu": "전주시"
+   },
+   {
+    "sido": "전북특별자치도",
+    "sigungu": "익산시"
+   },
+   {
+    "sido": "전라남도",
+    "sigungu": "목포시"
+   },
+   {
+    "sido": "전라남도",
+    "sigungu": "순천시"
+   },
+   {
+    "sido": "경상북도",
+    "sigungu": "포항시"
+   },
+   {
+    "sido": "경상북도",
+    "sigungu": "안동시"
+   },
+   {
+    "sido": "경상북도",
+    "sigungu": "구미시"
+   },
+   {
+    "sido": "경상남도",
+    "sigungu": "김해시"
+   },
+   {
+    "sido": "경상남도",
+    "sigungu": "양산시"
+   },
+   {
+    "sido": "부산광역시",
+    "sigungu": null
+   },
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   },
+   {
+    "sido": "세종특별자치시",
+    "sigungu": null
+   },
+   {
+    "sido": "울산광역시",
+    "sigungu": null
+   },
+   {
+    "sido": "대전광역시",
+    "sigungu": null
+   },
+   {
+    "sido": "대구광역시",
+    "sigungu": null
+   },
+   {
+    "sido": "인천광역시",
+    "sigungu": null
+   },
+   {
+    "sido": "광주광역시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:50+00:00"
+ },
+ {
+  "id": "lg:1002250",
+  "company": "LG CNS",
+  "title": "[LG CNS] 고려대학교 융합데이터과학과 채용 조건형 계약 정원 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002250",
+  "start_at": "2026-10-20T10:00",
+  "end_at": "2026-10-30T17:00",
+  "career_type": "산학장학생",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:48+00:00"
+ },
+ {
+  "id": "lg:1002329",
+  "company": "로보스타",
+  "title": "[로보스타] 2026년 하반기 신입사원 채용(R&D, 영업)",
+  "url": "https://careers.lg.com/apply/detail?id=1002329",
+  "start_at": "2026-10-21T06:00",
+  "end_at": "2026-11-03T23:00",
+  "career_type": "신입",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "수원시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:46+00:00"
+ },
+ {
+  "id": "lg:1002339",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] SAP BW 담당자 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1002339",
+  "start_at": "2026-10-23T10:00",
+  "end_at": "2026-12-31T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:44+00:00"
+ },
+ {
+  "id": "lg:1002330",
+  "company": "LG전자",
+  "title": "[CTO부문] AI Security 전문가 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002330",
+  "start_at": "2026-10-23T10:00",
+  "end_at": "2026-11-04T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:42+00:00"
+ },
+ {
+  "id": "lg:1002342",
+  "company": "LG전자",
+  "title": "[구미사업장] `26년 하반기 기능직 신입채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002342",
+  "start_at": "2026-10-23T18:00",
+  "end_at": "2026-10-30T18:00",
+  "career_type": "신입",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경상북도",
+    "sigungu": "구미시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:41+00:00"
+ },
+ {
+  "id": "lg:1002331",
+  "company": "LG이노텍",
+  "title": "[광학솔루션] Lens 분야 경력사원 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002331",
+  "start_at": "2026-10-26T06:00",
+  "end_at": "2026-11-09T18:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경상북도",
+    "sigungu": "구미시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:39+00:00"
+ },
+ {
+  "id": "lg:1002349",
+  "company": "D&O",
+  "title": "[F&B] 여의도 캐주얼다이닝 양식 조리 경력사원 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002349",
+  "start_at": "2026-10-28T09:00",
+  "end_at": "2026-11-11T18:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "영등포구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:37+00:00"
+ },
+ {
+  "id": "lg:1000948",
+  "company": "비즈테크아이",
+  "title": "[비즈테크아이] 상시 인재 채용 (인재 Pool)",
+  "url": "https://careers.lg.com/apply/detail?id=1000948",
+  "start_at": "2025-09-29T14:00",
+  "end_at": "2026-12-31T23:59",
+  "career_type": "경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "마포구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:35+00:00"
+ },
+ {
+  "id": "lg:1000553",
+  "company": "하이엠솔루텍",
+  "title": "[하이엠솔루텍] 장애인 특별 채용_시스템에어컨 서비스엔지니어 모집(2026년 상시)",
+  "url": "https://careers.lg.com/apply/detail?id=1000553",
+  "start_at": "2026-01-01T00:00",
+  "end_at": "2026-12-31T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [],
+  "first_seen": "2026-10-28T14:30:34+00:00"
+ },
+ {
+  "id": "lg:1000552",
+  "company": "하이엠솔루텍",
+  "title": "[하이엠솔루텍] 장애인 특별 채용_사무직 모집(2026년 상시)",
+  "url": "https://careers.lg.com/apply/detail?id=1000552",
+  "start_at": "2026-01-01T00:00",
+  "end_at": "2026-12-31T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:32+00:00"
+ },
+ {
+  "id": "lg:1001744",
+  "company": "하이엠솔루텍",
+  "title": "[정규직] 현장PM 각 담당자 모집(기계설비,전기,정보통신) - 인재 Pool",
+  "url": "https://careers.lg.com/apply/detail?id=1001744",
+  "start_at": "2026-05-20T06:00",
+  "end_at": "2026-12-31T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:30+00:00"
+ },
+ {
+  "id": "lg:1001743",
+  "company": "하이엠솔루텍",
+  "title": "[정규직] 해외 BMS(빌딩자동제어) 엔지니어 모집 _인재 Pool",
+  "url": "https://careers.lg.com/apply/detail?id=1001743",
+  "start_at": "2026-05-20T06:00",
+  "end_at": "2026-12-31T23:00",
+  "career_type": "경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:28+00:00"
+ },
+ {
+  "id": "lg:1001807",
+  "company": "LG CNS",
+  "title": "[LG CNS] Robotics 분야 모집(경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001807",
+  "start_at": "2026-06-10T12:00",
+  "end_at": "2026-10-31T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:26+00:00"
+ },
+ {
+  "id": "lg:1001893",
+  "company": "LG화학",
+  "title": "[상시접수] LG화학 상시 인재등록 (전 직무)",
+  "url": "https://careers.lg.com/apply/detail?id=1001893",
+  "start_at": "2026-07-01T06:00",
+  "end_at": "2031-06-30T18:00",
+  "career_type": "신입/경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   },
+   {
+    "sido": "충청북도",
+    "sigungu": "청주시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "오산시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:25+00:00"
+ },
+ {
+  "id": "lg:1001928",
+  "company": "하이엠솔루텍",
+  "title": "[정규직] 해외 칠러서비스 기술지원 담당자 모집 _인재 Pool",
+  "url": "https://careers.lg.com/apply/detail?id=1001928",
+  "start_at": "2026-07-08T09:00",
+  "end_at": "2026-12-31T23:00",
+  "career_type": "경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:23+00:00"
+ },
+ {
+  "id": "lg:1001992",
+  "company": "LG CNS",
+  "title": "[LG CNS] 마케팅 분야 Staff 모집 (경력)",
+  "url": "https://careers.lg.com/apply/detail?id=1001992",
+  "start_at": "2026-07-24T13:00",
+  "end_at": "2026-10-31T18:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:21+00:00"
+ },
+ {
+  "id": "lg:1002176",
+  "company": "LG에너지솔루션",
+  "title": "[CDO] AI/빅데이터 경력 상시 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002176",
+  "start_at": "2026-09-07T09:00",
+  "end_at": "2027-03-31T18:00",
+  "career_type": "경력",
+  "employment_type": "상시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "서초구"
+   },
+   {
+    "sido": "충청북도",
+    "sigungu": "청주시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:19+00:00"
+ },
+ {
+  "id": "lg:1002265",
+  "company": "LG전자",
+  "title": "[LG전자] R&D 석/박사 해외 유학생 채용 (북미 외)",
+  "url": "https://careers.lg.com/apply/detail?id=1002265",
+  "start_at": "2026-10-09T09:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "산학장학생",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "영등포구"
+   },
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   },
+   {
+    "sido": "서울특별시",
+    "sigungu": "금천구"
+   },
+   {
+    "sido": "서울특별시",
+    "sigungu": "서초구"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "평택시"
+   },
+   {
+    "sido": "경상남도",
+    "sigungu": "창원시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:18+00:00"
+ },
+ {
+  "id": "lg:1002309",
+  "company": "LG유플러스",
+  "title": "[Consumer부문] 전남소매영업팀 회계/정산 계약직 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002309",
+  "start_at": "2026-10-15T06:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "전라남도",
+    "sigungu": "순천시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:16+00:00"
+ },
+ {
+  "id": "lg:1002314",
+  "company": "HSAD",
+  "title": "[HSAD] 2026년 하반기 회계 신입사원 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002314",
+  "start_at": "2026-10-16T17:00",
+  "end_at": "2026-11-02T09:00",
+  "career_type": "신입",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:14+00:00"
+ },
+ {
+  "id": "lg:1002062",
+  "company": "LG유플러스",
+  "title": "[CTO] Speech AI 경력 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002062",
+  "start_at": "2026-10-19T06:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:12+00:00"
+ },
+ {
+  "id": "lg:1002325",
+  "company": "하이엠솔루텍",
+  "title": "[정규직] HVAC 현장 PM 담당자 모집(현장설계, 공무)",
+  "url": "https://careers.lg.com/apply/detail?id=1002325",
+  "start_at": "2026-10-20T06:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "대전광역시",
+    "sigungu": "유성구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:11+00:00"
+ },
+ {
+  "id": "lg:1002320",
+  "company": "LG에너지솔루션",
+  "title": "[자동차전지] 각형 Cell 개발 경력 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002320",
+  "start_at": "2026-10-20T06:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "대전광역시",
+    "sigungu": "유성구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:09+00:00"
+ },
+ {
+  "id": "lg:1002295",
+  "company": "하이텔레서비스",
+  "title": "[하이텔레서비스] 사내변호사 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002295",
+  "start_at": "2026-10-20T06:00",
+  "end_at": "2026-11-03T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:07+00:00"
+ },
+ {
+  "id": "lg:1001518",
+  "company": "LG유플러스",
+  "title": "[정보보안센터] 침해사고 예방 및 대응 경력채용",
+  "url": "https://careers.lg.com/apply/detail?id=1001518",
+  "start_at": "2026-10-20T09:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:05+00:00"
+ },
+ {
+  "id": "lg:1001511",
+  "company": "LG유플러스",
+  "title": "[정보보안센터] 개인정보정책팀 Manager 경력채용",
+  "url": "https://careers.lg.com/apply/detail?id=1001511",
+  "start_at": "2026-10-20T09:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:03+00:00"
+ },
+ {
+  "id": "lg:1002323",
+  "company": "LG에너지솔루션",
+  "title": "[ESS전지] ESS 시스템 개발 경력 모집 (10월)",
+  "url": "https://careers.lg.com/apply/detail?id=1002323",
+  "start_at": "2026-10-20T14:00",
+  "end_at": "2026-11-22T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "대전광역시",
+    "sigungu": "유성구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:02+00:00"
+ },
+ {
+  "id": "lg:1002035",
+  "company": "LG유플러스",
+  "title": "[CTO] ixi O mVoIP 내재화 개발 PM 경력 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002035",
+  "start_at": "2026-10-21T09:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:30:00+00:00"
+ },
+ {
+  "id": "lg:1002335",
+  "company": "하이케어솔루션",
+  "title": "[하이케어솔루션] 사내변호사 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002335",
+  "start_at": "2026-10-22T00:00",
+  "end_at": "2026-11-03T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:58+00:00"
+ },
+ {
+  "id": "lg:1001537",
+  "company": "LG유플러스",
+  "title": "[CTO] Application Architect 경력채용",
+  "url": "https://careers.lg.com/apply/detail?id=1001537",
+  "start_at": "2026-10-22T09:00",
+  "end_at": "2026-11-08T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:56+00:00"
+ },
+ {
+  "id": "lg:1002308",
+  "company": "LG이노텍",
+  "title": "[패키지솔루션] 베트남어 통번역 담당자 모집(계약직)",
+  "url": "https://careers.lg.com/apply/detail?id=1002308",
+  "start_at": "2026-10-23T06:00",
+  "end_at": "2026-11-08T18:00",
+  "career_type": "신입",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "경상북도",
+    "sigungu": "구미시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:55+00:00"
+ },
+ {
+  "id": "lg:1002050",
+  "company": "LG유플러스",
+  "title": "[정보보안센터] 무선망 보안 엔지니어 신입(석/박사)/경력 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002050",
+  "start_at": "2026-10-23T09:00",
+  "end_at": "2026-11-08T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:53+00:00"
+ },
+ {
+  "id": "lg:1002338",
+  "company": "LG에너지솔루션",
+  "title": "[CTO] 차세대전지 생산운영 경력 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002338",
+  "start_at": "2026-10-23T12:00",
+  "end_at": "2026-11-08T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "충청북도",
+    "sigungu": "청주시"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:51+00:00"
+ },
+ {
+  "id": "lg:1002328",
+  "company": "LG에너지솔루션",
+  "title": "[CTO] Pack / BMS 개발 경력 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002328",
+  "start_at": "2026-10-23T12:00",
+  "end_at": "2026-11-08T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "서초구"
+   },
+   {
+    "sido": "대전광역시",
+    "sigungu": "유성구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:49+00:00"
+ },
+ {
+  "id": "lg:1001393",
+  "company": "LG유플러스",
+  "title": "[CTO] DevOps(클라우드컴퓨팅) 경력채용",
+  "url": "https://careers.lg.com/apply/detail?id=1001393",
+  "start_at": "2026-10-23T13:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:48+00:00"
+ },
+ {
+  "id": "lg:1002346",
+  "company": "LG유플러스",
+  "title": "[정보보안센터] 정보보안 컨설팅 및 제안 담당",
+  "url": "https://careers.lg.com/apply/detail?id=1002346",
+  "start_at": "2026-10-27T09:00",
+  "end_at": "2026-11-08T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:46+00:00"
+ },
+ {
+  "id": "lg:1002345",
+  "company": "하이엠솔루텍",
+  "title": "[정규_전담직] 서울지역 자재 업무 담당자 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002345",
+  "start_at": "2026-10-27T10:00",
+  "end_at": "2026-11-01T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "동대문구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:44+00:00"
+ },
+ {
+  "id": "lg:1002347",
+  "company": "하이엠솔루텍",
+  "title": "[정규직] 해외 BMS(빌딩자동제어) 엔지니어 모집",
+  "url": "https://careers.lg.com/apply/detail?id=1002347",
+  "start_at": "2026-10-27T15:00",
+  "end_at": "2026-11-08T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:42+00:00"
+ },
+ {
+  "id": "lg:1002348",
+  "company": "하이엠솔루텍",
+  "title": "[정규직] HVAC 현장 PM 담당자 모집(대전)",
+  "url": "https://careers.lg.com/apply/detail?id=1002348",
+  "start_at": "2026-10-27T16:00",
+  "end_at": "2026-11-08T23:00",
+  "career_type": "신입/경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "대전광역시",
+    "sigungu": "유성구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:40+00:00"
+ },
+ {
+  "id": "lg:1001889",
+  "company": "LG유플러스",
+  "title": "[정보보안센터] AI보안 담당자 경력채용",
+  "url": "https://careers.lg.com/apply/detail?id=1001889",
+  "start_at": "2026-10-28T09:00",
+  "end_at": "2026-11-08T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "first_seen": "2026-10-28T14:29:39+00:00"
+ },
+ {
   "id": "samsung:23364",
   "company": "에스원",
   "title": "경력사원 채용(오피스데스크, 안전관리자)",

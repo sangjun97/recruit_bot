@@ -47,3 +47,17 @@ def test_pick_location_lines():
     text = "[주요 업무]\n- 모델 개발\n\n[근무 조건]\n- 고용 형태 : 정규직\n- 근무 장소 : 현대카드 본사\n[혜택]\n- 의료비"
     assert pick_location_lines(text) == "- 근무 장소 : 현대카드 본사"
     assert pick_location_lines("아무 내용 없음") is None
+
+
+def test_sido_only_added_alongside_sigungu_of_other_sido():
+    got = ext("서울특별시 | 서초R&D캠퍼스, 대전기술연구원(제2캠퍼스) | 대전광역시")
+    assert ("서울특별시", "서초구", "alias") in got
+    assert ("대전광역시", "유성구", "alias") in got
+    assert ("서울특별시", None, "rule") not in got   # 서울은 서초구로 이미 잡혔으므로 시·도만 추가하지 않는다
+    assert ("대전광역시", None, "rule") not in got
+
+
+def test_multi_city_list():
+    got = ext("가산, 창원, 마곡, 양재, 평택, 여의도")
+    assert ("경상남도", "창원시", "rule") in got and ("경기도", "평택시", "rule") in got
+    assert ("서울특별시", "금천구", "alias") in got and ("서울특별시", "강서구", "alias") in got

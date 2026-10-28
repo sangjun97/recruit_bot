@@ -14,12 +14,12 @@ concurrency:
 
 jobs:
   run:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
           cache: pip
@@ -30,6 +30,8 @@ jobs:
           python -m playwright install --with-deps chromium
 
       - name: Run radar
+        id: radar
+        continue-on-error: true   # 한 소스가 실패해도 나머지 결과는 커밋한다. 아래 단계에서 실패로 표시
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -47,3 +49,7 @@ jobs:
             git commit -m "chore: update postings $(date -u +'%Y-%m-%d %H:%M UTC')"
             git push
           fi
+
+      - name: Fail if radar failed
+        if: steps.radar.outcome == 'failure'
+        run: exit 1

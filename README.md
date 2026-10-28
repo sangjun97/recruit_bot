@@ -29,6 +29,7 @@ copy .env.example .env   # 토큰 입력
 
 `radar/sources/__init__.py` 의 `SOURCES` 에 추가한다. recruiter.co.kr 솔루션을 쓰는 기업은
 `RecruiterCoKrSource(key=..., company=..., subdomain=...)` 한 줄로 끝난다.
+현재 소스: 현대카드(recruiter.co.kr), 삼성커리어스(삼성 관계사 전체), LG Careers(LG 계열사 전체).
 추가 전에 robots.txt·이용약관·공고 제공 방식을 확인하고 CLAUDE.md 조사 기록에 남긴다.
 
 ## 근무지 추출

@@ -42,6 +42,7 @@ def cmd_run(args: argparse.Namespace) -> int:
                     if is_new:
                         new_count += 1
                         loc_text = src.fetch_location_text(ctx, p)
+                        db.upsert(p)  # 상세 조회 중 채워진 필드(시작일 등)를 반영
                         regions = extract_regions(loc_text, settings)
                         db.set_regions(p.id, loc_text, regions)
                         label = ", ".join(r.label() for r in regions) or "근무지 미확인"
