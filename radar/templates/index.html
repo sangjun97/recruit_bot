@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>채용 레이더</title>
+<style>
+  :root { --bg:#f7f7f8; --card:#fff; --text:#1a1a1a; --muted:#6b7280; --line:#e5e7eb; --accent:#2563eb; --open:#15803d; --closed:#9ca3af; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111214; --card:#1b1d21; --text:#e8e8ea; --muted:#9aa0a6; --line:#2a2d33; --accent:#60a5fa; --open:#4ade80; --closed:#6b7280; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; }
+  header { padding: 20px 16px 8px; max-width: 920px; margin: 0 auto; }
+  h1 { margin:0 0 4px; font-size: 22px; }
+  .sub { color: var(--muted); font-size: 13px; }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; padding: 8px 16px 12px; max-width: 920px; margin: 0 auto; }
+  select, input[type=search] { font: inherit; padding: 8px 10px; border:1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--text); }
+  input[type=search] { flex: 1 1 160px; min-width: 140px; }
+  label.chk { display:flex; align-items:center; gap:6px; font-size:14px; padding: 8px 4px; }
+  main { max-width: 920px; margin: 0 auto; padding: 0 16px 40px; }
+  .count { color: var(--muted); font-size: 13px; margin: 4px 0 10px; }
+  .card { display:block; background: var(--card); border:1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; text-decoration:none; color: inherit; }
+  .card:hover { border-color: var(--accent); }
+  .row1 { display:flex; justify-content:space-between; gap:12px; align-items:baseline; }
+  .company { font-size: 13px; color: var(--muted); }
+  .title { font-size: 16px; font-weight: 600; margin: 2px 0 6px; }
+  .meta { font-size: 13px; color: var(--muted); display:flex; flex-wrap:wrap; gap: 6px 14px; }
+  .badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; border:1px solid var(--line); white-space:nowrap; }
+  .badge.open { color: var(--open); border-color: var(--open); }
+  .badge.closed { color: var(--closed); }
+  .region { color: var(--accent); font-weight: 500; }
+  .empty { color: var(--muted); padding: 40px 0; text-align:center; }
+  footer { max-width: 920px; margin: 0 auto; padding: 0 16px 30px; color: var(--muted); font-size: 12px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>채용 레이더</h1>
+  <div class="sub">기업 공식 채용 홈페이지에서 수집 · 마지막 갱신 {{ generated_at }} · 총 {{ count }}건</div>
+</header>
+<div class="filters">
+  <input id="q" type="search" placeholder="제목·회사 검색">
+  <select id="company"><option value="">회사 전체</option></select>
+  <select id="sido"><option value="">시·도 전체</option></select>
+  <select id="sigungu"><option value="">시·군·구 전체</option></select>
+  <label class="chk"><input id="openOnly" type="checkbox" checked> 접수중만</label>
+</div>
+<main>
+  <div class="count" id="count"></div>
+  <div id="list"></div>
+</main>
+<footer>공고 상세와 지원은 각 기업의 공식 채용 페이지에서 진행하세요. 근무지는 공고 문구에서 자동 추출한 값이라 틀릴 수 있습니다.</footer>
+<script id="data" type="application/json">{{ postings_json|safe }}</script>
+<script>
+(function () {
+  var data = JSON.parse(document.getElementById('data').textContent);
+  function $(id) { return document.getElementById(id); }
+  var qs = { q: $('q'), company: $('company'), sido: $('sido'), sigungu: $('sigungu'), openOnly: $('openOnly') };
+
+  function fill(sel, values, keep) {
+    var cur = keep ? sel.value : '';
+    while (sel.options.length > 1) sel.remove(1);
+    Array.from(values).sort(function (a, b) { return a.localeCompare(b, 'ko'); }).forEach(function (v) {
+      var o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o);
+    });
+    if (Array.from(sel.options).some(function (o) { return o.value === cur; })) sel.value = cur;
+  }
+  fill(qs.company, new Set(data.map(function (p) { return p.company; })));
+  fill(qs.sido, new Set(data.flatMap(function (p) { return p.regions.map(function (r) { return r.sido; }); })));
+
+  function refreshSigungu() {
+    var sido = qs.sido.value;
+    var vals = new Set(data.flatMap(function (p) {
+      return p.regions.filter(function (r) { return (!sido || r.sido === sido) && r.sigungu; }).map(function (r) { return r.sigungu; });
+    }));
+    fill(qs.sigungu, vals, true);
+  }
+  refreshSigungu();
+
+  function fmt(iso) { return iso ? iso.replace('T', ' ').slice(0, 16) : ''; }
+  function isOpen(p) { return !p.status || p.status === '접수중' || p.status === '접수예정'; }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  function shortSido(s) { return s.replace(/(특별시|광역시|특별자치시|특별자치도)$/, ''); }
+
+  function render() {
+    var q = qs.q.value.trim().toLowerCase();
+    var rows = data.filter(function (p) {
+      if (qs.openOnly.checked && !isOpen(p)) return false;
+      if (qs.company.value && p.company !== qs.company.value) return false;
+      if (qs.sido.value && !p.regions.some(function (r) { return r.sido === qs.sido.value; })) return false;
+      if (qs.sigungu.value && !p.regions.some(function (r) { return r.sigungu === qs.sigungu.value; })) return false;
+      if (q && (p.title + ' ' + p.company).toLowerCase().indexOf(q) < 0) return false;
+      return true;
+    });
+    $('count').textContent = rows.length + '건';
+    var list = $('list');
+    list.innerHTML = '';
+    if (!rows.length) { list.innerHTML = '<div class="empty">조건에 맞는 공고가 없습니다.</div>'; return; }
+    rows.forEach(function (p) {
+      var a = document.createElement('a');
+      a.className = 'card'; a.href = p.url; a.target = '_blank'; a.rel = 'noopener';
+      var region = p.regions.length
+        ? p.regions.map(function (r) { return shortSido(r.sido) + (r.sigungu ? ' ' + r.sigungu : ''); }).join(', ')
+        : '근무지 미확인';
+      var badge = p.status ? '<span class="badge ' + (isOpen(p) ? 'open' : 'closed') + '">' + esc(p.status) + '</span>' : '';
+      var metas = [p.career_type, p.employment_type].filter(Boolean).join(' · ');
+      var period = (p.start_at || p.end_at) ? fmt(p.start_at).slice(0, 10) + ' ~ ' + fmt(p.end_at) : '';
+      a.innerHTML = '<div class="row1"><span class="company">' + esc(p.company) + '</span>' + badge + '</div>'
+        + '<div class="title">' + esc(p.title) + '</div>'
+        + '<div class="meta"><span class="region">📍 ' + esc(region) + '</span>'
+        + (period ? '<span>📅 ' + esc(period) + '</span>' : '')
+        + (metas ? '<span>' + esc(metas) + '</span>' : '') + '</div>';
+      list.appendChild(a);
+    });
+  }
+  qs.sido.addEventListener('change', function () { refreshSigungu(); render(); });
+  [qs.q, qs.company, qs.sigungu, qs.openOnly].forEach(function (el) { el.addEventListener('input', render); });
+  render();
+})();
+</script>
+</body>
+</html>

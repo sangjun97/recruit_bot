@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: radar
+Version: 0.1.0
+Summary: 채용 레이더: 기업 공식 채용 홈페이지 신규 공고 알림 + 근무지 필터
+Requires-Python: >=3.12
+Requires-Dist: httpx>=0.28
+Requires-Dist: playwright>=1.50
+Requires-Dist: pydantic>=2.0
+Requires-Dist: python-dotenv>=1.0
+Requires-Dist: jinja2>=3.1
+Requires-Dist: anthropic>=0.50
+Provides-Extra: dev
+Requires-Dist: pytest>=8; extra == "dev"

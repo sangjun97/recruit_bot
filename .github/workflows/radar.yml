@@ -1,0 +1,49 @@
+name: radar
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"   # 30분마다 (UTC). GitHub 사정으로 몇 분씩 늦어질 수 있음
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: radar
+  cancel-in-progress: false
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install
+        run: |
+          pip install -e .
+          python -m playwright install --with-deps chromium
+
+      - name: Run radar
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python -m radar run
+
+      - name: Commit data and site
+        run: |
+          git config user.name "radar-bot"
+          git config user.email "radar-bot@users.noreply.github.com"
+          git add data/radar.sqlite docs
+          if git diff --cached --quiet; then
+            echo "no changes"
+          else
+            git commit -m "chore: update postings $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+          fi
