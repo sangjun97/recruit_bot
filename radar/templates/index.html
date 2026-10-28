@@ -40,6 +40,7 @@
 <div class="filters">
   <input id="q" type="search" placeholder="제목·회사 검색">
   <select id="company"><option value="">회사 전체</option></select>
+  <select id="career"><option value="">신입·경력 전체</option></select>
   <select id="sido"><option value="">시·도 전체</option></select>
   <select id="sigungu"><option value="">시·군·구 전체</option></select>
   <label class="chk"><input id="openOnly" type="checkbox" checked> 접수중만</label>
@@ -54,43 +55,57 @@
 (function () {
   var data = JSON.parse(document.getElementById('data').textContent);
   function $(id) { return document.getElementById(id); }
-  var qs = { q: $('q'), company: $('company'), sido: $('sido'), sigungu: $('sigungu'), openOnly: $('openOnly') };
+  var qs = { q: $('q'), company: $('company'), career: $('career'), sido: $('sido'), sigungu: $('sigungu'), openOnly: $('openOnly') };
+  var CAREER_ORDER = ['신입', '경력', '인턴', '기타'];
 
-  function fill(sel, values, keep) {
-    var cur = keep ? sel.value : '';
-    while (sel.options.length > 1) sel.remove(1);
-    Array.from(values).sort(function (a, b) { return a.localeCompare(b, 'ko'); }).forEach(function (v) {
-      var o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o);
-    });
-    if (Array.from(sel.options).some(function (o) { return o.value === cur; })) sel.value = cur;
+  // '신입/경력' 처럼 섞인 표기를 신입·경력·인턴 태그로 나눈다
+  function careerTags(p) {
+    var t = p.career_type || '';
+    var tags = CAREER_ORDER.slice(0, 3).filter(function (k) { return t.indexOf(k) >= 0; });
+    return tags.length ? tags : ['기타'];
   }
-  fill(qs.company, new Set(data.map(function (p) { return p.company; })));
-  fill(qs.sido, new Set(data.flatMap(function (p) { return p.regions.map(function (r) { return r.sido; }); })));
+  data.forEach(function (p) { p._tags = careerTags(p); p._q = (p.title + ' ' + p.company).toLowerCase(); });
 
-  function refreshSigungu() {
-    var sido = qs.sido.value;
-    var vals = new Set(data.flatMap(function (p) {
-      return p.regions.filter(function (r) { return (!sido || r.sido === sido) && r.sigungu; }).map(function (r) { return r.sigungu; });
-    }));
-    fill(qs.sigungu, vals, true);
-  }
-  refreshSigungu();
-
-  function fmt(iso) { return iso ? iso.replace('T', ' ').slice(0, 16) : ''; }
   function isOpen(p) { return !p.status || p.status === '접수중' || p.status === '접수예정'; }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function shortSido(s) { return s.replace(/(특별시|광역시|특별자치시|특별자치도)$/, ''); }
+  function fmt(iso) { return iso ? iso.replace('T', ' ').slice(0, 16) : ''; }
+
+  // except: 이 필터는 무시하고 판정한다 (해당 드롭다운의 선택지를 만들 때 사용)
+  function matches(p, except) {
+    if (except !== 'openOnly' && qs.openOnly.checked && !isOpen(p)) return false;
+    if (except !== 'company' && qs.company.value && p.company !== qs.company.value) return false;
+    if (except !== 'career' && qs.career.value && p._tags.indexOf(qs.career.value) < 0) return false;
+    if (except !== 'sido' && qs.sido.value && !p.regions.some(function (r) { return r.sido === qs.sido.value; })) return false;
+    if (except !== 'sigungu' && qs.sigungu.value && !p.regions.some(function (r) { return r.sigungu === qs.sigungu.value; })) return false;
+    var q = qs.q.value.trim().toLowerCase();
+    if (except !== 'q' && q && p._q.indexOf(q) < 0) return false;
+    return true;
+  }
+
+  function fill(sel, values, sorter) {
+    var cur = sel.value;
+    while (sel.options.length > 1) sel.remove(1);
+    var arr = Array.from(values);
+    arr.sort(sorter || function (a, b) { return a.localeCompare(b, 'ko'); });
+    arr.forEach(function (v) { var o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
+    // 선택해 둔 값이 더 이상 없으면 전체로 되돌린다
+    sel.value = arr.indexOf(cur) >= 0 ? cur : '';
+  }
+
+  function refreshOptions() {
+    fill(qs.company, new Set(data.filter(function (p) { return matches(p, 'company'); }).map(function (p) { return p.company; })));
+    fill(qs.career, new Set(data.filter(function (p) { return matches(p, 'career'); }).flatMap(function (p) { return p._tags; })),
+      function (a, b) { return CAREER_ORDER.indexOf(a) - CAREER_ORDER.indexOf(b); });
+    fill(qs.sido, new Set(data.filter(function (p) { return matches(p, 'sido') && matches(p, 'sigungu'); })
+      .flatMap(function (p) { return p.regions.map(function (r) { return r.sido; }); })));
+    var sido = qs.sido.value;
+    fill(qs.sigungu, new Set(data.filter(function (p) { return matches(p, 'sigungu'); })
+      .flatMap(function (p) { return p.regions.filter(function (r) { return (!sido || r.sido === sido) && r.sigungu; }).map(function (r) { return r.sigungu; }); })));
+  }
 
   function render() {
-    var q = qs.q.value.trim().toLowerCase();
-    var rows = data.filter(function (p) {
-      if (qs.openOnly.checked && !isOpen(p)) return false;
-      if (qs.company.value && p.company !== qs.company.value) return false;
-      if (qs.sido.value && !p.regions.some(function (r) { return r.sido === qs.sido.value; })) return false;
-      if (qs.sigungu.value && !p.regions.some(function (r) { return r.sigungu === qs.sigungu.value; })) return false;
-      if (q && (p.title + ' ' + p.company).toLowerCase().indexOf(q) < 0) return false;
-      return true;
-    });
+    var rows = data.filter(function (p) { return matches(p, null); });
     $('count').textContent = rows.length + '건';
     var list = $('list');
     list.innerHTML = '';
@@ -102,7 +117,7 @@
         ? p.regions.map(function (r) { return shortSido(r.sido) + (r.sigungu ? ' ' + r.sigungu : ''); }).join(', ')
         : '근무지 미확인';
       var badge = p.status ? '<span class="badge ' + (isOpen(p) ? 'open' : 'closed') + '">' + esc(p.status) + '</span>' : '';
-      var metas = [p.career_type, p.employment_type].filter(Boolean).join(' · ');
+      var metas = [p._tags.join('/'), p.employment_type].filter(Boolean).join(' · ');
       var period = (p.start_at || p.end_at) ? fmt(p.start_at).slice(0, 10) + ' ~ ' + fmt(p.end_at) : '';
       a.innerHTML = '<div class="row1"><span class="company">' + esc(p.company) + '</span>' + badge + '</div>'
         + '<div class="title">' + esc(p.title) + '</div>'
@@ -112,9 +127,15 @@
       list.appendChild(a);
     });
   }
-  qs.sido.addEventListener('change', function () { refreshSigungu(); render(); });
-  [qs.q, qs.company, qs.sigungu, qs.openOnly].forEach(function (el) { el.addEventListener('input', render); });
-  render();
+
+  function update() {
+    refreshOptions();
+    // 시·도를 바꿨을 때 시·군·구 선택이 그 시·도 밖이면 초기화된 뒤 다시 계산한다
+    refreshOptions();
+    render();
+  }
+  Object.keys(qs).forEach(function (k) { qs[k].addEventListener(k === 'q' ? 'input' : 'change', update); });
+  update();
 })();
 </script>
 </body>
