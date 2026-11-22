@@ -61,3 +61,26 @@ def test_multi_city_list():
     got = ext("가산, 창원, 마곡, 양재, 평택, 여의도")
     assert ("경상남도", "창원시", "rule") in got and ("경기도", "평택시", "rule") in got
     assert ("서울특별시", "금천구", "alias") in got and ("서울특별시", "강서구", "alias") in got
+
+
+def test_ambiguous_stems_need_a_province_hint():
+    from radar.location import load_region_dict
+    rd = load_region_dict()
+    labels = lambda text: sorted(r.label() for r in rd.extract(text))
+    # '상주'(常駐), '양산'(量産), '음성'(音聲)은 지명이 아닌 뜻으로 더 자주 쓰인다
+    assert labels("근무지 : 경기도 분당 (고객사 현장 상주 근무)") == ["경기도 성남시"]
+    assert labels("근무지: 수원 (양산 라인 지원, 음성 인식 개발)") == ["경기도 수원시"]
+    # 시·도 표기가 앞에 있거나 온전한 이름이면 지명으로 본다
+    assert labels("근무지: 경북 상주") == ["경상북도 상주시"]
+    assert labels("근무지: 양산시") == ["경상남도 양산시"]
+
+
+def test_place_name_followed_by_facility_word():
+    from radar.location import load_region_dict
+    rd = load_region_dict()
+    labels = lambda text: sorted(r.label() for r in rd.extract(text))
+    assert labels("의왕연구소") == ["경기도 의왕시"]
+    assert labels("울산공장") == ["울산광역시 북구"]            # 별칭이 먼저 잡힌다
+    assert labels("아산공장, 서울본사") == ["서울특별시", "충청남도 아산시"]
+    assert labels("화성시청 인근") == []                       # 시설 이름이 아닌 한글이 이어지면 여전히 건너뛴다
+    assert labels("이천쌀 판매 담당") == []

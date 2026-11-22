@@ -1,4 +1,4 @@
-from radar.sources.lg_careers import location_text_from_detail, parse_list
+from radar.sources.lg_careers import job_text_from_detail, location_text_from_detail, parse_list
 
 LIST = {"data": {"jobNoticeList": [
     {"jobNoticeId": 1001889, "careerTypeName": "경력", "recruitTypeName": "수시", "companyName": "LG유플러스",
@@ -24,3 +24,12 @@ def test_location_text_from_detail():
     }}}
     assert location_text_from_detail("경기도", detail) == "경기도\n가산, 창원, 마곡\nBMS SW: 대전"
     assert location_text_from_detail(None, {"data": {}}) is None
+
+
+def test_job_text_from_detail():
+    detail = {"data": {"jobNoticesDetail": {
+        "jobNoticesDetail": {"recruitJobName": "AI보안"},
+        "recList": [{"jobGroupName": "AI보안"}, {"jobGroupName": "Speech AI"}, {"jobGroupName": ""}],
+    }}}
+    assert job_text_from_detail(detail) == "AI보안\nSpeech AI"
+    assert job_text_from_detail({"data": {}}) == ""

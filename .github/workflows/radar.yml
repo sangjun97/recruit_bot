@@ -2,8 +2,17 @@ name: radar
 
 on:
   schedule:
-    - cron: "*/30 * * * *"   # 30분마다 (UTC). GitHub 사정으로 몇 분씩 늦어질 수 있음
+    # 30분마다 (UTC). 정각·30분은 GitHub 예약 실행이 가장 몰려 자주 밀리거나 빠지므로 7분·37분에 돌린다.
+    - cron: "7,37 * * * *"
   workflow_dispatch:
+  # 수집 코드나 설정을 고쳐 푸시하면 다음 예약을 기다리지 않고 바로 한 번 돌린다.
+  # 봇이 올리는 data/·docs/ 커밋은 경로가 달라 다시 실행을 부르지 않는다.
+  push:
+    branches: [main]
+    paths:
+      - "radar/**"
+      - "pyproject.toml"
+      - ".github/workflows/radar.yml"
 
 permissions:
   contents: write
@@ -15,7 +24,7 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v5
 
@@ -31,7 +40,7 @@ jobs:
 
       - name: Run radar
         id: radar
-        continue-on-error: true   # 한 소스가 실패해도 나머지 결과는 커밋한다. 아래 단계에서 실패로 표시
+        continue-on-error: true   # 일부 소스나 알림이 실패해도 나머지 결과와 사이트는 커밋한다. 아래 단계에서 실패로 표시
         env:
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -47,7 +56,8 @@ jobs:
             echo "no changes"
           else
             git commit -m "chore: update postings $(date -u +'%Y-%m-%d %H:%M UTC')"
-            git push
+            # 실행 중에 코드가 푸시됐으면 그 위로 옮겨서 다시 올린다
+            git push || (git pull --rebase && git push)
           fi
 
       - name: Fail if radar failed

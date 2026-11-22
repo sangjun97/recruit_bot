@@ -1,54 +1,89 @@
 from __future__ import annotations
 
 import html
+import json
 import sqlite3
 
 import httpx
 
+from .categories import CATEGORY_LABELS, ai_keywords, ai_roles, categorize_row
+
 TELEGRAM_API = "https://api.telegram.org/bot{token}/{method}"
 MAX_MESSAGE_LEN = 3800  # 텔레그램 한도 4096자보다 여유 있게
+MAX_REGIONS = 4         # 근무지가 이보다 많으면 시·도만 적는다
 
 
 class TelegramError(RuntimeError):
     pass
 
 
-def send_telegram(token: str, chat_id: str, text: str) -> None:
-    resp = httpx.post(
-        TELEGRAM_API.format(token=token, method="sendMessage"),
-        data={"chat_id": chat_id, "text": text, "parse_mode": "HTML", "disable_web_page_preview": "true"},
-        timeout=30,
-    )
-    # 오류 메시지에 토큰이 들어간 URL이 찍히지 않도록 직접 처리한다
+def _call(token: str, method: str, **params) -> dict:
+    """텔레그램 API 호출. 실패 사유만 담은 TelegramError 를 낸다(오류 메시지에 토큰이 든 URL이 섞이지 않게)."""
+    try:
+        resp = httpx.post(TELEGRAM_API.format(token=token, method=method), data=params, timeout=30)
+    except httpx.HTTPError as e:
+        raise TelegramError(f"텔레그램 연결 실패: {type(e).__name__}") from None
     try:
         body = resp.json()
     except ValueError:
         body = {}
     if resp.status_code != 200 or not body.get("ok"):
-        desc = body.get("description", f"HTTP {resp.status_code}")
+        desc = str(body.get("description", f"HTTP {resp.status_code}"))
         hint = ""
         if "chat not found" in desc:
-            hint = " → 텔레그램에서 봇을 열고 '시작(Start)'을 한 번 눌러야 봇이 메시지를 보낼 수 있습니다."
-        raise TelegramError(f"텔레그램 전송 실패: {desc}{hint}")
+            hint = " → 채팅 ID가 틀렸거나, 텔레그램에서 봇을 열고 '시작(Start)'을 누르지 않았습니다."
+        elif "Unauthorized" in desc or resp.status_code in (401, 404):
+            hint = " → 봇 토큰이 틀렸습니다. TELEGRAM_BOT_TOKEN 값을 다시 등록하세요."
+        raise TelegramError(f"{desc}{hint}".replace(token, "***"))
+    return body
+
+
+def send_telegram(token: str, chat_id: str, text: str) -> None:
+    _call(token, "sendMessage", chat_id=chat_id, text=text, parse_mode="HTML", disable_web_page_preview="true")
+
+
+def check_telegram(token: str, chat_id: str) -> str | None:
+    """메시지를 보내지 않고 토큰과 채팅 ID가 유효한지 확인한다. 문제가 있으면 사유를, 없으면 None 을 돌려준다."""
+    try:
+        _call(token, "getMe")
+        _call(token, "getChat", chat_id=chat_id)
+    except TelegramError as e:
+        return str(e)
+    return None
+
+
+def _region_text(regions: list[dict]) -> str:
+    if not regions:
+        return "근무지 미확인"
+    if len(regions) > MAX_REGIONS:
+        return ", ".join(dict.fromkeys(x["sido"] for x in regions))
+    return ", ".join(f"{x['sido']} {x.get('sigungu') or ''}".strip() for x in regions)
 
 
 def format_posting(row: sqlite3.Row | dict) -> str:
     r = dict(row)
     regions = r.get("regions")
     if regions is None:
-        import json
         regions = json.loads(r.get("regions_json") or "[]")
-    region_txt = ", ".join(f"{x['sido']} {x.get('sigungu') or ''}".strip() for x in regions) or "근무지 미확인"
+    cats = categorize_row(r)
+    tags = "".join(f"[{CATEGORY_LABELS[c]}] " for c in cats)
     period = ""
     if r.get("start_at") or r.get("end_at"):
         s = (r.get("start_at") or "")[:10]
         e = (r.get("end_at") or "").replace("T", " ")[:16]
         period = f"\n   📅 {s} ~ {e}"
-    meta = " · ".join(x for x in [r.get("career_type"), r.get("employment_type"), r.get("status")] if x)
+    meta = " · ".join(x for x in [r.get("career_type"), r.get("employment_type")] if x)
     meta = f"\n   {html.escape(meta)}" if meta else ""
+    roles = ""
+    if "ai" in cats and not ai_keywords(r.get("title")):
+        # 여러 직무를 묶은 공고: 어떤 직무 때문에 AI 로 분류됐는지 보여준다
+        names = ai_roles(r.get("job_text"), limit=5)
+        if names:
+            roles = f"\n   🤖 {html.escape(', '.join(names))}"
     return (
-        f"<b>{html.escape(r['company'])}</b> | <a href=\"{html.escape(r['url'])}\">{html.escape(r['title'])}</a>"
-        f"\n   📍 {html.escape(region_txt)}{period}{meta}"
+        f"{html.escape(tags)}<b>{html.escape(r['company'])}</b> | "
+        f"<a href=\"{html.escape(r['url'])}\">{html.escape(r['title'])}</a>"
+        f"{roles}\n   📍 {html.escape(_region_text(regions))}{period}{meta}"
     )
 
 

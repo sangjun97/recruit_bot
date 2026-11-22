@@ -5,58 +5,113 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>채용 레이더</title>
 <style>
-  :root { --bg:#f7f7f8; --card:#fff; --text:#1a1a1a; --muted:#6b7280; --line:#e5e7eb; --accent:#2563eb; --open:#15803d; --closed:#9ca3af; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#111214; --card:#1b1d21; --text:#e8e8ea; --muted:#9aa0a6; --line:#2a2d33; --accent:#60a5fa; --open:#4ade80; --closed:#6b7280; } }
+  :root { --bg:#f7f7f8; --card:#fff; --text:#1a1a1a; --muted:#6b7280; --line:#e5e7eb; --accent:#2563eb; --open:#15803d; --closed:#9ca3af; --ai:#7c3aed; --cardco:#c2410c; --warn:#b45309; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#111214; --card:#1b1d21; --text:#e8e8ea; --muted:#9aa0a6; --line:#2a2d33; --accent:#60a5fa; --open:#4ade80; --closed:#6b7280; --ai:#c4b5fd; --cardco:#fdba74; --warn:#fbbf24; } }
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--text); font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; }
-  header { padding: 20px 16px 8px; max-width: 920px; margin: 0 auto; }
+  header, .tabs, .filters, main, footer { max-width: 920px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
+  header { padding-top: 20px; padding-bottom: 8px; }
   h1 { margin:0 0 4px; font-size: 22px; }
   .sub { color: var(--muted); font-size: 13px; }
-  .filters { display:flex; flex-wrap:wrap; gap:8px; padding: 8px 16px 12px; max-width: 920px; margin: 0 auto; }
-  select, input[type=search] { font: inherit; padding: 8px 10px; border:1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--text); }
+  .tabs { display:flex; gap:8px; padding-top: 8px; padding-bottom: 4px; }
+  .tab { flex: 1 1 0; font: inherit; font-size: 15px; font-weight: 600; padding: 10px 8px; border:1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--muted); cursor: pointer; }
+  .tab .n { font-weight: 400; font-size: 13px; margin-left: 4px; }
+  .tab[aria-pressed=true] { color: #fff; background: var(--accent); border-color: var(--accent); }
+  @media (prefers-color-scheme: dark) { .tab[aria-pressed=true] { color: #0b1220; } }
+  .filters { display:flex; flex-wrap:wrap; gap:8px; padding-top: 8px; padding-bottom: 12px; }
+  select, input[type=search] { font: inherit; padding: 8px 10px; border:1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--text); max-width: 100%; }
   input[type=search] { flex: 1 1 160px; min-width: 140px; }
   label.chk { display:flex; align-items:center; gap:6px; font-size:14px; padding: 8px 4px; }
-  main { max-width: 920px; margin: 0 auto; padding: 0 16px 40px; }
+  main { padding-bottom: 40px; }
   .count { color: var(--muted); font-size: 13px; margin: 4px 0 10px; }
   .card { display:block; background: var(--card); border:1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; text-decoration:none; color: inherit; }
   .card:hover { border-color: var(--accent); }
-  .row1 { display:flex; justify-content:space-between; gap:12px; align-items:baseline; }
+  .card.is-closed { opacity: .6; }
+  .row1 { display:flex; justify-content:space-between; gap:12px; align-items:center; }
+  .who { display:flex; flex-wrap:wrap; gap:6px; align-items:center; min-width:0; }
   .company { font-size: 13px; color: var(--muted); }
-  .title { font-size: 16px; font-weight: 600; margin: 2px 0 6px; }
+  .title { font-size: 16px; font-weight: 600; margin: 4px 0 6px; overflow-wrap: anywhere; }
+  .roles { font-size: 13px; margin: 0 0 6px; color: var(--ai); overflow-wrap: anywhere; }
   .meta { font-size: 13px; color: var(--muted); display:flex; flex-wrap:wrap; gap: 6px 14px; }
   .badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; border:1px solid var(--line); white-space:nowrap; }
   .badge.open { color: var(--open); border-color: var(--open); }
   .badge.closed { color: var(--closed); }
+  .chip { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 6px; border:1px solid currentColor; white-space:nowrap; }
+  .chip.c-ai { color: var(--ai); }
+  .chip.c-card { color: var(--cardco); }
+  .chip.c-new { color: var(--accent); }
   .region { color: var(--accent); font-weight: 500; }
   .empty { color: var(--muted); padding: 40px 0; text-align:center; }
-  footer { max-width: 920px; margin: 0 auto; padding: 0 16px 30px; color: var(--muted); font-size: 12px; }
+  footer { padding-bottom: 30px; color: var(--muted); font-size: 12px; }
+  footer p { margin: 0 0 8px; }
+  .warn { color: var(--warn); }
+  details summary { cursor: pointer; }
+  table.src { border-collapse: collapse; margin-top: 8px; width: 100%; }
+  table.src td, table.src th { text-align:left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--line); font-weight: 400; }
+  table.src th { color: var(--text); }
+  table.src a { color: inherit; }
 </style>
 </head>
 <body>
 <header>
   <h1>채용 레이더</h1>
-  <div class="sub">기업 공식 채용 홈페이지에서 수집 · 마지막 갱신 {{ generated_at }} · 총 {{ count }}건</div>
+  <div class="sub">대기업 AI·데이터 직무와 카드사 공고를 기업 공식 채용 홈페이지에서 수집 · 마지막 갱신 {{ generated_at }}</div>
 </header>
+<div class="tabs" role="group" aria-label="분야">
+  <button class="tab" type="button" data-cat="" aria-pressed="true">전체<span class="n"></span></button>
+  <button class="tab" type="button" data-cat="ai" aria-pressed="false">AI·데이터<span class="n"></span></button>
+  <button class="tab" type="button" data-cat="card" aria-pressed="false">카드사<span class="n"></span></button>
+</div>
 <div class="filters">
-  <input id="q" type="search" placeholder="제목·회사 검색">
-  <select id="company"><option value="">회사 전체</option></select>
-  <select id="career"><option value="">신입·경력 전체</option></select>
-  <select id="sido"><option value="">시·도 전체</option></select>
-  <select id="sigungu"><option value="">시·군·구 전체</option></select>
+  <input id="q" type="search" placeholder="제목·회사·직무 검색" aria-label="검색">
+  <select id="company" aria-label="회사"><option value="">회사 전체</option></select>
+  <select id="career" aria-label="신입·경력"><option value="">신입·경력 전체</option></select>
+  <select id="sido" aria-label="지역"><option value="">지역 전체</option></select>
+  <select id="sort" aria-label="정렬"><option value="new">최근 게시순</option><option value="end">마감 임박순</option></select>
   <label class="chk"><input id="openOnly" type="checkbox" checked> 접수중만</label>
 </div>
 <main>
   <div class="count" id="count"></div>
   <div id="list"></div>
 </main>
-<footer>공고 상세와 지원은 각 기업의 공식 채용 페이지에서 진행하세요. 근무지는 공고 문구에서 자동 추출한 값이라 틀릴 수 있습니다.</footer>
+<footer>
+  <p>공고 상세와 지원은 각 기업의 공식 채용 페이지에서 진행하세요. AI·데이터 분류와 근무지는 공고 제목·직무명에서 자동으로 판단한 값이라 틀리거나 빠질 수 있습니다.</p>
+  {% if telegram and not telegram.ok %}<p class="warn">텔레그램 알림이 동작하지 않고 있습니다: {{ telegram.detail }}</p>{% endif %}
+  {% if sources %}
+  <details>
+    <summary>수집 대상 {{ sources|length }}곳{% set bad = sources|selectattr('error')|list %}{% if bad %} · <span class="warn">최근 수집 실패 {{ bad|length }}곳</span>{% endif %}</summary>
+    <table class="src">
+      <tr><th>채용 사이트</th><th>게시 공고</th><th>최근 수집 성공</th></tr>
+      {% for s in sources %}
+      <tr>
+        <td><a href="{{ s.url }}" target="_blank" rel="noopener">{{ s.name }}</a></td>
+        <td>{% if s.error %}<span class="warn">수집 실패</span>{% elif s.fetched is none %}-{% else %}{{ s.fetched }}건{% endif %}</td>
+        <td>{{ s.last_ok or '-' }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+    <p style="margin-top:8px">게시 공고 수는 사이트에 올라온 전체 공고 수입니다. 이 가운데 카드사 공고 전체와 AI·데이터 직무 공고만 위 목록에 보입니다.</p>
+  </details>
+  {% endif %}
+</footer>
 <script id="data" type="application/json">{{ postings_json|safe }}</script>
 <script>
 (function () {
   var data = JSON.parse(document.getElementById('data').textContent);
+  var LABELS = {{ labels_json|safe }};
   function $(id) { return document.getElementById(id); }
-  var qs = { q: $('q'), company: $('company'), career: $('career'), sido: $('sido'), sigungu: $('sigungu'), openOnly: $('openOnly') };
+  var qs = { q: $('q'), company: $('company'), career: $('career'), sido: $('sido'), openOnly: $('openOnly') };
+  var sortSel = $('sort');
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var cat = '';
   var CAREER_ORDER = ['신입', '경력', '인턴', '기타'];
+  var MAX_REGIONS = 4;
+
+  // 페이지를 연 시각 기준으로 마감 여부를 다시 계산한다(사이트 생성 이후 마감된 공고가 접수중으로 남지 않게).
+  // end_at 은 한국 시각(KST) 자연 시각 문자열이라 KST 현재 시각 문자열과 그대로 비교한다.
+  function nowKst() { return new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 16); }
+  var NOW = nowKst();
+  var NEW_SINCE = new Date(Date.now() + 9 * 3600 * 1000 - 3 * 86400 * 1000).toISOString().slice(0, 16);   // 3일 전(KST)
 
   // '신입/경력' 처럼 섞인 표기를 신입·경력·인턴 태그로 나눈다
   function careerTags(p) {
@@ -64,20 +119,32 @@
     var tags = CAREER_ORDER.slice(0, 3).filter(function (k) { return t.indexOf(k) >= 0; });
     return tags.length ? tags : ['기타'];
   }
-  data.forEach(function (p) { p._tags = careerTags(p); p._q = (p.title + ' ' + p.company).toLowerCase(); });
+  data.forEach(function (p) {
+    p._tags = careerTags(p);
+    p._q = (p.title + ' ' + p.company + ' ' + p.roles.join(' ')).toLowerCase();
+    p._open = p.open && !(p.end_at && p.end_at < NOW);
+    p._sidos = Array.from(new Set(p.regions.map(function (r) { return r.sido; })));
+    p._new = p.posted > NEW_SINCE && p.posted <= NOW;
+  });
+  data.sort(function (a, b) { return b.posted.localeCompare(a.posted); });   // 기본 순서: 최근 게시순
 
-  function isOpen(p) { return !p.status || p.status === '접수중' || p.status === '접수예정'; }
   function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
   function shortSido(s) { return s.replace(/(특별시|광역시|특별자치시|특별자치도)$/, ''); }
   function fmt(iso) { return iso ? iso.replace('T', ' ').slice(0, 16) : ''; }
+  function dday(p) {
+    if (!p.end_at) return '';
+    var days = Math.floor((new Date(p.end_at.slice(0, 10)) - new Date(NOW.slice(0, 10))) / 86400000);
+    if (days < 0 || days > 30) return '';
+    return days === 0 ? '오늘 마감' : 'D-' + days;
+  }
 
-  // except: 이 필터는 무시하고 판정한다 (해당 드롭다운의 선택지를 만들 때 사용)
+  // except: 이 필터는 무시하고 판정한다 (해당 선택지의 목록·건수를 만들 때 사용)
   function matches(p, except) {
-    if (except !== 'openOnly' && qs.openOnly.checked && !isOpen(p)) return false;
+    if (except !== 'cat' && cat && p.cats.indexOf(cat) < 0) return false;
+    if (except !== 'openOnly' && qs.openOnly.checked && !p._open) return false;
     if (except !== 'company' && qs.company.value && p.company !== qs.company.value) return false;
     if (except !== 'career' && qs.career.value && p._tags.indexOf(qs.career.value) < 0) return false;
-    if (except !== 'sido' && qs.sido.value && !p.regions.some(function (r) { return r.sido === qs.sido.value; })) return false;
-    if (except !== 'sigungu' && qs.sigungu.value && !p.regions.some(function (r) { return r.sigungu === qs.sigungu.value; })) return false;
+    if (except !== 'sido' && qs.sido.value && p._sidos.indexOf(qs.sido.value) < 0) return false;
     var q = qs.q.value.trim().toLowerCase();
     if (except !== 'q' && q && p._q.indexOf(q) < 0) return false;
     return true;
@@ -93,35 +160,52 @@
     sel.value = arr.indexOf(cur) >= 0 ? cur : '';
   }
 
+  // 각 선택지는 나머지 필터를 적용한 결과에 실제로 있는 값만 보여준다
   function refreshOptions() {
     fill(qs.company, new Set(data.filter(function (p) { return matches(p, 'company'); }).map(function (p) { return p.company; })));
     fill(qs.career, new Set(data.filter(function (p) { return matches(p, 'career'); }).flatMap(function (p) { return p._tags; })),
       function (a, b) { return CAREER_ORDER.indexOf(a) - CAREER_ORDER.indexOf(b); });
-    fill(qs.sido, new Set(data.filter(function (p) { return matches(p, 'sido') && matches(p, 'sigungu'); })
-      .flatMap(function (p) { return p.regions.map(function (r) { return r.sido; }); })));
-    var sido = qs.sido.value;
-    fill(qs.sigungu, new Set(data.filter(function (p) { return matches(p, 'sigungu'); })
-      .flatMap(function (p) { return p.regions.filter(function (r) { return (!sido || r.sido === sido) && r.sigungu; }).map(function (r) { return r.sigungu; }); })));
+    fill(qs.sido, new Set(data.filter(function (p) { return matches(p, 'sido'); }).flatMap(function (p) { return p._sidos; })));
+    var base = data.filter(function (p) { return matches(p, 'cat'); });
+    tabs.forEach(function (t) {
+      var c = t.getAttribute('data-cat');
+      var n = c ? base.filter(function (p) { return p.cats.indexOf(c) >= 0; }).length : base.length;
+      t.querySelector('.n').textContent = n;
+      t.setAttribute('aria-pressed', String(c === cat));
+    });
+  }
+
+  function regionText(p) {
+    if (!p.regions.length) return '근무지 미확인';
+    if (p.regions.length > MAX_REGIONS) return p._sidos.map(shortSido).join(', ');
+    return p.regions.map(function (r) { return shortSido(r.sido) + (r.sigungu ? ' ' + r.sigungu : ''); }).join(', ');
   }
 
   function render() {
     var rows = data.filter(function (p) { return matches(p, null); });
+    if (sortSel.value === 'end') {
+      rows.sort(function (a, b) { return (a.end_at || '9999').localeCompare(b.end_at || '9999'); });
+    }
     $('count').textContent = rows.length + '건';
     var list = $('list');
     list.innerHTML = '';
     if (!rows.length) { list.innerHTML = '<div class="empty">조건에 맞는 공고가 없습니다.</div>'; return; }
     rows.forEach(function (p) {
       var a = document.createElement('a');
-      a.className = 'card'; a.href = p.url; a.target = '_blank'; a.rel = 'noopener';
-      var region = p.regions.length
-        ? p.regions.map(function (r) { return shortSido(r.sido) + (r.sigungu ? ' ' + r.sigungu : ''); }).join(', ')
-        : '근무지 미확인';
-      var badge = p.status ? '<span class="badge ' + (isOpen(p) ? 'open' : 'closed') + '">' + esc(p.status) + '</span>' : '';
+      a.className = 'card' + (p._open ? '' : ' is-closed'); a.href = p.url; a.target = '_blank'; a.rel = 'noopener';
+      var d = p._open ? dday(p) : '';
+      var badge = p._open
+        ? '<span class="badge open">' + esc(d || p.status || '접수중') + '</span>'
+        : '<span class="badge closed">접수마감</span>';
+      var chips = p.cats.map(function (c) { return '<span class="chip c-' + c + '">' + esc(LABELS[c] || c) + '</span>'; }).join('')
+        + (p._new && p._open ? '<span class="chip c-new">NEW</span>' : '');
       var metas = [p._tags.join('/'), p.employment_type].filter(Boolean).join(' · ');
-      var period = (p.start_at || p.end_at) ? fmt(p.start_at).slice(0, 10) + ' ~ ' + fmt(p.end_at) : '';
-      a.innerHTML = '<div class="row1"><span class="company">' + esc(p.company) + '</span>' + badge + '</div>'
+      // 마감일이 없는 공고는 채용이 끝나면 내려가는 상시 공고다
+      var period = (p.start_at || p.end_at) ? fmt(p.start_at).slice(0, 10) + ' ~ ' + (p.end_at ? fmt(p.end_at) : '채용 시 마감') : '';
+      a.innerHTML = '<div class="row1"><div class="who"><span class="company">' + esc(p.company) + '</span>' + chips + '</div>' + badge + '</div>'
         + '<div class="title">' + esc(p.title) + '</div>'
-        + '<div class="meta"><span class="region">📍 ' + esc(region) + '</span>'
+        + (p.roles.length ? '<div class="roles">AI·데이터 직무: ' + esc(p.roles.join(', ')) + '</div>' : '')
+        + '<div class="meta"><span class="region">📍 ' + esc(regionText(p)) + '</span>'
         + (period ? '<span>📅 ' + esc(period) + '</span>' : '')
         + (metas ? '<span>' + esc(metas) + '</span>' : '') + '</div>';
       list.appendChild(a);
@@ -130,12 +214,20 @@
 
   function update() {
     refreshOptions();
-    // 시·도를 바꿨을 때 시·군·구 선택이 그 시·도 밖이면 초기화된 뒤 다시 계산한다
-    refreshOptions();
+    refreshOptions();   // 한 선택지가 초기화되면 다른 선택지의 목록도 달라지므로 한 번 더 계산한다
     render();
   }
+
+  function setCat(c, fromHash) {
+    cat = LABELS[c] ? c : '';
+    if (!fromHash) { try { history.replaceState(null, '', cat ? '#' + cat : location.pathname + location.search); } catch (e) {} }
+    update();
+  }
+  tabs.forEach(function (t) { t.addEventListener('click', function () { setCat(t.getAttribute('data-cat')); }); });
   Object.keys(qs).forEach(function (k) { qs[k].addEventListener(k === 'q' ? 'input' : 'change', update); });
-  update();
+  sortSel.addEventListener('change', render);
+  window.addEventListener('hashchange', function () { setCat(location.hash.slice(1), true); });
+  setCat(location.hash.slice(1), true);   // 주소 끝에 #ai 또는 #card 를 붙이면 그 분야로 바로 열린다
 })();
 </script>
 </body>

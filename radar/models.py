@@ -21,11 +21,13 @@ class Posting(BaseModel):
     company: str
     title: str
     url: str
-    start_at: datetime | None = None
+    start_at: datetime | None = None     # 사이트 기준(KST) 시각, 시간대 정보 없음
     end_at: datetime | None = None
+    end_date_only: bool = False          # 목록에 마감 '날짜'만 있어 시각(23:59)은 추정인 경우. 저장하지 않는다
     career_type: str | None = None       # 신입 / 경력 / 인턴 등
     employment_type: str | None = None   # 정규 / 계약 등
     status: str | None = None            # 접수중 / 접수마감 등 (소스 표기 그대로)
+    job_text: str | None = None          # 직무 분류·모집 직무명(줄 단위). AI 직무 판별에 쓴다. None 은 '아직 모름'
     location_raw: str | None = None      # 공고 본문에서 근무지로 보이는 원문 조각
     regions: list[Region] = Field(default_factory=list)
 

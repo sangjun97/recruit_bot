@@ -1,21 +1,24 @@
-"""삼성커리어스(samsungcareers.com) 수집기. 삼성전자 DX/DS부문을 포함한 삼성 관계사 전체 공고가 한 사이트에 올라온다.
+"""삼성커리어스(samsungcareers.com) 수집기. 삼성전자 DX/DS부문을 포함한 삼성 관계사 공고가 한 사이트에 올라온다.
 
-- robots.txt 없음. 이용약관은 회원(가입자) 대상이며 자동 수집 금지 조항은 없으나 제12조·제15조에
+- robots.txt 없음(302). 이용약관은 회원(가입자) 대상이며 자동 수집 금지 조항은 없으나 제12조·제15조에
   "서비스에서 취득한 정보를 회사 승낙 없이 복제·제3자 제공·영리 이용 금지" 조항이 있다.
-  그래서 공고 제목·기간·링크·근무지 문장만 저장하고 본문은 저장하지 않는다. 로그인하지 않는다.
-- 공고 목록: 페이지가 스스로 POST /hr/list.data 로 불러오는 HTML 조각.
-- 공고 상세: GET /recruit/detail.data?seqno=ID 가 JSON 을 돌려주며, 모집 직무마다 workPlaceKr(근무지)가 따로 있다.
+  그래서 공고 제목·기간·링크·직무명·근무지 문장만 저장하고 본문은 저장하지 않는다. 로그인하지 않는다.
+- 공고 목록: POST /hr/list.data (HTML 조각). 브라우저 없이 받을 수 있다. 접수 중인 공고만 올라온다.
+- 공고 상세: GET /recruit/detail.data?seqno=ID (JSON). 모집 직무마다 titleKr(직무명)·workPlaceKr(근무지)가 있고,
+  result.startdate/enddate 에 분 단위 접수 기간(YYYYMMDDHHMM)이 있다. 목록에는 날짜만 있다.
 - 공유 링크: /hr/?no=ID
+- 삼성 공고는 여러 직무를 한 공고로 묶으므로('경력사원 채용(AI, IT, 경영기획 ...)') 직무명을 job_text 로 저장해
+  AI·데이터 직무 판별에 쓴다.
 """
 from __future__ import annotations
 
 import re
-import time
 from datetime import datetime
 
-from playwright.sync_api import BrowserContext
 from selectolax.lexbor import LexborHTMLParser as HTMLParser
 
+from ..companies import SAMSUNG_MAJOR
+from ..fetch import Fetcher
 from ..models import Posting
 from .base import Source
 
@@ -31,6 +34,14 @@ def _clean(s: str | None) -> str:
 def _date(s: str) -> datetime | None:
     try:
         return datetime.strptime(s.strip(), "%Y.%m.%d")
+    except ValueError:
+        return None
+
+
+def _stamp(s: str | None) -> datetime | None:
+    """상세의 'YYYYMMDDHHMM' 표기."""
+    try:
+        return datetime.strptime((s or "").strip()[:12], "%Y%m%d%H%M")
     except ValueError:
         return None
 
@@ -68,8 +79,9 @@ def parse_list_html(html: str, source_key: str) -> tuple[list[Posting], int]:
                 url=f"{BASE}/hr/?no={sn}",
                 start_at=start,
                 end_at=end,
+                end_date_only=True,   # 목록에는 날짜만 있다. 실제 마감 시각은 상세에서 받는다
                 career_type=career,
-                status="접수중",  # 목록에는 접수 중인 공고만 올라온다
+                status="접수중",       # 목록에는 접수 중인 공고만 올라온다
             )
         )
     return out, max_pages
@@ -93,12 +105,33 @@ def location_text_from_detail(data: dict) -> str | None:
     return "\n".join(dict.fromkeys(lines)) or None
 
 
+def job_text_from_detail(data: dict) -> str:
+    """상세 JSON의 모집 직무명 목록(줄 단위)."""
+    items = (data.get("data") or {}).get("items") or []
+    names = [_clean(it.get("titleKr")) for it in items]
+    return "\n".join(dict.fromkeys(n for n in names if n))
+
+
+def apply_detail(posting: Posting, data: dict) -> None:
+    """상세에서만 알 수 있는 값(분 단위 접수 기간, 직무명)을 posting 에 채운다."""
+    result = (data.get("data") or {}).get("result") or {}
+    start, end = _stamp(result.get("startdate")), _stamp(result.get("enddate"))
+    if start:
+        posting.start_at = start
+    if end:
+        posting.end_at = end
+        posting.end_date_only = False
+    posting.job_text = job_text_from_detail(data)
+
+
 class SamsungCareersSource(Source):
-    def __init__(self, key: str = "samsung", companies: set[str] | None = None, delay_sec: float = 1.5):
+    detail_for_classify = True
+    site_url = f"{BASE}/hr/"
+
+    def __init__(self, key: str = "samsung", companies: set[str] | None = SAMSUNG_MAJOR):
         self.key = key
-        self.company = "삼성"
-        self.companies = companies   # None 이면 관계사 전체. 예: {"삼성전자 DX부문", "삼성전자 DS부문"}
-        self.delay_sec = delay_sec
+        self.company = "삼성 (삼성커리어스)"
+        self.companies = companies   # None 이면 관계사 전체. 기본은 주력 계열사만(companies.py)
 
     def _list_form(self, page_no: int) -> dict[str, str]:
         return {
@@ -106,38 +139,19 @@ class SamsungCareersSource(Source):
             "strCompany": "", "strType": "", "strOrderBy": "", "strEntity": "",
         }
 
-    def fetch_list(self, ctx: BrowserContext) -> list[Posting]:
-        page = ctx.new_page()
+    def fetch_list(self, f: Fetcher) -> list[Posting]:
         postings: dict[str, Posting] = {}
-        try:
-            page.goto(f"{BASE}/hr/", wait_until="networkidle", timeout=60_000)
-            page.wait_for_timeout(1000)
-            page_no, max_pages = 1, 1
-            while page_no <= max_pages:
-                if page_no > 1:
-                    time.sleep(self.delay_sec)
-                resp = page.request.post(f"{BASE}/hr/list.data", form=self._list_form(page_no))
-                items, max_pages = parse_list_html(resp.text(), self.key)
-                for p in items:
-                    postings[p.external_id] = p
-                page_no += 1
-                if page_no > 20:  # 안전장치
-                    break
-        finally:
-            page.close()
-        result = list(postings.values())
-        if self.companies:
-            result = [p for p in result if p.company in self.companies]
-        return result
+        page_no, max_pages = 1, 1
+        while page_no <= max_pages and page_no <= 20:   # 20 은 안전장치
+            resp = f.post(f"{BASE}/hr/list.data", data=self._list_form(page_no))
+            items, max_pages = parse_list_html(resp.text, self.key)
+            for p in items:
+                postings[p.external_id] = p
+            page_no += 1
+        return self.scope(list(postings.values()), self.companies)
 
-    def fetch_location_text(self, ctx: BrowserContext, posting: Posting) -> str | None:
-        page = ctx.new_page()
-        try:
-            time.sleep(self.delay_sec)
-            # 공유 링크로 열면 페이지가 스스로 detail.data 를 요청한다. 같은 세션으로 JSON만 다시 받는다
-            page.goto(posting.url, wait_until="networkidle", timeout=60_000)
-            resp = page.request.get(f"{BASE}/recruit/detail.data?seqno={posting.external_id}&strCode=")
-            data = resp.json()
-        finally:
-            page.close()
+    def fetch_detail(self, f: Fetcher, posting: Posting) -> str | None:
+        resp = f.get(f"{BASE}/recruit/detail.data", params={"seqno": posting.external_id, "strCode": ""})
+        data = resp.json()
+        apply_detail(posting, data)
         return location_text_from_detail(data)

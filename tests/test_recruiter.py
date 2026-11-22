@@ -18,3 +18,15 @@ def test_parse_items():
     assert p.status == "접수중" and p.career_type == "경력" and p.employment_type == "경력"
     assert p.start_at.year == 2026 and p.end_at.hour == 12
     assert ps[1].status == "접수마감" and ps[1].career_type == "신입" and ps[1].start_at is None
+
+
+def test_company_from_title_tag():
+    items = [
+        {"positionSn": 1, "title": "[현대카드] 대손 충당금 관리"},
+        {"positionSn": 2, "title": "[현대커머셜] 부동산금융"},
+        {"positionSn": 3, "title": "[현대카드/커머셜] 사내 변호사"},
+        {"positionSn": 4, "title": "머리말 없는 공고"},
+    ]
+    names = {"현대카드": "현대카드", "현대커머셜": "현대커머셜", "현대카드/커머셜": "현대카드/현대커머셜"}
+    ps = parse_items(items, "careerhyundai", "hyundaicard", "현대카드/현대커머셜", names)
+    assert [p.company for p in ps] == ["현대카드", "현대커머셜", "현대카드/현대커머셜", "현대카드/현대커머셜"]

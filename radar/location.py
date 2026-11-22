@@ -19,6 +19,16 @@ LOCATION_LINE_RE = re.compile(
 )
 HANGUL = re.compile(r"[가-힣]")
 
+# 지명 바로 뒤에 붙어도 지명으로 읽는 시설 이름: '의왕연구소', '울산공장', '서울본사', '판교캠퍼스'
+FACILITY_SUFFIX_RE = re.compile(r"(연구소|연구원|공장|사업장|캠퍼스|본사|지사|지점|센터|조선소|제철소|발전소|물류센터|사옥|오피스|지역|근무|소재)")
+
+# 접미사(시·군)를 떼면 흔한 낱말과 같아지는 지명. '현장 상주 근무', '양산 라인', '음성 인식' 같은 문장에서 오탐이 나므로
+# 앞에 해당 시·도 표기가 있을 때만('경북 상주') 지명으로 본다. '상주시'처럼 온전한 이름은 그대로 잡힌다.
+AMBIGUOUS_STEMS = {
+    "상주", "양산", "음성", "예산", "고령", "진도", "영양", "부여", "무안", "영광", "완주", "장수", "보은", "정선",
+    "인제", "영주", "강진", "영동", "동해", "남해", "연기", "성주", "화순", "고성", "사천", "서천", "금산",
+}
+
 
 class RegionDict:
     def __init__(self, data: dict):
@@ -65,8 +75,11 @@ class RegionDict:
             return any(s < ce and e > cs for cs, ce in consumed)
 
         def followed_by_hangul(m: re.Match) -> bool:
+            """지명 뒤에 한글이 이어져 다른 낱말일 가능성이 높은지. 시설 이름이 붙은 경우('의왕연구소')는 지명으로 본다."""
             after = text[m.end():m.end() + 1]
-            return bool(after) and bool(HANGUL.match(after))
+            if not after or not HANGUL.match(after):
+                return False
+            return FACILITY_SUFFIX_RE.match(text, m.end()) is None
 
         # 1) 별칭(사업장·역·지명)
         for name in self._alias_names:
@@ -105,6 +118,10 @@ class RegionDict:
                     continue
                 sgg = self.stems[stem]
                 sido = self.sigungu_to_sido[sgg][0]
+                if stem in AMBIGUOUS_STEMS:
+                    before = text[max(0, m.start() - 12):m.start()]
+                    if not any(tok in before and self.canonical_sido(tok) == sido for tok in self._sido_tokens):
+                        continue
                 found.setdefault((sido, sgg), Region(sido=sido, sigungu=sgg, method="rule"))
                 consumed.append(m.span())
 
