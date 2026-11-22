@@ -147,6 +147,7 @@
   .tag { display:inline-flex; align-items:center; gap: 4px; background: var(--calm-bg); border-radius: 6px; padding: 3px 8px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
   .tag svg { flex:none; color: var(--muted); }
   .tag.loc { color: var(--text); font-weight: 600; }
+  .tag.via { background: transparent; border: 1px dashed var(--line); color: var(--muted); padding: 2px 7px; }
   .due { margin-left: auto; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
   .empty { grid-column: 1 / -1; text-align:center; padding: 56px 16px; color: var(--muted); background: var(--surface); border:1px dashed var(--line); border-radius: 16px; }
   .empty b { display:block; color: var(--text); font-size: 16px; margin-bottom: 6px; }
@@ -228,7 +229,7 @@
 </div>
 
 <footer><div class="wrap">
-  <p>공고 상세와 지원은 각 기업의 공식 채용 페이지에서 진행하세요. AI·데이터 분류와 근무지는 공고 제목·직무명에서 자동으로 판단한 값이라 틀리거나 빠질 수 있습니다. 회사 로고는 각 회사의 상표이며 어느 회사 공고인지 알아보기 위한 용도로만 썼습니다.</p>
+  <p>공고 상세와 지원은 각 기업의 공식 채용 페이지에서 진행하세요. 공식 채용 사이트를 읽을 수 없는 일부 카드사 공고는 그 회사가 채용 포털(사람인·잡코리아)에 직접 올린 것을 가져오며, 카드에 '경유'로 표시합니다. AI·데이터 분류와 근무지는 공고 제목·직무명에서 자동으로 판단한 값이라 틀리거나 빠질 수 있습니다. 회사 로고는 각 회사의 상표이며 어느 회사 공고인지 알아보기 위한 용도로만 썼습니다.</p>
   {% if telegram and not telegram.ok %}<p class="warn">텔레그램 알림이 동작하지 않고 있습니다: {{ telegram.detail }}</p>{% endif %}
   {% if sources %}
   <details>
@@ -433,7 +434,8 @@
       var employ = p.employment_type && p.employment_type !== career ? p.employment_type : '';
       var tags = (region ? '<span class="tag loc">' + PIN + esc(region) + '</span>' : '')
         + (career ? '<span class="tag">' + esc(career) + '</span>' : '')
-        + (employ ? '<span class="tag">' + esc(employ) + '</span>' : '');
+        + (employ ? '<span class="tag">' + esc(employ) + '</span>' : '')
+        + (p.via ? '<span class="tag via">' + esc(p.via) + ' 경유</span>' : '');   // 채용 포털에서 읽어 온 공고
       return '<a class="card' + (p._open ? '' : ' is-closed') + '" href="' + esc(p.url) + '" target="_blank" rel="noopener">'
         + '<div class="chead">' + logoHtml(p._brand)
         + '<div class="who"><span class="company">' + esc(p.company) + '</span><div class="chips">' + chips + '</div></div>'

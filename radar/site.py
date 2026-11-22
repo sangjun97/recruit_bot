@@ -10,6 +10,7 @@ from jinja2 import Environment, FileSystemLoader, select_autoescape
 from .brands import brand_for, brand_table
 from .categories import CATEGORY_LABELS, ai_keywords, ai_roles, categorize_row
 from .db import Database
+from .dedupe import drop_portal_duplicates
 from .logos import existing_logos
 from .status import KST, OPEN_STATUSES, effective_status, kst_naive
 
@@ -84,7 +85,15 @@ def _kst_label(iso_utc: str | None) -> str | None:
 def build_site(db: Database, out_dir: Path, hide_after_days: int = 7, sources: list | None = None) -> Path:
     out_dir.mkdir(parents=True, exist_ok=True)
     postings = visible_postings(db.all_postings(), datetime.now(timezone.utc), hide_after_days)
-    public = [d for d in (public_posting(p) for p in postings) if d["cats"]]   # 관심 분야 공고만 싣는다
+    postings = [p for p in postings if categorize_row(p)]   # 관심 분야 공고만 싣는다
+    # 같은 공고가 공식 사이트와 포털, 또는 포털 두 곳에 있으면 하나만 싣는다
+    for p in postings:
+        p["_open"] = p["status"] in OPEN_STATUSES
+    postings, _ = drop_portal_duplicates(
+        postings, [s.key for s in sources or []], {s.key for s in sources or [] if getattr(s, "portal", False)}
+    )
+    via = {s.key: s.portal_name for s in sources or [] if getattr(s, "portal", False)}
+    public = [{**public_posting(p), "via": via.get(p.get("source"), "")} for p in postings]
     telegram = json.loads(db.get_meta("telegram") or "null")
     env = Environment(loader=FileSystemLoader(TEMPLATES), autoescape=select_autoescape(["html"]))
     tpl = env.get_template("index.html")

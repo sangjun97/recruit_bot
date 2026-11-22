@@ -34,6 +34,8 @@ BRANDS: list[Brand] = [
     Brand("wooricard", "우리카드", ("우리카드",), None, "#0067ac", "우리"),
     Brand("nhcard", "NH농협카드", ("NH농협카드",), None, "#00843d", "NH"),
     Brand("bccard", "BC카드", ("BC카드", "비씨카드"), "https://www.bccard.com/favicon.ico", "#e8384f", "BC"),
+    Brand("hanacard", "하나카드", ("하나카드",), None, "#008485", "하나"),
+    Brand("lottecard", "롯데카드", ("롯데카드",), None, "#da291c", "롯데"),
     # --- 그룹·대기업 ---
     Brand("samsung", "삼성", ("삼성", "에스원", "호텔신라", "제일기획"), "https://www.samsung.com/sec/static/_images/favicon.ico", "#1428a0"),
     Brand("lguplus", "LG유플러스", ("LG유플러스",), "https://www.lguplus.com/static/pc-static/icon_512_lgu.png", "#e6007e", "U+", group="lg"),

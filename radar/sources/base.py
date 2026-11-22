@@ -21,6 +21,10 @@ class Source(ABC):
     # 이 간격(분)보다 자주 수집하지 않는다. 응답이 크거나 브라우저를 띄워야 해서 사이트에 부담이 되는 소스에 쓴다.
     min_interval_min: int = 0
 
+    # 채용 포털(사람인·잡코리아)을 거쳐 읽는 보완용 소스인지. 같은 공고가 공식 사이트나 다른 포털에도 있으면 포털 쪽을 숨긴다.
+    portal: bool = False
+    portal_name: str = ""   # 카드에 '○○ 경유'로 표시할 포털 이름
+
     # 근무지 문장을 LLM 에 보내도 되는지. robots.txt 가 AI 입력을 꺼리는 사이트는 False 로 두고 규칙으로만 추출한다.
     llm_ok: bool = True
 

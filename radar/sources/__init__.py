@@ -9,6 +9,8 @@
 - 이용약관이 개인적인 이용까지 금지하는 회사는 제외한다. 영리 이용·제3자 제공만 금지하는 약관은 괜찮다.
 - 공고 페이지가 허용돼 있으면, 데이터가 다른(금지된) 경로에서 오더라도 페이지를 브라우저로 열어 화면을 읽는다.
 - 공고 페이지 자체가 자동 접근을 막는 회사는, 그 회사가 쓰는 채용 솔루션의 공개 API 가 있으면 그것으로 받는다.
+- 그래도 모으기 어려운 회사는 채용 포털(사람인·잡코리아)에서 그 회사가 직접 올린 공고를 읽는다. 포털에도 같은 기준을 적용한다
+  (robots.txt 가 금지하거나 약관이 자동 수집을 금지하는 포털은 쓰지 않는다: 링커리어, 원티드, 인크루트 등).
 """
 from __future__ import annotations
 
@@ -21,6 +23,7 @@ from .greeting import GreetingSource
 from .hanwha import HanwhaSource
 from .hd_hyundai import HDHyundaiSource
 from .hmg import HyundaiMotorGroupSource
+from .jobkorea import JobKoreaSearchSource
 from .kakao import KakaoSource
 from .kt import KTSource
 from .lg_careers import LGCareersSource
@@ -29,6 +32,7 @@ from .naver import NaverSource
 from .nonghyup import NonghyupCardSource
 from .recruiter_co_kr import RecruiterCoKrSource
 from .samsung_careers import SamsungCareersSource
+from .saramin import SaraminCompanySource
 from .shinhancard import ShinhanCardSource
 from .shinsegae import ShinsegaeSource
 from .sk_careers import SkCareersSource
@@ -51,6 +55,15 @@ SOURCES: list[Source] = [
     CareerlinkSource(key="wooricard_open", company="우리카드 (공채)", site="https://wooricard.careerlink.kr", co_no="CO202409050397"),
     NonghyupCardSource(key="nhcard"),
     # 삼성카드는 아래 삼성커리어스에, BC카드는 KT그룹 채용에 함께 올라온다.
+
+    # --- 카드사 보완: 채용 포털 (2026-11-22 사용자 결정) --------------------------
+    # 하나카드·롯데카드는 공식 채용 사이트를 읽을 수 없고(robots.txt 금지, 이미지 공고), 신한카드는 일부 공고를 포털에만 올린다.
+    # 각 회사가 포털에 직접 올린 공고만 읽는다. 같은 공고가 겹치면 앞에 있는 소스 것을 남긴다(radar/dedupe.py).
+    SaraminCompanySource(key="saramin_hanacard", company="하나카드", csn="d3d0QVlUVzlSL0tPYjhoZ0lJd1Jvdz09"),
+    SaraminCompanySource(key="saramin_lottecard", company="롯데카드", csn="NFQ1RmFyL0dhbGI4ZjdCOXorS1ZWQT09"),
+    SaraminCompanySource(key="saramin_shinhancard", company="신한카드", csn="WXlrQkdrMFZFUlo3NUVWZWc2YUZ5Zz09"),
+    JobKoreaSearchSource(key="jobkorea_hanacard", company="하나카드", keyword="하나카드", corp_names={"하나카드"}),
+    JobKoreaSearchSource(key="jobkorea_lottecard", company="롯데카드", keyword="롯데카드", corp_names={"롯데카드"}),
 
     # --- 대기업 (AI·데이터 직무만) ----------------------------------------------
     SamsungCareersSource(key="samsung"),

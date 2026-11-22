@@ -19,6 +19,7 @@ from datetime import datetime, timedelta, timezone
 from .categories import CATEGORY_LABELS, categorize_row
 from .config import Settings, load_settings
 from .db import Database
+from .dedupe import drop_portal_duplicates
 from .fetch import Fetcher
 from .location import extract_regions
 from .logos import fetch_logos
@@ -117,6 +118,13 @@ def notify(db: Database, settings: Settings, args: argparse.Namespace, now_utc: 
             continue
         send_rows.append(row)
     db.mark_notified(closed_ids)
+
+    # 포털에서 읽은 공고가 이미 있는 공고(공식 사이트나 다른 포털)와 같으면 알리지 않는다
+    open_rows = [r for r in db.all_postings() if categorize_row(r) and is_open(r, now_utc)]
+    _, duplicates = drop_portal_duplicates(open_rows, [s.key for s in SOURCES], {s.key for s in SOURCES if s.portal})
+    duplicate_ids = {r["id"] for r in duplicates}
+    db.mark_notified([r["id"] for r in send_rows if r["id"] in duplicate_ids])
+    send_rows = [r for r in send_rows if r["id"] not in duplicate_ids]
 
     has_creds = bool(settings.telegram_token and settings.telegram_chat_id)
     ok = True
