@@ -2,11 +2,13 @@ from __future__ import annotations
 
 import html
 import json
+import re
 import sqlite3
 
 import httpx
 
 from .categories import CATEGORY_LABELS, ai_keywords, ai_roles, categorize_row
+from .config import TOKEN_RE
 
 TELEGRAM_API = "https://api.telegram.org/bot{token}/{method}"
 MAX_MESSAGE_LEN = 3800  # 텔레그램 한도 4096자보다 여유 있게
@@ -49,6 +51,14 @@ def send_telegram(token: str, chat_id: str, text: str) -> None:
 
 def check_telegram(token: str, chat_id: str) -> str | None:
     """메시지를 보내지 않고 토큰과 채팅 ID가 유효한지 확인한다. 문제가 있으면 사유를, 없으면 None 을 돌려준다."""
+    if not TOKEN_RE.fullmatch(token):
+        # 값 자체는 남기지 않고 모양만 알려 준다(공개 페이지에 표시되는 문구다)
+        return (
+            f"봇 토큰 형식이 아닙니다(등록된 값: {len(token)}자, {token.count(chr(10)) + 1}줄). "
+            "BotFather 가 준 '숫자:영문자' 한 줄만 TELEGRAM_BOT_TOKEN 에 등록하세요."
+        )
+    if not re.fullmatch(r"-?\d+", chat_id):
+        return f"채팅 ID 형식이 아닙니다(등록된 값: {len(chat_id)}자). 숫자만 TELEGRAM_CHAT_ID 에 등록하세요."
     try:
         _call(token, "getMe")
         _call(token, "getChat", chat_id=chat_id)
