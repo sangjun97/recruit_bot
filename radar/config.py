@@ -24,13 +24,19 @@ class Settings:
     purge_after_days: int         # 마감 후 이 일수가 지나면 DB에서 지운다
 
 
+def _secret(name: str) -> str | None:
+    value = (os.getenv(name) or "").strip().strip("\"'").strip()
+    return value or None
+
+
 def load_settings() -> Settings:
     return Settings(
         db_path=Path(os.getenv("RADAR_DB_PATH", ROOT / "data" / "radar.sqlite")),
         site_dir=Path(os.getenv("RADAR_SITE_DIR", ROOT / "docs")),
-        telegram_token=os.getenv("TELEGRAM_BOT_TOKEN") or None,
-        telegram_chat_id=os.getenv("TELEGRAM_CHAT_ID") or None,
-        anthropic_api_key=os.getenv("ANTHROPIC_API_KEY") or None,
+        # 붙여넣을 때 섞이기 쉬운 앞뒤 공백·줄바꿈·따옴표는 떼어 낸다(GitHub Secrets 는 입력한 그대로 보관한다)
+        telegram_token=_secret("TELEGRAM_BOT_TOKEN"),
+        telegram_chat_id=_secret("TELEGRAM_CHAT_ID"),
+        anthropic_api_key=_secret("ANTHROPIC_API_KEY"),
         llm_model=os.getenv("RADAR_LLM_MODEL", "claude-haiku-5-5"),
         # 수집기임을 숨기지 않는다. 사이트 운영자가 식별할 수 있도록 프로젝트명을 포함한다.
         user_agent=os.getenv(

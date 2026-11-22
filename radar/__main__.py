@@ -173,13 +173,23 @@ def cmd_run(args: argparse.Namespace) -> int:
                 db.finish_run(run_id, fetched, new_count, error=f"{type(e).__name__}: {e}"[:300])
             db.commit()
 
-    notify_ok = notify(db, settings, args, now_utc)
+    # 알림 단계에서 어떤 오류가 나도 사이트 생성까지는 가야 한다. 사유는 DB 에 남겨 사이트 아래에 보여준다
+    try:
+        notify_ok = notify(db, settings, args, now_utc)
+    except Exception as e:
+        traceback.print_exc()
+        notify_ok = False
+        detail = f"알림 단계 오류: {type(e).__name__}"
+        db.set_meta("telegram", json.dumps({"ok": False, "detail": detail, "at": now_utc.isoformat(timespec="seconds")}, ensure_ascii=False))
     db.commit()
 
-    purged = db.purge_closed(settings.purge_after_days)
-    if purged:
-        print(f"[purge] 마감 후 {settings.purge_after_days}일 지난 공고 {purged}건 삭제")
-    db.prune_runs()
+    try:
+        purged = db.purge_closed(settings.purge_after_days)
+        if purged:
+            print(f"[purge] 마감 후 {settings.purge_after_days}일 지난 공고 {purged}건 삭제")
+        db.prune_runs()
+    except Exception:
+        traceback.print_exc()
     db.commit()
 
     # 알림이나 일부 소스가 실패해도 사이트는 항상 다시 만든다

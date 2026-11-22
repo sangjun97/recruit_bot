@@ -23,6 +23,11 @@ def _call(token: str, method: str, **params) -> dict:
         resp = httpx.post(TELEGRAM_API.format(token=token, method=method), data=params, timeout=30)
     except httpx.HTTPError as e:
         raise TelegramError(f"텔레그램 연결 실패: {type(e).__name__}") from None
+    except Exception as e:
+        # 토큰에 공백·줄바꿈·한글 같은 글자가 섞이면 주소를 만드는 단계에서 실패한다(httpx.InvalidURL 등)
+        raise TelegramError(
+            f"요청을 만들 수 없음({type(e).__name__}) → 봇 토큰에 공백이나 다른 글자가 섞였습니다. TELEGRAM_BOT_TOKEN 값을 다시 등록하세요."
+        ) from None
     try:
         body = resp.json()
     except ValueError:
