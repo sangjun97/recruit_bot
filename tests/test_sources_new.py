@@ -14,10 +14,89 @@ def test_registry_keys_are_unique_and_have_site_urls():
     assert all(s.site_url.startswith("https://") and s.company for s in every)
 
 
-def test_pending_sources_run_only_when_named():
-    assert {s.key for s in PENDING_SOURCES} == {"hyundai", "kia", "hanwha"}
-    assert not {s.key for s in get_sources()} & {"hyundai", "kia", "hanwha"}   # 기본 실행에는 들어가지 않는다
-    assert [s.key for s in get_sources(["hanwha"])] == ["hanwha"]
+def test_get_sources_by_key():
+    assert get_sources() is SOURCES
+    assert [s.key for s in get_sources(["hanwha", "kbcard"])] == ["kbcard", "hanwha"]   # 등록 순서대로
+    # 승인 대기 소스는 기본 실행에 들어가지 않는다(지금은 비어 있다)
+    assert not {s.key for s in PENDING_SOURCES} & {s.key for s in get_sources()}
+
+
+# --- 신한카드 (화면에 그려진 표를 읽는다) -------------------------------------------
+def test_shinhancard_rows():
+    from radar.sources import shinhancard
+
+    now = datetime(2026, 11, 22, 16, 0)
+    notice = [
+        {"cells": ["정기채용", "2026년 신한카드 신입사원 채용 공고", "2026.11.09", "2026.11.16 새글", "서류심사중"],
+         "title": "2026년 신한카드 신입사원 채용 공고", "click": "goDetail('1','HPD')"},
+        {"cells": ["{{hmpBsnDtlTxt}}", "{{sbjtNm}}"], "title": "{{sbjtNm}}", "click": "goDetail('{{ancGdSeqN}}','{{hmpBlbBsnCCd}}')"},
+    ]
+    ps = shinhancard.parse_rows(notice, "shinhancard", "notice", now)
+    assert len(ps) == 1   # 값이 채워지지 않은 틀 행은 건너뛴다
+    p = ps[0]
+    assert p.external_id == "HPD-1-20261109" and p.company == "신한카드" and p.status == "접수마감"
+    assert p.url == "https://www.shinhancard.com/mob/MOBFMCOMN/MOBFMCOM02.shc?ancGdSeqN=1&hmpBlbBsnCCd=HPD"
+    assert p.start_at == datetime(2026, 11, 9) and p.end_at == datetime(2026, 11, 16, 23, 59) and p.employment_type == "정기채용"
+    career = [{"cells": ["데이터 분석 경력직", "2026.11.20 ~ 2026.12.05"], "title": "데이터 분석 경력직", "click": "goApply('A12')"}]
+    q = shinhancard.parse_rows(career, "shinhancard", "career", now)[0]
+    assert q.status == "접수중" and q.career_type == "경력" and q.url.endswith("MOBFMCOM03.shc") and q.external_id.startswith("career-")
+    assert categorize_row(q) == ["ai", "card"]
+
+
+# --- NH농협카드 --------------------------------------------------------------------
+NH_LIST = """
+<table class="table"><tbody>
+<tr><td><i class="icon_txt">일반계약직</i></td>
+ <td class="t_left"><div><a href="#" onclick="javascript:fn_jbnfDtl('91049')">NH농협은행 NH카드분사(카드가맹점사업팀) 일반계약직직원 채용</a></div></td>
+ <td>NH농협은행</td><td>본부 NH카드분사</td><td><div><span>NH농협카드</span></div></td><td class="date">2026-11-20 ~ 2026-12-01</td></tr>
+<tr><td><i>파트타임</i></td>
+ <td><a href="#" onclick="javascript:fn_jbnfDtl('91232')">NH농협은행 안동시지부 사무지원직 채용 (체크카드 업무)</a></td>
+ <td>NH농협은행</td><td>경북 안동시</td><td><span>안동시지부</span></td><td class="date">2026-11-12 ~ 2026-11-30</td></tr>
+<tr><td><i>전문직</i></td>
+ <td><a href="#" onclick="javascript:fn_jbnfDtl('90647')">NH농협은행 NH카드분사 카드마케팅2팀 전문계약직 직원 채용공고</a></td>
+ <td>NH농협은행</td><td>본부 NH카드분사</td><td><span>NH농협카드</span></td><td class="date">2026-10-26 ~ 2026-11-15</td></tr>
+</tbody></table>"""
+
+
+def test_nonghyup_keeps_only_card_division_rows():
+    from radar.sources import nonghyup
+
+    ps = nonghyup.parse_list(NH_LIST, "nhcard", datetime(2026, 11, 22, 16, 0))
+    assert [p.external_id for p in ps] == ["91049", "90647"]   # 지점의 '체크카드' 공고는 카드 부문이 아니다
+    p = ps[0]
+    assert p.company == "NH농협카드" and p.status == "접수중" and p.employment_type == "일반계약직"
+    assert p.url == "https://with.nonghyup.com/jbnf/jbnfDtl.do?jbnfSqno=91049"
+    assert p.end_at == datetime(2026, 12, 1, 23, 59) and p.end_date_only and categorize_row(p) == ["card"]
+    assert ps[1].status == "접수마감"
+    detail = "<html><body><p>- 근 무 지 : 서울시 종로구 통일로 134, NH농협타워</p><p>- 담당업무 : 가맹점 관리</p></body></html>"
+    assert nonghyup.location_text_from_detail(detail) == "- 근무지 : 서울시 종로구 통일로 134, NH농협타워"
+
+
+# --- 두산 -------------------------------------------------------------------------
+DOOSAN_LIST = """
+<ul class="list-cont">
+ <li><a href="javascript:void(0);" onclick="goDetail('1000367001', 'C_REC_MGT_04', 'C_REC_TYPE_05', '30000000');" class="list-tit">
+   <div class="company"> 두산로보틱스 <span class="badge-type">  경력  </span></div>
+   <strong>Physical AI Engineer</strong>
+   <div class="deadline"><span class="badge-day"> D-39 </span> 2026-10-08 ~ 2026-12-31 </div></a></li>
+ <li><a href="javascript:void(0);" onclick="goDetail('1000367274', 'C_REC_MGT_04', 'C_REC_TYPE_05', '30000000');" class="list-tit">
+   <div class="company"> 두산연강재단 <span class="badge-type"> 전문/생산/계약직 </span></div>
+   <strong>두산아트센터(DAC) 홍보마케팅 매니저 채용 (계약직)</strong>
+   <div class="deadline"><span class="badge-day">D-2</span> 2026-11-10 ~ 2026-11-24 </div></a></li>
+</ul>"""
+
+
+def test_doosan_parse_list_and_scope():
+    from radar.companies import DOOSAN_MAJOR, in_group
+    from radar.sources import doosan
+
+    ps = doosan.parse_list(DOOSAN_LIST, "doosan")
+    p = ps[0]
+    assert p.external_id == "1000367001" and p.company == "두산로보틱스" and p.title == "Physical AI Engineer"
+    assert p.career_type == "경력" and p.start_at == datetime(2026, 10, 8) and p.end_at == datetime(2026, 12, 31, 23, 59)
+    assert p.url == "https://career.doosan.com/dsp/sa/RecList.jsp" and categorize_row(p) == ["ai"]
+    assert ps[1].company == "두산연강재단" and ps[1].employment_type == "전문/생산/계약직" and ps[1].career_type is None
+    assert in_group("(주)두산-전자", DOOSAN_MAJOR) and in_group("두산밥캣(주)", DOOSAN_MAJOR) and not in_group("두산연강재단", DOOSAN_MAJOR)
 
 
 # --- 현대자동차·기아 ---------------------------------------------------------------

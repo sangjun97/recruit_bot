@@ -7,6 +7,8 @@ robots.txt 주의 (2026-11-22 확인):
 - 목록 데이터를 내려주는 api-recruiter.recruiter.co.kr/robots.txt 는 'User-agent: * / Disallow: /' 로 전체 금지다.
 그래서 API 호스트를 직접 호출하지 않는다. 허용된 공고 목록 페이지(/career/recruit)를 브라우저로 열고,
 페이지가 화면을 그리려고 스스로 받은 목록 응답을 읽는다. 상세도 공고 페이지를 열어 화면의 글자만 읽는다.
+사람이 브라우저로 공고 페이지를 보는 것과 같은 요청만 나간다. 2026-11-22 에 사용자가 이 방식을 승인했다
+("공고 페이지에서 가져올 수 있는 사이트면 그렇게 진행").
 """
 from __future__ import annotations
 
@@ -76,9 +78,10 @@ def _dt(s: str | None) -> datetime | None:
 class RecruiterCoKrSource(Source):
     def __init__(
         self, key: str, company: str, subdomain: str, title_companies: dict[str, str] | None = None,
-        list_path: str = "/career/recruit",
+        list_path: str = "/career/recruit", min_interval_min: int = 0,
     ):
         self.key = key
+        self.min_interval_min = min_interval_min   # 브라우저로 여는 소스라, 급하지 않은 곳은 간격을 둔다
         self.company = company
         self.subdomain = subdomain
         self.title_companies = title_companies
