@@ -8,6 +8,7 @@
 - 공고 목록 경로가 robots.txt 로 금지된 사이트는 추가하지 않는다.
 - 이용약관이 개인적인 이용까지 금지하는 회사는 제외한다. 영리 이용·제3자 제공만 금지하는 약관은 괜찮다.
 - 공고 페이지가 허용돼 있으면, 데이터가 다른(금지된) 경로에서 오더라도 페이지를 브라우저로 열어 화면을 읽는다.
+- 공고 페이지 자체가 자동 접근을 막는 회사는, 그 회사가 쓰는 채용 솔루션의 공개 API 가 있으면 그것으로 받는다.
 """
 from __future__ import annotations
 
@@ -15,6 +16,7 @@ from .base import Source
 from .careerlink import CareerlinkSource
 from .cj import CJSource
 from .doosan import DoosanSource
+from .greenhouse import GreenhouseSource
 from .greeting import GreetingSource
 from .hanwha import HanwhaSource
 from .hd_hyundai import HDHyundaiSource
@@ -67,6 +69,12 @@ SOURCES: list[Source] = [
     RecruiterCoKrSource(key="glovis", company="현대글로비스", subdomain="glovis", list_path="/career/apply", min_interval_min=120),
     NaverSource(key="naver"),
     KakaoSource(key="kakao"),
+    # 자체 사이트가 자동 접근을 막는 두 회사는 채용 솔루션(Greenhouse)의 공개 API 로 받는다. 쿠팡 게시판은 전 세계 공고라 한국 근무만 남긴다
+    GreenhouseSource(
+        key="coupang", company="쿠팡", board="coupang", site_url="https://www.coupang.jobs/kr/",
+        location_filter=r"Korea|Seoul|Pangyo", min_interval_min=120,
+    ),
+    GreenhouseSource(key="krafton", company="크래프톤", board="krafton", site_url="https://www.krafton.com/careers/", min_interval_min=60),
     KTSource(key="kt"),
     LotteSource(key="lotte"),
     HanwhaSource(key="hanwha"),

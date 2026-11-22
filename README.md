@@ -3,7 +3,7 @@
 기업 공식 채용 홈페이지를 주기적으로 확인해 **대기업의 AI·데이터 직무 공고**와 **카드사 공고**를 한 화면에 모으고,
 새 공고를 텔레그램으로 알리는 개인용 도구.
 
-- 웹 페이지: 분야 전환(전체 / AI·데이터 / 카드사), 회사·신입경력·지역 필터, 마감 임박순 정렬
+- 웹 페이지: 분야 전환(전체 / AI·데이터 / 카드사), 회사 로고와 회사 모아보기, 이번 주 마감 달력, 새 공고·마감 임박 빠른 필터, 신입경력·지역 필터
 - 알림: 관심 분야의 새 공고만 텔레그램으로 전송
 - 수집 대상과 조사 기록: [research/sources.md](research/sources.md)
 
@@ -18,6 +18,7 @@ copy .env.example .env   # 토큰 입력
 .venv\Scripts\python -m radar run --no-notify   # 알림 없이 수집과 사이트 생성만
 .venv\Scripts\python -m radar run --sources sk,lg   # 일부 소스만
 .venv\Scripts\python -m radar sources           # 등록된 소스와 최근 수집 결과
+.venv\Scripts\python -m radar logos             # 회사 로고 받기(브랜드를 추가했을 때만)
 .venv\Scripts\python -m radar notify-test       # 텔레그램 연결 확인
 .venv\Scripts\python -m pytest
 ```
@@ -65,6 +66,8 @@ copy .env.example .env   # 토큰 입력
 2. `radar/sources/` 에 수집기를 만들거나 기존 것을 재사용하고, `radar/sources/__init__.py` 의 `SOURCES` 에 등록한다.
    recruiter.co.kr 솔루션을 쓰는 기업은 `RecruiterCoKrSource(key=..., company=..., subdomain=...)` 한 줄이면 된다.
 3. 그룹 통합 사이트면 `radar/companies.py` 에 수집할 계열사 목록을 추가한다.
+4. `radar/brands.py` 에 회사명 규칙과 로고 주소를 추가하고 `python -m radar logos` 를 실행한다.
+   로고가 없으면 회사 색 바탕의 글자 타일로 표시된다.
 
 저장하는 것은 공고 제목·기간·전형 구분·원문 링크·직무명·근무지 문장뿐이다. 본문은 저장하지 않는다.
 

@@ -7,8 +7,10 @@ from pathlib import Path
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 
+from .brands import brand_for, brand_table
 from .categories import CATEGORY_LABELS, ai_keywords, ai_roles, categorize_row
 from .db import Database
+from .logos import existing_logos
 from .status import KST, OPEN_STATUSES, effective_status, kst_naive
 
 TEMPLATES = Path(__file__).parent / "templates"
@@ -38,7 +40,11 @@ def public_posting(p: dict) -> dict:
     roles: list[str] = []
     if "ai" in cats and not ai_keywords(p.get("title")):
         roles = ai_roles(p.get("job_text"))   # 여러 직무를 묶은 공고: AI 로 분류된 근거가 된 직무명
+    brand = brand_for(p["company"])
+    fallback = {} if brand.key else {"bm": brand.mono, "bc": brand.color}   # 규칙에 없는 회사는 글자 타일 정보를 직접 싣는다
     return {
+        **fallback,
+        "b": brand.key,
         "id": p["id"], "company": p["company"], "title": p["title"], "url": p["url"],
         "start_at": p["start_at"], "end_at": p["end_at"], "career_type": p["career_type"],
         "employment_type": p["employment_type"], "status": p["status"],
@@ -85,6 +91,7 @@ def build_site(db: Database, out_dir: Path, hide_after_days: int = 7, sources: l
     html = tpl.render(
         postings_json=json.dumps(public, ensure_ascii=False).replace("</", "<\\/"),
         labels_json=json.dumps(CATEGORY_LABELS, ensure_ascii=False),
+        brands_json=json.dumps(brand_table(existing_logos(out_dir)), ensure_ascii=False),
         generated_at=datetime.now(KST).strftime("%Y-%m-%d %H:%M KST"),
         count=len(public),
         sources=source_status(db, sources or []),

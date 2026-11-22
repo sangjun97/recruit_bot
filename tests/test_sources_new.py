@@ -377,3 +377,59 @@ def test_careerlink_parse_list():
     assert p.job_text == "업무지원 > 금융상품 모니터링" and categorize_row(p) == ["card"]   # 카드사는 직무와 상관없이 전부
     q = ps[1]
     assert q.status == "접수마감" and q.location_raw is None and categorize_row(q) == ["ai"]
+
+
+# --- Greenhouse (쿠팡·크래프톤) ----------------------------------------------------
+GREENHOUSE = {"jobs": [
+    {"absolute_url": "https://www.coupang.jobs/en/jobs/?gh_jid=8146344", "id": 8146344, "location": {"name": "Seoul, South Korea"},
+     "metadata": [{"name": "Job Level (All Offices)", "value": "Lv. 7-I"}, {"name": "Job Priority", "value": None}],
+     "title": "Senior Staff, Machine Learning Engineer (Coupang Eats Search)", "company_name": "Coupang",
+     "first_published": "2026-08-20T21:15:53-04:00", "language": "en", "application_deadline": None},
+    {"absolute_url": "https://www.coupang.jobs/en/jobs/?gh_jid=1", "id": 1, "location": {"name": "Taipei, Taiwan"},
+     "title": "Data Scientist", "first_published": "2026-10-01T00:00:00-04:00", "metadata": []},
+    {"absolute_url": "https://job-boards.greenhouse.io/krafton/jobs/8581502002", "id": 8581502002, "location": {"name": "Seoul"},
+     "metadata": [{"name": "Employment Type", "value": "Professional Contractor"}, {"name": "Job Category - Data", "value": "Machine Learning"},
+                  {"name": "Job Category - Tech", "value": None}],
+     "title": "[Publishing Platform Div.] Game Security Engineer (7년 이상)", "first_published": "2026-09-15T20:54:34-04:00",
+     "application_deadline": None},
+]}
+
+
+def test_greenhouse_parse_jobs():
+    import re
+
+    from radar.sources import greenhouse
+
+    korea = greenhouse.parse_jobs(GREENHOUSE, "coupang", "쿠팡", re.compile("Korea|Seoul|Pangyo", re.I))
+    assert [p.external_id for p in korea] == ["8146344", "8581502002"]   # 대만 근무 공고는 빠진다
+    p = korea[0]
+    assert p.company == "쿠팡" and p.url.endswith("gh_jid=8146344") and p.end_at is None and p.status == "접수중"
+    assert p.start_at == datetime(2026, 8, 21, 10, 15, 53)                # 미국 동부 시각 → 한국 시각
+    assert p.career_type == "경력" and p.location_raw == "Seoul, South Korea" and categorize_row(p) == ["ai"]
+    k = greenhouse.parse_jobs(GREENHOUSE, "krafton", "크래프톤")[2]
+    assert k.employment_type == "계약" and k.job_text == "Machine Learning"
+    assert categorize_row(k) == ["ai"]                                    # 제목에는 없지만 회사가 붙인 직무 분류로 잡힌다
+
+
+def test_english_city_names_resolve_to_regions():
+    from radar.location import load_region_dict
+
+    rd = load_region_dict()
+    assert [r.label() for r in rd.extract("Seoul, South Korea")] == ["서울특별시"]
+    assert [r.label() for r in rd.extract("Pangyo")] == ["경기도 성남시"]
+
+
+def test_shinhancard_unreadable_table_is_an_error_not_an_empty_list():
+    from radar.sources import shinhancard
+
+    now = datetime(2026, 11, 22, 16, 0)
+    assert shinhancard.parse_rows([{"cells": ["현재 채용중인 직무가 없습니다."], "title": "", "click": ""}], "s", "career", now) == []
+    # 제목 칸 표시가 없어도 날짜·단추가 아닌 가장 긴 칸을 제목으로 읽는다
+    rows = [{"cells": ["AI 서비스 기획", "2026.11.20 ~ 2026.12.05", "지원하기"], "title": "", "click": ""}]
+    assert shinhancard.parse_rows(rows, "s", "career", now)[0].title == "AI 서비스 기획"
+    # 값이 든 행이 있는데 제목을 하나도 못 찾으면 조용히 넘어가지 않는다
+    try:
+        shinhancard.parse_rows([{"cells": ["2026.11.20", "2026.12.05"], "title": "", "click": ""}], "s", "career", now)
+    except shinhancard.UnreadableTable:
+        return
+    raise AssertionError("해석하지 못한 표는 오류로 드러나야 한다")

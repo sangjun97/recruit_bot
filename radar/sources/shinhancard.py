@@ -32,24 +32,47 @@ GO_DETAIL_RE = re.compile(r"goDetail\('(\d+)'\s*,\s*'(\w+)'\)")
 # 화면에 그려진 표의 각 행에서 칸의 글자와 링크의 클릭 동작만 꺼낸다
 ROWS_JS = """els => els.map(tr => ({
   cells: Array.from(tr.querySelectorAll('td')).map(td => td.innerText.replace(/\\s+/g, ' ').trim()),
-  title: (tr.querySelector('td.subject a, td a') || {innerText: ''}).innerText.replace(/\\s+/g, ' ').trim(),
+  title: (tr.querySelector('td.subject a') || {innerText: ''}).innerText.replace(/\\s+/g, ' ').trim(),
   click: (tr.querySelector('td.subject a, td a') || {getAttribute: () => ''}).getAttribute('data-bind-click') || ''
 }))"""
+BUTTON_WORDS = {"지원하기", "상세보기", "바로가기", "지원", "보기", "새글"}
+
+
+class UnreadableTable(RuntimeError):
+    pass
 
 
 def _dates(text: str) -> list[datetime]:
     return [datetime(int(y), int(m), int(d)) for y, m, d in DATE_RE.findall(text)]
 
 
+def _title(row: dict) -> str:
+    """제목 칸의 글자. 제목 칸 표시(td.subject)가 없는 표는 날짜도 단추 글자도 아닌 칸 가운데 가장 긴 것을 제목으로 본다."""
+    title = (row.get("title") or "").strip()
+    if title:
+        return title
+    cells = [c for c in row.get("cells") or [] if c and c not in BUTTON_WORDS and not _dates(c)]
+    return max(cells, key=len) if cells else ""
+
+
 def parse_rows(rows: list[dict], source_key: str, board: str, now_kst: datetime) -> list[Posting]:
-    """화면에서 읽은 행을 Posting 으로 바꾼다. board 는 'notice'(채용공고) 또는 'career'(경력채용)."""
+    """화면에서 읽은 행을 Posting 으로 바꾼다. board 는 'notice'(채용공고) 또는 'career'(경력채용).
+
+    값이 든 행이 있는데 하나도 해석하지 못하면 UnreadableTable 을 낸다. 조용히 0건으로 넘어가지 않고
+    '수집 실패'로 드러나게 하기 위해서다(경력채용 표는 실제 행 모양을 보지 못하고 만들었다).
+    """
     out: list[Posting] = []
+    filled = 0
     for r in rows:
-        title = (r.get("title") or "").strip()
         click = r.get("click") or ""
-        if not title or "{{" in title or "{{" in click:
-            continue   # 아직 값이 채워지지 않은 틀(template) 행
         cells = [c for c in r.get("cells") or [] if c]
+        if "{{" in click or any("{{" in c for c in cells):
+            continue   # 아직 값이 채워지지 않은 틀(template) 행
+        if len(cells) >= 2:
+            filled += 1   # 칸이 하나뿐인 행은 '등록된 공고가 없습니다' 같은 안내 줄이다
+        title = _title(r)
+        if not title or len(cells) < 2:
+            continue
         days = _dates(" ".join(cells))
         start = days[0] if days else None
         end = days[1].replace(hour=23, minute=59) if len(days) > 1 else None
@@ -85,6 +108,9 @@ def parse_rows(rows: list[dict], source_key: str, board: str, now_kst: datetime)
                 status=status,
             )
         )
+    if filled and not out:
+        shape = sorted({len([c for c in r.get("cells") or [] if c]) for r in rows})
+        raise UnreadableTable(f"신한카드 {board} 표에 행이 {filled}개 있는데 해석하지 못함 (행별 칸 수 {shape})")
     return out
 
 

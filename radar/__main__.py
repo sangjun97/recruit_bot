@@ -4,6 +4,7 @@
   python -m radar build-site
   python -m radar notify-test
   python -m radar sources
+  python -m radar logos [--force]
   python -m radar extract "근무지: 경기도 이천시 ..."
 """
 from __future__ import annotations
@@ -20,6 +21,7 @@ from .config import Settings, load_settings
 from .db import Database
 from .fetch import Fetcher
 from .location import extract_regions
+from .logos import fetch_logos
 from .models import Posting
 from .notify import TelegramError, build_messages, check_telegram, format_posting, send_telegram
 from .site import build_site
@@ -237,6 +239,17 @@ def cmd_sources(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_logos(args: argparse.Namespace) -> int:
+    """회사 로고를 받아 사이트 폴더(docs/logos)에 둔다. 새 브랜드를 추가했을 때만 실행하면 된다."""
+    settings = load_settings()
+    with Fetcher(settings.user_agent, 0.5) as f:
+        saved, failed = fetch_logos(f, settings.site_dir, force=args.force)
+    print(f"받은 로고 {len(saved)}개: {', '.join(saved) or '-'}")
+    if failed:
+        print(f"받지 못한 로고 {len(failed)}개(글자 타일로 표시됨): {', '.join(failed)}")
+    return 0
+
+
 def cmd_extract(args: argparse.Namespace) -> int:
     settings = load_settings()
     regions = extract_regions(args.text, settings)
@@ -259,6 +272,9 @@ def main(argv: list[str] | None = None) -> int:
     sub.add_parser("build-site").set_defaults(func=cmd_build_site)
     sub.add_parser("notify-test").set_defaults(func=cmd_notify_test)
     sub.add_parser("sources", help="등록된 소스와 최근 수집 결과").set_defaults(func=cmd_sources)
+    lg = sub.add_parser("logos", help="회사 로고를 받아 docs/logos 에 저장")
+    lg.add_argument("--force", action="store_true", help="이미 있는 로고도 다시 받는다")
+    lg.set_defaults(func=cmd_logos)
     e = sub.add_parser("extract")
     e.add_argument("text")
     e.set_defaults(func=cmd_extract)
