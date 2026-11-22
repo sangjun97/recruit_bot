@@ -4,95 +4,248 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>채용 레이더</title>
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
-  :root { --bg:#f7f7f8; --card:#fff; --text:#1a1a1a; --muted:#6b7280; --line:#e5e7eb; --accent:#2563eb; --open:#15803d; --closed:#9ca3af; --ai:#7c3aed; --cardco:#c2410c; --warn:#b45309; }
-  @media (prefers-color-scheme: dark) { :root { --bg:#111214; --card:#1b1d21; --text:#e8e8ea; --muted:#9aa0a6; --line:#2a2d33; --accent:#60a5fa; --open:#4ade80; --closed:#6b7280; --ai:#c4b5fd; --cardco:#fdba74; --warn:#fbbf24; } }
+  :root {
+    --bg:#f4f5f7; --surface:#ffffff; --text:#191f28; --sub:#4e5968; --muted:#8b95a1; --line:#e5e8eb; --hover:#f2f4f6;
+    --accent:#3182f6; --accent-weak:#e8f3ff; --on-accent:#ffffff;
+    --ai:#6d28d9; --ai-bg:#f1eafe; --cardc:#c2410c; --cardc-bg:#ffedd5;
+    --urgent:#e11d48; --urgent-bg:#ffe4e9; --soon:#b45309; --soon-bg:#fef3c7; --calm:#4e5968; --calm-bg:#f2f4f6;
+    --new:#0f766e; --new-bg:#ccfbf1; --warn:#b45309;
+    --shadow: 0 1px 2px rgba(0,0,0,.04), 0 4px 14px rgba(0,0,0,.04);
+  }
+  @media (prefers-color-scheme: dark) { :root {
+    --bg:#0f1115; --surface:#171a21; --text:#e9ecf1; --sub:#b0b8c1; --muted:#7d8794; --line:#272c37; --hover:#1e222b;
+    --accent:#5b9dff; --accent-weak:#16294a; --on-accent:#0b1220;
+    --ai:#c4b5fd; --ai-bg:#2a2050; --cardc:#fdba74; --cardc-bg:#3a2413;
+    --urgent:#fb7185; --urgent-bg:#40141f; --soon:#fbbf24; --soon-bg:#3a2a0a; --calm:#b0b8c1; --calm-bg:#20242d;
+    --new:#5eead4; --new-bg:#0f2f2c; --warn:#fbbf24;
+    --shadow: 0 1px 2px rgba(0,0,0,.3);
+  } }
   * { box-sizing: border-box; }
-  body { margin:0; background:var(--bg); color:var(--text); font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; }
-  header, .tabs, .filters, main, footer { max-width: 920px; margin: 0 auto; padding-left: 16px; padding-right: 16px; }
-  header { padding-top: 20px; padding-bottom: 8px; }
-  h1 { margin:0 0 4px; font-size: 22px; }
-  .sub { color: var(--muted); font-size: 13px; }
-  .tabs { display:flex; gap:8px; padding-top: 8px; padding-bottom: 4px; }
-  .tab { flex: 1 1 0; font: inherit; font-size: 15px; font-weight: 600; padding: 10px 8px; border:1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--muted); cursor: pointer; }
-  .tab .n { font-weight: 400; font-size: 13px; margin-left: 4px; }
-  .tab[aria-pressed=true] { color: #fff; background: var(--accent); border-color: var(--accent); }
-  @media (prefers-color-scheme: dark) { .tab[aria-pressed=true] { color: #0b1220; } }
-  .filters { display:flex; flex-wrap:wrap; gap:8px; padding-top: 8px; padding-bottom: 12px; }
-  select, input[type=search] { font: inherit; padding: 8px 10px; border:1px solid var(--line); border-radius: 8px; background: var(--card); color: var(--text); max-width: 100%; }
-  input[type=search] { flex: 1 1 160px; min-width: 140px; }
-  label.chk { display:flex; align-items:center; gap:6px; font-size:14px; padding: 8px 4px; }
-  main { padding-bottom: 40px; }
-  .count { color: var(--muted); font-size: 13px; margin: 4px 0 10px; }
-  .card { display:block; background: var(--card); border:1px solid var(--line); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; text-decoration:none; color: inherit; }
-  .card:hover { border-color: var(--accent); }
-  .card.is-closed { opacity: .6; }
-  .row1 { display:flex; justify-content:space-between; gap:12px; align-items:center; }
-  .who { display:flex; flex-wrap:wrap; gap:6px; align-items:center; min-width:0; }
-  .company { font-size: 13px; color: var(--muted); }
-  .title { font-size: 16px; font-weight: 600; margin: 4px 0 6px; overflow-wrap: anywhere; }
-  .roles { font-size: 13px; margin: 0 0 6px; color: var(--ai); overflow-wrap: anywhere; }
-  .meta { font-size: 13px; color: var(--muted); display:flex; flex-wrap:wrap; gap: 6px 14px; }
-  .badge { font-size: 12px; padding: 2px 8px; border-radius: 999px; border:1px solid var(--line); white-space:nowrap; }
-  .badge.open { color: var(--open); border-color: var(--open); }
-  .badge.closed { color: var(--closed); }
-  .chip { font-size: 11px; font-weight: 600; padding: 1px 7px; border-radius: 6px; border:1px solid currentColor; white-space:nowrap; }
-  .chip.c-ai { color: var(--ai); }
-  .chip.c-card { color: var(--cardco); }
-  .chip.c-new { color: var(--accent); }
-  .region { color: var(--accent); font-weight: 500; }
-  .empty { color: var(--muted); padding: 40px 0; text-align:center; }
-  footer { padding-bottom: 30px; color: var(--muted); font-size: 12px; }
+  html { scroll-behavior: smooth; }
+  body { margin:0; background:var(--bg); color:var(--text); -webkit-font-smoothing: antialiased;
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif; }
+  button, input, select { font: inherit; color: inherit; }
+  button { cursor: pointer; }
+  .wrap { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+  /* 머리말 */
+  header.top { padding: 28px 0 14px; }
+  .brandline { display:flex; align-items:center; gap:8px; color: var(--sub); font-size: 14px; font-weight: 600; }
+  .brandline svg { color: var(--accent); }
+  .brandline .updated { margin-left:auto; font-weight: 400; font-size: 12.5px; color: var(--muted); }
+  h1.lead { margin: 14px 0 6px; font-size: 30px; line-height: 1.25; letter-spacing: -0.02em; font-weight: 750; }
+  h1.lead b { color: var(--accent); font-weight: 800; }
+  p.sublead { margin: 0; color: var(--sub); font-size: 15px; }
+
+  /* 따라오는 줄: 분야 탭 + 검색 */
+  .sticky { position: sticky; top: 0; z-index: 20; background: color-mix(in srgb, var(--bg) 88%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid transparent; }
+  .sticky.stuck { border-bottom-color: var(--line); }
+  .sticky .wrap { display:flex; flex-wrap: wrap; gap: 10px; align-items:center; padding-top: 10px; padding-bottom: 10px; }
+  .tabs { display:inline-flex; padding: 4px; gap: 2px; background: var(--surface); border:1px solid var(--line); border-radius: 12px; }
+  .tab { border:0; background: transparent; padding: 8px 16px; border-radius: 9px; font-size: 15px; font-weight: 650; color: var(--sub); white-space: nowrap; }
+  .tab .n { margin-left: 6px; font-size: 13px; font-weight: 500; color: var(--muted); }
+  .tab:hover { background: var(--hover); }
+  .tab[aria-pressed=true] { background: var(--accent); color: var(--on-accent); }
+  .tab[aria-pressed=true] .n { color: inherit; opacity: .85; }
+  .search { flex: 1 1 240px; display:flex; align-items:center; gap: 8px; background: var(--surface); border:1px solid var(--line); border-radius: 12px; padding: 0 12px; height: 44px; }
+  .search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-weak); }
+  .search svg { color: var(--muted); flex: none; }
+  .search input { flex:1; min-width: 0; border:0; outline:0; background: transparent; height: 100%; font-size: 15px; }
+  .search input::placeholder { color: var(--muted); }
+
+  /* 구획 제목 */
+  .sec { margin-top: 18px; }
+  .sec h2 { margin: 0 0 8px; font-size: 13px; font-weight: 650; color: var(--sub); letter-spacing: 0; display:flex; align-items:center; gap:6px; }
+  .sec h2 small { font-weight: 400; color: var(--muted); font-size: 12px; }
+
+  /* 이번 주 마감 */
+  .week { display:grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 8px; }
+  .day { border:1px solid var(--line); background: var(--surface); border-radius: 12px; padding: 10px 6px 9px; text-align:center; display:flex; flex-direction:column; gap:2px; align-items:center; }
+  .day .dow { font-size: 12px; color: var(--muted); font-weight: 600; }
+  .day .date { font-size: 13px; color: var(--sub); }
+  .day .cnt { margin-top: 4px; font-size: 18px; font-weight: 750; line-height: 1; color: var(--text); }
+  .day .cnt small { font-size: 12px; font-weight: 500; color: var(--muted); margin-left: 1px; }
+  .day.zero { cursor: default; }
+  .day.zero .cnt { color: var(--line); }
+  .day.today .dow { color: var(--urgent); }
+  .day:not(.zero):hover { border-color: var(--accent); }
+  .day[aria-pressed=true] { border-color: var(--accent); background: var(--accent-weak); }
+  .day[aria-pressed=true] .cnt { color: var(--accent); }
+
+  /* 회사 모아보기 */
+  .brands { display:flex; flex-wrap: wrap; gap: 8px; }
+  .bchip { display:inline-flex; align-items:center; gap: 8px; border:1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 5px 12px 5px 5px; font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; }
+  .bchip .n { color: var(--muted); font-weight: 500; font-size: 13px; }
+  .bchip:hover { border-color: var(--accent); }
+  .bchip[aria-pressed=true] { border-color: var(--accent); background: var(--accent-weak); color: var(--accent); }
+  .bchip[aria-pressed=true] .n { color: inherit; }
+
+  /* 로고 */
+  .logo { flex: none; display:inline-flex; align-items:center; justify-content:center; overflow:hidden; background:#fff; border:1px solid var(--line); border-radius: 10px; width: 40px; height: 40px; }
+  .logo img { width: 72%; height: 72%; object-fit: contain; display:block; }
+  .logo.mono { border: 1px solid color-mix(in srgb, var(--text) 14%, transparent); color:#fff; font-weight: 750; font-size: 13px; letter-spacing: -0.02em; }
+  .logo.mono.dark { color:#191f28; }
+  .bchip .logo { width: 28px; height: 28px; border-radius: 50%; }
+  .bchip .logo.mono { font-size: 10.5px; }
+
+  /* 필터 줄 */
+  .toolbar { display:flex; flex-wrap:wrap; gap: 8px; align-items:center; margin-top: 18px; }
+  .pill { border:1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 14px; font-size: 14px; font-weight: 600; color: var(--sub); display:inline-flex; align-items:center; gap:6px; white-space: nowrap; }
+  .pill .n { color: var(--muted); font-weight: 500; }
+  .pill:hover { border-color: var(--accent); }
+  .pill[aria-pressed=true] { background: var(--text); border-color: var(--text); color: var(--bg); }
+  .pill[aria-pressed=true] .n { color: inherit; opacity: .8; }
+  .pill .dot { width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  .pill.fresh .dot { color: var(--new); } .pill.soon .dot { color: var(--urgent); }
+  select { border:1px solid var(--line); background: var(--surface); border-radius: 999px; padding: 8px 30px 8px 14px; font-size: 14px; font-weight: 600; color: var(--sub); appearance: none; -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2.5 4.5 6 8l3.5-3.5' fill='none' stroke='%238b95a1' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position: right 12px center; }
+  select:hover { border-color: var(--accent); }
+  .spacer { flex: 1 1 auto; }
+  .seg { display:inline-flex; padding: 3px; gap: 2px; background: var(--calm-bg); border-radius: 10px; }
+  .seg button { border:0; background: transparent; padding: 6px 12px; border-radius: 8px; font-size: 13.5px; font-weight: 600; color: var(--muted); }
+  .seg button[aria-pressed=true] { background: var(--surface); color: var(--text); box-shadow: var(--shadow); }
+  label.switch { display:inline-flex; align-items:center; gap: 8px; font-size: 14px; font-weight: 600; color: var(--sub); cursor: pointer; user-select: none; }
+  label.switch input { position:absolute; opacity:0; width:0; height:0; }
+  label.switch .track { width: 36px; height: 22px; border-radius: 999px; background: var(--line); position: relative; transition: background .15s; }
+  label.switch .track::after { content:""; position:absolute; top: 3px; left: 3px; width: 16px; height: 16px; border-radius: 50%; background: #fff; transition: transform .15s; box-shadow: 0 1px 2px rgba(0,0,0,.25); }
+  label.switch input:checked + .track { background: var(--accent); }
+  label.switch input:checked + .track::after { transform: translateX(14px); }
+  label.switch input:focus-visible + .track { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  /* 결과 줄 */
+  .resultbar { display:flex; align-items:center; gap: 10px; margin: 18px 0 10px; font-size: 14px; color: var(--sub); }
+  .resultbar b { color: var(--text); font-size: 16px; }
+  .reset { border:0; background: transparent; color: var(--accent); font-weight: 600; font-size: 14px; padding: 4px 6px; border-radius: 6px; }
+  .reset:hover { background: var(--accent-weak); }
+  .reset[hidden] { display:none; }
+
+  /* 카드 격자 */
+  .grid { display:grid; grid-template-columns: repeat(auto-fill, minmax(330px, 1fr)); gap: 12px; padding-bottom: 48px; }
+  .card { display:flex; flex-direction:column; gap: 10px; background: var(--surface); border:1px solid var(--line); border-radius: 16px; padding: 16px; text-decoration:none; color: inherit; box-shadow: var(--shadow); transition: transform .12s ease, border-color .12s ease, box-shadow .12s ease; min-width: 0; }
+  .card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .card.is-closed { opacity: .55; box-shadow: none; }
+  .chead { display:flex; align-items:center; gap: 10px; min-width: 0; }
+  .who { min-width: 0; flex: 1 1 auto; display:flex; flex-direction:column; gap: 3px; }
+  .company { font-size: 14px; font-weight: 650; color: var(--text); overflow:hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .chips { display:flex; flex-wrap: wrap; gap: 4px; }
+  .chip { font-size: 11px; font-weight: 700; padding: 2px 7px; border-radius: 6px; white-space:nowrap; }
+  .chip.c-ai { color: var(--ai); background: var(--ai-bg); }
+  .chip.c-card { color: var(--cardc); background: var(--cardc-bg); }
+  .chip.c-new { color: var(--new); background: var(--new-bg); }
+  .dday { flex: none; align-self: flex-start; font-size: 12.5px; font-weight: 750; padding: 5px 10px; border-radius: 999px; white-space: nowrap; color: var(--calm); background: var(--calm-bg); }
+  .dday.urgent { color: var(--urgent); background: var(--urgent-bg); }
+  .dday.soon { color: var(--soon); background: var(--soon-bg); }
+  .dday.always { color: var(--muted); background: transparent; border: 1px solid var(--line); font-weight: 600; }
+  .title { margin: 0; font-size: 16.5px; line-height: 1.42; font-weight: 650; letter-spacing: -0.01em; overflow-wrap: anywhere;
+    display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .roles { margin: -4px 0 0; font-size: 13px; line-height: 1.45; color: var(--ai); overflow-wrap: anywhere;
+    display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .cfoot { margin-top: auto; display:flex; flex-wrap: wrap; align-items:center; gap: 6px; padding-top: 2px; font-size: 13px; color: var(--sub); }
+  .tag { display:inline-flex; align-items:center; gap: 4px; background: var(--calm-bg); border-radius: 6px; padding: 3px 8px; white-space: nowrap; max-width: 100%; overflow: hidden; text-overflow: ellipsis; }
+  .tag svg { flex:none; color: var(--muted); }
+  .tag.loc { color: var(--text); font-weight: 600; }
+  .due { margin-left: auto; color: var(--muted); font-size: 12.5px; white-space: nowrap; }
+  .empty { grid-column: 1 / -1; text-align:center; padding: 56px 16px; color: var(--muted); background: var(--surface); border:1px dashed var(--line); border-radius: 16px; }
+  .empty b { display:block; color: var(--text); font-size: 16px; margin-bottom: 6px; }
+
+  footer { border-top: 1px solid var(--line); padding: 20px 0 40px; color: var(--muted); font-size: 12.5px; line-height: 1.6; }
   footer p { margin: 0 0 8px; }
   .warn { color: var(--warn); }
-  details summary { cursor: pointer; }
-  table.src { border-collapse: collapse; margin-top: 8px; width: 100%; }
-  table.src td, table.src th { text-align:left; padding: 4px 8px 4px 0; border-bottom: 1px solid var(--line); font-weight: 400; }
-  table.src th { color: var(--text); }
+  details summary { cursor: pointer; color: var(--sub); font-weight: 600; }
+  table.src { border-collapse: collapse; margin-top: 8px; width: 100%; max-width: 720px; }
+  table.src td, table.src th { text-align:left; padding: 5px 10px 5px 0; border-bottom: 1px solid var(--line); font-weight: 400; }
+  table.src th { color: var(--text); font-weight: 600; }
   table.src a { color: inherit; }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  @media (max-width: 720px) {
+    .wrap { padding: 0 14px; }
+    h1.lead { font-size: 24px; }
+    .sticky .wrap { gap: 8px; padding-top: 8px; padding-bottom: 8px; }
+    .tabs { width: 100%; } .tab { flex: 1 1 0; padding: 7px 6px; }
+    .search { height: 40px; flex-basis: 100%; }
+    .brands { flex-wrap: nowrap; overflow-x: auto; padding-bottom: 6px; margin: 0 -14px; padding-left: 14px; padding-right: 14px; scrollbar-width: none; }
+    .brands::-webkit-scrollbar { display:none; }
+    .week { gap: 5px; } .day { padding: 8px 2px; border-radius: 10px; } .day .cnt { font-size: 16px; } .day .date { font-size: 12px; }
+    .grid { grid-template-columns: 1fr; }
+    .spacer { flex-basis: 100%; height: 0; }
+  }
+  @media (prefers-reduced-motion: reduce) { .card { transition: none; } html { scroll-behavior: auto; } }
 </style>
 </head>
 <body>
-<header>
-  <h1>채용 레이더</h1>
-  <div class="sub">대기업 AI·데이터 직무와 카드사 공고를 기업 공식 채용 홈페이지에서 수집 · 마지막 갱신 2026-11-22 17:36 KST</div>
-</header>
-<div class="tabs" role="group" aria-label="분야">
-  <button class="tab" type="button" data-cat="" aria-pressed="true">전체<span class="n"></span></button>
-  <button class="tab" type="button" data-cat="ai" aria-pressed="false">AI·데이터<span class="n"></span></button>
-  <button class="tab" type="button" data-cat="card" aria-pressed="false">카드사<span class="n"></span></button>
+<header class="top"><div class="wrap">
+  <div class="brandline">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4.5"/><path d="M12 12 18.5 6.5"/><circle cx="12" cy="12" r="1" fill="currentColor"/></svg>
+    <span>채용 레이더</span>
+    <span class="updated">갱신 2026-11-22 18:23 KST</span>
+  </div>
+  <h1 class="lead">지금 <b id="heroCount">0</b>개 공고가 열려 있어요</h1>
+  <p class="sublead">대기업 AI·데이터 직무와 카드사 공고를 각 회사 공식 채용 홈페이지에서 모았습니다.</p>
+</div></header>
+
+<div class="sticky" id="sticky"><div class="wrap">
+  <div class="tabs" role="group" aria-label="분야">
+    <button class="tab" type="button" data-cat="" aria-pressed="true">전체<span class="n"></span></button>
+    <button class="tab" type="button" data-cat="ai" aria-pressed="false">AI·데이터<span class="n"></span></button>
+    <button class="tab" type="button" data-cat="card" aria-pressed="false">카드사<span class="n"></span></button>
+  </div>
+  <label class="search">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+    <input id="q" type="search" placeholder="회사, 제목, 직무로 검색" aria-label="검색">
+  </label>
+</div></div>
+
+<div class="wrap">
+  <section class="sec" aria-label="이번 주 마감">
+    <h2>이번 주 마감 <small>날짜를 누르면 그날 마감하는 공고만 봅니다</small></h2>
+    <div class="week" id="week"></div>
+  </section>
+
+  <section class="sec" aria-label="회사 모아보기">
+    <h2>회사 모아보기</h2>
+    <div class="brands" id="brands"></div>
+  </section>
+
+  <div class="toolbar">
+    <button class="pill fresh" type="button" id="fresh" aria-pressed="false"><span class="dot"></span>새 공고<span class="n"></span></button>
+    <button class="pill soon" type="button" id="soon" aria-pressed="false"><span class="dot"></span>마감 임박<span class="n"></span></button>
+    <select id="career" aria-label="신입·경력"><option value="">신입·경력 전체</option></select>
+    <select id="sido" aria-label="지역"><option value="">지역 전체</option></select>
+    <span class="spacer"></span>
+    <div class="seg" role="group" aria-label="정렬">
+      <button type="button" data-sort="new" aria-pressed="true">최근 게시순</button>
+      <button type="button" data-sort="end" aria-pressed="false">마감 임박순</button>
+    </div>
+    <label class="switch"><input id="openOnly" type="checkbox" checked><span class="track"></span>접수중만</label>
+  </div>
+
+  <div class="resultbar"><span><b id="count">0</b>건</span><button class="reset" type="button" id="reset" hidden>필터 초기화</button></div>
+  <main class="grid" id="list"></main>
 </div>
-<div class="filters">
-  <input id="q" type="search" placeholder="제목·회사·직무 검색" aria-label="검색">
-  <select id="company" aria-label="회사"><option value="">회사 전체</option></select>
-  <select id="career" aria-label="신입·경력"><option value="">신입·경력 전체</option></select>
-  <select id="sido" aria-label="지역"><option value="">지역 전체</option></select>
-  <select id="sort" aria-label="정렬"><option value="new">최근 게시순</option><option value="end">마감 임박순</option></select>
-  <label class="chk"><input id="openOnly" type="checkbox" checked> 접수중만</label>
-</div>
-<main>
-  <div class="count" id="count"></div>
-  <div id="list"></div>
-</main>
-<footer>
-  <p>공고 상세와 지원은 각 기업의 공식 채용 페이지에서 진행하세요. AI·데이터 분류와 근무지는 공고 제목·직무명에서 자동으로 판단한 값이라 틀리거나 빠질 수 있습니다.</p>
+
+<footer><div class="wrap">
+  <p>공고 상세와 지원은 각 기업의 공식 채용 페이지에서 진행하세요. AI·데이터 분류와 근무지는 공고 제목·직무명에서 자동으로 판단한 값이라 틀리거나 빠질 수 있습니다. 회사 로고는 각 회사의 상표이며 어느 회사 공고인지 알아보기 위한 용도로만 썼습니다.</p>
   
   
   <details>
-    <summary>수집 대상 26곳</summary>
+    <summary>수집 대상 28곳</summary>
     <table class="src">
       <tr><th>채용 사이트</th><th>게시 공고</th><th>최근 수집 성공</th></tr>
       
       <tr>
         <td><a href="https://careerhyundai.recruiter.co.kr/career/recruit" target="_blank" rel="noopener">현대카드/현대커머셜</a></td>
         <td>15건</td>
-        <td>11-22 17:35</td>
+        <td>11-22 18:22</td>
       </tr>
       
       <tr>
         <td><a href="https://kbcard.careerlink.kr/jobs" target="_blank" rel="noopener">KB국민카드</a></td>
         <td>3건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:22</td>
       </tr>
       
       <tr>
@@ -104,61 +257,61 @@
       <tr>
         <td><a href="https://wooricard.career.greetinghr.com/ko/open-positions" target="_blank" rel="noopener">우리카드</a></td>
         <td>1건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:22</td>
       </tr>
       
       <tr>
         <td><a href="https://wooricard.careerlink.kr/jobs" target="_blank" rel="noopener">우리카드 (공채)</a></td>
         <td>0건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:22</td>
       </tr>
       
       <tr>
         <td><a href="https://with.nonghyup.com/jbnf/jbnfLst.do" target="_blank" rel="noopener">NH농협카드 (범농협 채용)</a></td>
         <td>10건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:22</td>
       </tr>
       
       <tr>
         <td><a href="https://www.samsungcareers.com/hr/" target="_blank" rel="noopener">삼성 (삼성커리어스)</a></td>
         <td>10건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://careers.lg.com/apply" target="_blank" rel="noopener">LG (LG Careers)</a></td>
         <td>38건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://www.skcareers.com/Recruit" target="_blank" rel="noopener">SK (SK Careers)</a></td>
         <td>89건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://talent.hyundai.com/apply/applyList.hc" target="_blank" rel="noopener">현대자동차</a></td>
         <td>99건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://career.kia.com/apply/applyList.kc" target="_blank" rel="noopener">기아</a></td>
         <td>8건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://career.hyundai-autoever.com/ko/apply" target="_blank" rel="noopener">현대오토에버</a></td>
         <td>42건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://career.hyundaicapital.com/jobs" target="_blank" rel="noopener">현대캐피탈</a></td>
         <td>6건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
@@ -170,43 +323,55 @@
       <tr>
         <td><a href="https://recruit.navercorp.com/rcrt/list.do" target="_blank" rel="noopener">네이버 (NAVER Careers)</a></td>
         <td>35건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://careers.kakao.com/jobs" target="_blank" rel="noopener">카카오 (카카오 영입)</a></td>
         <td>74건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
+      </tr>
+      
+      <tr>
+        <td><a href="https://www.coupang.jobs/kr/" target="_blank" rel="noopener">쿠팡</a></td>
+        <td>360건</td>
+        <td>11-22 18:23</td>
+      </tr>
+      
+      <tr>
+        <td><a href="https://www.krafton.com/careers/" target="_blank" rel="noopener">크래프톤</a></td>
+        <td>65건</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://recruit.kt.com/careers/" target="_blank" rel="noopener">KT (KT그룹 채용)</a></td>
         <td>15건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://recruit.lotte.co.kr/apply/announcement" target="_blank" rel="noopener">롯데 (롯데그룹 채용)</a></td>
         <td>8건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://www.hanwhain.com/portal/apply/recruit" target="_blank" rel="noopener">한화 (한화인)</a></td>
         <td>94건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://recruit.cj.net/recruit/ko/recruit/recruit/list.fo" target="_blank" rel="noopener">CJ (CJ그룹 채용)</a></td>
         <td>146건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://job.shinsegae.com/rcrut" target="_blank" rel="noopener">신세계 (신세계그룹 채용)</a></td>
         <td>53건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
@@ -218,13 +383,13 @@
       <tr>
         <td><a href="https://career.doosan.com/dsp/sa/RecList.jsp" target="_blank" rel="noopener">두산 (두산그룹 채용)</a></td>
         <td>32건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
         <td><a href="https://kbstar.careerlink.kr/jobs" target="_blank" rel="noopener">KB국민은행</a></td>
         <td>7건</td>
-        <td>11-22 17:36</td>
+        <td>11-22 18:23</td>
       </tr>
       
       <tr>
@@ -243,62 +408,94 @@
     <p style="margin-top:8px">게시 공고 수는 사이트에 올라온 전체 공고 수입니다. 이 가운데 카드사 공고 전체와 AI·데이터 직무 공고만 위 목록에 보입니다.</p>
   </details>
   
-</footer>
-<script id="data" type="application/json">[{"id": "doosan:1000363504", "company": "두산로보틱스", "title": "Physical AI Engineer", "url": "https://career.doosan.com/dsp/sa/RecList.jsp", "start_at": "2026-10-08T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-10-08T00:00"}, {"id": "hanwha:17596", "company": "한화시스템/ICT", "title": "[한화시스템/ICT] AI 인재Pool 등록", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=17596", "start_at": "2025-12-24T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규/계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-12-24T00:00"}, {"id": "hanwha:19932", "company": "한화오션(주)", "title": "[인재풀 등록] NES사업부, AX사업부, 제품전략기술원, 제조총괄, 안전총괄 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=19932", "start_at": "2026-01-01T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-01-01T00:00"}, {"id": "hanwha:20230", "company": "한화생명", "title": "[한화생명] AX지원팀 'AI 엔지니어(모델링)' 경력채용 (대리급)", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20230", "start_at": "2026-11-20T15:00", "end_at": "2026-12-03T15:00", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "영등포구"}], "posted": "2026-11-20T15:00"}, {"id": "hanwha:20213", "company": "한화생명", "title": "[한화생명] 데이터전략팀 'Data Scientist' 경력채용 (대리~과장)", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20213", "start_at": "2026-11-18T15:00", "end_at": "2026-12-02T15:00", "career_type": "경력", "employment_type": "정규/계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "영등포구"}], "posted": "2026-11-18T15:00"}, {"id": "hanwha:20196", "company": "한화시스템/ICT", "title": "VLM Project Manager 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20196", "start_at": "2026-11-17T15:00", "end_at": "2026-11-29T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "중구"}, {"sido": "경상남도", "sigungu": "창원시"}, {"sido": "경상남도", "sigungu": "거제시"}], "posted": "2026-11-17T15:00"}, {"id": "hanwha:20197", "company": "한화시스템/ICT", "title": "AI Agent Project Manager 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20197", "start_at": "2026-11-17T15:00", "end_at": "2026-11-29T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "중구"}, {"sido": "경상남도", "sigungu": "창원시"}, {"sido": "경상남도", "sigungu": "거제시"}], "posted": "2026-11-17T15:00"}, {"id": "hanwha:20201", "company": "한화시스템/ICT", "title": "AX 전략기획 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20201", "start_at": "2026-11-17T15:00", "end_at": "2026-11-29T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-17T15:00"}, {"id": "hanwha:20077", "company": "한화시스템/방산", "title": "한화시스템 MRO사업부 IPS Engineer / Data Analyst 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20077", "start_at": "2026-10-29T00:00", "end_at": "2026-11-22T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-29T00:00"}, {"id": "hyundai:2026-N2-209", "company": "현대자동차", "title": "NPU 딥러닝 컴파일러 개발", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=209", "start_at": "2026-06-15T09:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-06-15T09:00"}, {"id": "hyundai:2026-N2-98", "company": "현대자동차", "title": "[AVP] 모빌리티 서비스 Data Engineer", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=98", "start_at": "2026-03-20T09:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-03-20T09:00"}, {"id": "hyundai:2026-N2-99", "company": "현대자동차", "title": "[AVP] 모빌리티 플랫폼 Infra Engineer", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=99", "start_at": "2026-03-20T09:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": ["Data Engineering"], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-03-20T09:00"}, {"id": "hyundai:2026-N2-413", "company": "현대자동차", "title": "[ICT] Backend Developer - MLOps 개발", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=413", "start_at": "2026-11-16T09:00", "end_at": "2026-11-30T17:05", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}], "posted": "2026-11-16T09:00"}, {"id": "hyundai:2026-N2-414", "company": "현대자동차", "title": "[ICT] IT Project Manager - AX 과제 기획/관리/평가", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=414", "start_at": "2026-11-16T09:00", "end_at": "2026-11-30T17:05", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}], "posted": "2026-11-16T09:00"}, {"id": "hyundai:2026-N2-322", "company": "현대자동차", "title": "[로보틱스랩] Perceptive AI 개발", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=322", "start_at": "2026-09-01T09:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "의왕시"}], "posted": "2026-09-01T09:00"}, {"id": "hyundai:2026-N2-400", "company": "현대자동차", "title": "[제조AI] 제조 비전 AI 모델 운영 및 최적화", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=400", "start_at": "2026-11-16T09:00", "end_at": "2026-11-30T17:05", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "의왕시"}], "posted": "2026-11-16T09:00"}, {"id": "hyundai:2026-N2-395", "company": "현대자동차", "title": "로보틱스 및 AI 기술 전략", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=395", "start_at": "2026-11-16T09:00", "end_at": "2026-11-30T17:05", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}], "posted": "2026-11-16T09:00"}, {"id": "hyundaicapital:RC20260828033736", "company": "현대캐피탈", "title": "AI Agent Ops Engineer", "url": "https://career.hyundaicapital.com/jobs/RC20260828033736", "start_at": null, "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-11-22T16:25"}, {"id": "hd:271656", "company": "HD한국조선해양", "title": "[HD한국조선해양] 2026년 AIX 경력 채용", "url": "https://recruit.hd.com/kr/mainLayout/applyDetail/271656", "start_at": "2026-11-06T00:00", "end_at": "2026-11-30T14:00", "career_type": "경력", "employment_type": "일반채용", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["AI - 자율 작업 인지 기술 개발", "AI - 자율작업/주행 E2E 학습  알고리즘 개발", "AI - 자율작업/주행가상 환경 개발", "AI - 자율작업/주행 시스템 설계 및 개발환경 구축", "AI - 자율작업/주행 개발 Senior PM", "AI - 자율작업/주행 현장 및 장비 운용"], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-06T00:00"}, {"id": "shinsegae:5255", "company": "신세계아이앤씨", "title": "[신세계아이앤씨] AI서비스개발 직무 인재모집(채용 시 마감)", "url": "https://job.shinsegae.com/rcrut/detail/5255", "start_at": "2026-08-10T00:00", "end_at": "2026-12-31T16:46", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-10T00:00"}, {"id": "cj:J20260915040092", "company": "CJ ENM", "title": "[CJ ENM] Mnet Plus Data Analyst", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20260915040092", "start_at": "2026-09-15T18:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-15T18:00"}, {"id": "cj:J20261120040642", "company": "CJ ENM", "title": "[CJ ENM] 애널리틱스 엔지니어_경력채용", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20261120040642", "start_at": "2026-11-20T11:25", "end_at": "2026-12-06T23:00", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["데이터분석"], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-20T11:25"}, {"id": "cj:J20250604030537", "company": "CJ대한통운", "title": "[TES물류기술연구소] 'AI모델개발자' 경력사원 모집", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20250604030537", "start_at": "2025-06-04T09:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-06-04T09:00"}, {"id": "cj:J20250625031039", "company": "CJ대한통운", "title": "[TES물류기술연구소] 'Data Scientist' 경력사원 모집", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20250625031039", "start_at": "2026-05-15T09:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-05-15T09:00"}, {"id": "cj:J20260629039137", "company": "CJ대한통운", "title": "[TES물류기술연구소] '데이터 엔지니어' 경력사원 모집", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20260629039137", "start_at": "2026-06-29T00:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-06-29T00:00"}, {"id": "cj:J20260813039265", "company": "CJ대한통운", "title": "[TES물류기술연구소] 로봇 S/W Engineer (Physical AI 개발) 경력사원 모집", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20260813039265", "start_at": "2026-08-13T09:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-13T09:00"}, {"id": "cj:J20241121027178", "company": "CJ올리브네트웍스", "title": "[경력] AX Tech Master", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20241121027178", "start_at": "2026-10-01T00:00", "end_at": "2026-12-07T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-01T00:00"}, {"id": "kakao:P-14469", "company": "카카오", "title": "AI Platform 추론 최적화 Engineer(경력)", "url": "https://careers.kakao.com/jobs/P-14469", "start_at": "2026-06-11T09:34", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-06-11T09:34"}, {"id": "kakao:P-14519", "company": "카카오", "title": "AI Research Engineer (Search & Agent) (경력)", "url": "https://careers.kakao.com/jobs/P-14519", "start_at": "2026-08-05T09:46", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-08-05T09:46"}, {"id": "kakao:P-14276", "company": "카카오", "title": "Data Analytics Engineer (경력)", "url": "https://careers.kakao.com/jobs/P-14276", "start_at": "2025-10-27T18:44", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2025-10-27T18:44"}, {"id": "kakao:P-14324", "company": "카카오", "title": "Data Scientist (경력)", "url": "https://careers.kakao.com/jobs/P-14324", "start_at": "2025-12-04T19:11", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2025-12-04T19:11"}, {"id": "kakao:P-14558", "company": "카카오", "title": "LLM Research Engineer (Post-training) (신입/경력)", "url": "https://careers.kakao.com/jobs/P-14558", "start_at": "2026-09-30T13:05", "end_at": null, "career_type": "신입/경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-09-30T13:05"}, {"id": "kakao:P-14559", "company": "카카오", "title": "LLM Research Engineer (Pre-training) (신입/경력)", "url": "https://careers.kakao.com/jobs/P-14559", "start_at": "2026-09-30T13:09", "end_at": null, "career_type": "신입/경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-09-30T13:09"}, {"id": "kakao:P-14402", "company": "카카오", "title": "Multimodal LLM Research Engineer (경력)", "url": "https://careers.kakao.com/jobs/P-14402", "start_at": "2026-03-16T18:37", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-03-16T18:37"}, {"id": "kakao:P-14581", "company": "카카오", "title": "생성형 모델 Research Engineer (Post-training) (신입/경력)", "url": "https://careers.kakao.com/jobs/P-14581", "start_at": "2026-11-04T13:29", "end_at": null, "career_type": "신입/경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-04T13:29"}, {"id": "kakao:S-4306", "company": "카카오모빌리티", "title": "[공동체] 카카오모빌리티 머신러닝 research scientist (R&D)", "url": "https://careers.kakao.com/jobs/S-4306", "start_at": "2025-02-26T19:14", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2025-02-26T19:14"}, {"id": "kakao:S-4725", "company": "카카오모빌리티", "title": "[공동체] 카카오모빌리티 자율주행 AI Perception 엔지니어 (R&D)", "url": "https://careers.kakao.com/jobs/S-4725", "start_at": "2026-07-01T18:50", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-07-01T18:50"}, {"id": "kakao:S-4680", "company": "카카오모빌리티", "title": "[공동체] 카카오모빌리티 자율주행 AI 엔지니어 (R&D)", "url": "https://careers.kakao.com/jobs/S-4680", "start_at": "2026-03-11T15:33", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-03-11T15:33"}, {"id": "kakao:S-4788", "company": "카카오스타일", "title": "[공동체] 카카오스타일 MLOps 엔지니어", "url": "https://careers.kakao.com/jobs/S-4788", "start_at": "2026-11-18T14:31", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-11-18T14:31"}, {"id": "kakao:S-4706", "company": "카카오페이", "title": "[공동체] 카카오페이 데이터 엔지니어 - 데이터 플랫폼", "url": "https://careers.kakao.com/jobs/S-4706", "start_at": "2026-05-06T18:49", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-05-06T18:49"}, {"id": "kakao:S-4750", "company": "카카오페이", "title": "[공동체] 카카오페이 서버 개발자 - 데이터 플랫폼", "url": "https://careers.kakao.com/jobs/S-4750", "start_at": "2026-09-03T16:28", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-09-03T16:28"}, {"id": "kakao:S-4699", "company": "카카오헬스케어", "title": "[공동체] 카카오헬스케어 AI Native EHR 개발", "url": "https://careers.kakao.com/jobs/S-4699", "start_at": "2026-03-31T18:46", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-03-31T18:46"}, {"id": "kakao:S-4689", "company": "카카오헬스케어", "title": "[공동체] 카카오헬스케어 Data Engineer(Healthcare)", "url": "https://careers.kakao.com/jobs/S-4689", "start_at": "2026-03-18T18:48", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-03-18T18:48"}, {"id": "naver:30005739", "company": "네이버웹툰", "title": "[네이버웹툰] AI Engineer (체험형 인턴)", "url": "https://recruit.navercorp.com/rcrt/view.do?annoId=30005739&lang=ko", "start_at": "2026-11-20T10:00", "end_at": "2026-12-13T23:59", "career_type": "신입", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-20T10:00"}, {"id": "naver:30005685", "company": "네이버클라우드", "title": "[NAVER Cloud/한국에이아이컴퓨팅센터] 클라우드·AI 세일즈 담당자 (경력)", "url": "https://recruit.navercorp.com/rcrt/view.do?annoId=30005685&lang=ko", "start_at": "2026-11-09T10:00", "end_at": "2026-11-25T17:00", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-09T10:00"}, {"id": "autoever:245510", "company": "현대오토에버", "title": "[HMG AI 팩토리] 분야별 전문가 집중 채용 (~11/30)", "url": "https://career.hyundai-autoever.com/ko/o/245510", "start_at": "2026-11-19T09:21", "end_at": "2026-11-30T23:59", "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-11-19T09:21"}, {"id": "autoever:229073", "company": "현대오토에버", "title": "[SDx] Data Engineer - Robot Data Engineer", "url": "https://career.hyundai-autoever.com/ko/o/229073", "start_at": "2026-11-04T10:29", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:29"}, {"id": "autoever:210269", "company": "현대오토에버", "title": "[Tech] AI Engineer - AI Agent 엔지니어", "url": "https://career.hyundai-autoever.com/ko/o/210269", "start_at": "2026-11-04T10:26", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:26"}, {"id": "autoever:210274", "company": "현대오토에버", "title": "[Tech] AI Engineer - AI Researcher", "url": "https://career.hyundai-autoever.com/ko/o/210274", "start_at": "2026-11-04T10:26", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:26"}, {"id": "autoever:210263", "company": "현대오토에버", "title": "[Tech] AI Engineer - LLM 엔지니어", "url": "https://career.hyundai-autoever.com/ko/o/210263", "start_at": "2026-11-04T10:26", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:26"}, {"id": "autoever:229348", "company": "현대오토에버", "title": "[Tech] AI Engineer - Physical AI Engineer", "url": "https://career.hyundai-autoever.com/ko/o/229348", "start_at": "2026-11-04T13:33", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T13:33"}, {"id": "autoever:233221", "company": "현대오토에버", "title": "[Tech] RX 기술 리더(팀장)", "url": "https://career.hyundai-autoever.com/ko/o/233221", "start_at": "2026-11-04T10:29", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["Data/AI(인공지능)"], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:29"}, {"id": "autoever:243073", "company": "현대오토에버", "title": "[Tech] Solution Architect - AI플랫폼 연구개발 아키텍트", "url": "https://career.hyundai-autoever.com/ko/o/243073", "start_at": "2026-11-03T14:08", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-03T14:08"}, {"id": "sk:R262457", "company": "SK주식회사(AX)", "title": "제조 AI · Data 분야 AI Studio(AI/ML DevOps 플랫폼) 개발/운영 PL 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262457", "start_at": "2026-11-10T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-11-10T00:00"}, {"id": "sk:R262455", "company": "SK주식회사(AX)", "title": "반도체 Utility AX 시스템 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262455", "start_at": "2026-11-10T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-11-10T00:00"}, {"id": "sk:R262339", "company": "티맵모빌리티", "title": "Data Platform Engineer", "url": "https://www.skcareers.com/Recruit/Detail/R262339", "start_at": "2026-10-26T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-26T00:00"}, {"id": "sk:R262196", "company": "티맵모빌리티", "title": "AI Agent Engineer", "url": "https://www.skcareers.com/Recruit/Detail/R262196", "start_at": "2026-10-12T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-12T00:00"}, {"id": "sk:R262169", "company": "티맵모빌리티", "title": "Data Analytics (리더)", "url": "https://www.skcareers.com/Recruit/Detail/R262169", "start_at": "2026-10-07T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-07T00:00"}, {"id": "sk:R262015", "company": "티맵모빌리티", "title": "LLMOps Engineer", "url": "https://www.skcareers.com/Recruit/Detail/R262015", "start_at": "2026-09-17T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-17T00:00"}, {"id": "sk:R261800", "company": "티맵모빌리티", "title": "AI Agent TPM (Technical Project Manager)", "url": "https://www.skcareers.com/Recruit/Detail/R261800", "start_at": "2026-08-18T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-18T00:00"}, {"id": "sk:R262527", "company": "SK주식회사(AX)", "title": "증권사 IT 및 AX 시스템 전문가 영입 (계약직)", "url": "https://www.skcareers.com/Recruit/Detail/R262527", "start_at": "2026-11-17T00:00", "end_at": "2026-12-29T23:59", "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": null}, {"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-17T00:00"}, {"id": "sk:R262526", "company": "SK주식회사(AX)", "title": "반도체 Cloud/AI Platform 개발/운영 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262526", "start_at": "2026-11-16T00:00", "end_at": "2026-12-29T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-11-16T00:00"}, {"id": "sk:R262417", "company": "SK주식회사(AX)", "title": "AI 기반 차세대 통신 BSS/OSS(NOVA) 응용개발 분야 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262417", "start_at": "2026-11-04T00:00", "end_at": "2026-12-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "중구"}], "posted": "2026-11-04T00:00"}, {"id": "sk:R262415", "company": "SK주식회사(AX)", "title": "제조 AI · Data 분야 [Data Engineer / DevOps(k8s)] 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262415", "start_at": "2026-11-04T00:00", "end_at": "2026-12-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-04T00:00"}, {"id": "sk:R262392", "company": "SK주식회사(AX)", "title": "SAP BW/BDC/BI/Data Analytics 분야 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262392", "start_at": "2026-10-30T00:00", "end_at": "2026-12-18T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-10-30T00:00"}, {"id": "sk:R262283", "company": "SK주식회사(AX)", "title": "AX/AI 프로젝트 PM/PL 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262283", "start_at": "2026-10-21T00:00", "end_at": "2026-12-01T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-21T00:00"}, {"id": "sk:R262275", "company": "SK주식회사(AX)", "title": "AX/AI 프로젝트 PM/PL 영입 (계약직)", "url": "https://www.skcareers.com/Recruit/Detail/R262275", "start_at": "2026-10-21T00:00", "end_at": "2026-12-01T23:59", "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-21T00:00"}, {"id": "sk:R262529", "company": "SK바이오사이언스", "title": "AX Engineering (AI Application 개발) 경력사원 채용", "url": "https://www.skcareers.com/Recruit/Detail/R262529", "start_at": "2026-11-17T00:00", "end_at": "2026-11-30T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": null}, {"sido": "인천광역시", "sigungu": null}], "posted": "2026-11-17T00:00"}, {"id": "sk:R262266", "company": "SK주식회사(AX)", "title": "반도체 Cloud/AI Platform 개발/운영 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262266", "start_at": "2026-10-16T00:00", "end_at": "2026-11-30T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-10-16T00:00"}, {"id": "sk:R262252", "company": "SK주식회사(AX)", "title": "전사 통합 Image 솔루션 제공 플랫폼 Application PL 및 ML 엔지니어 모집 (계약직)", "url": "https://www.skcareers.com/Recruit/Detail/R262252", "start_at": "2026-10-15T00:00", "end_at": "2026-11-27T23:59", "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "용인시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-10-15T00:00"}, {"id": "sk:R262476", "company": "SK바이오팜", "title": "AI Platform Operation 구성원 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262476", "start_at": "2026-11-11T00:00", "end_at": "2026-11-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-11T00:00"}, {"id": "sk:R262456", "company": "SK온", "title": "SK온 AI 인프라 구축 및 운영 담당자 채용", "url": "https://www.skcareers.com/Recruit/Detail/R262456", "start_at": "2026-11-11T00:00", "end_at": "2026-11-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-11T00:00"}, {"id": "sk:R262159", "company": "SK주식회사(AX)", "title": "제조 에너지/화학 계열 AI/DT 및 시스템 담당자 영입 (울산 근무)", "url": "https://www.skcareers.com/Recruit/Detail/R262159", "start_at": "2026-10-06T00:00", "end_at": "2026-11-24T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "울산광역시", "sigungu": null}], "posted": "2026-10-06T00:00"}, {"id": "wooricard:244674", "company": "우리카드", "title": "정보보안 경력직 채용", "url": "https://wooricard.career.greetinghr.com/ko/o/244674", "start_at": "2026-11-13T13:38", "end_at": "2026-11-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-11-13T13:38"}, {"id": "kbcard:RC20261103038715", "company": "KB국민카드", "title": "계약직원 채용 (단기채권 SV)", "url": "https://kbcard.careerlink.kr/jobs/RC20261103038715", "start_at": "2026-11-03T13:24", "end_at": "2026-11-22T23:59", "career_type": "경력", "employment_type": "계약직", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-11-03T13:24"}, {"id": "kbcard:RC20261103038723", "company": "KB국민카드", "title": "계약직원 채용 (단기채권 상담원 교육 SV)", "url": "https://kbcard.careerlink.kr/jobs/RC20261103038723", "start_at": "2026-11-03T13:29", "end_at": "2026-11-22T23:59", "career_type": "경력", "employment_type": "계약직", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-11-03T13:29"}, {"id": "kbcard:RC20261103038735", "company": "KB국민카드", "title": "보훈제한채용(상품판매 모니터링 등 업무지원)", "url": "https://kbcard.careerlink.kr/jobs/RC20261103038735", "start_at": "2026-11-03T13:45", "end_at": "2026-11-25T23:59", "career_type": "무관", "employment_type": "계약직", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-11-03T13:45"}, {"id": "lg:1002421", "company": "LG이노텍", "title": "[광학솔루션] R&D분야(개발기획/AI ISP/광기구설계) 경력사원 모집", "url": "https://careers.lg.com/apply/detail?id=1002421", "start_at": "2026-11-17T13:00", "end_at": "2026-11-30T23:00", "career_type": "경력", "employment_type": "수시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "안산시"}, {"sido": "경기도", "sigungu": "파주시"}], "posted": "2026-11-17T13:00"}, {"id": "hyundaicard:134649", "company": "현대카드", "title": "[현대카드] 대손 충당금 관리", "url": "https://careerhyundai.recruiter.co.kr/career/jobs/134649", "start_at": "2026-11-16T19:00", "end_at": "2026-11-30T23:59", "career_type": "경력", "employment_type": "경력", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "영등포구"}], "posted": "2026-11-16T19:00"}, {"id": "samsung:23523", "company": "삼성디스플레이", "title": "경력사원 채용(연구개발, 제조기술, 상품기획/영업, 품질, 건설/환경안전)", "url": "https://www.samsungcareers.com/hr/?no=23523", "start_at": "2026-11-16T08:00", "end_at": "2026-12-07T17:00", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": ["SW/AI/Automation"], "regions": [{"sido": "경기도", "sigungu": "용인시"}, {"sido": "충청남도", "sigungu": "아산시"}], "posted": "2026-11-16T08:00"}, {"id": "samsung:23492", "company": "삼성화재", "title": "경력사원 채용(AI, IT, 경영기획, 경영지원, 상품/계리, 언더라이팅, 손해사정, 방재연구)", "url": "https://www.samsungcareers.com/hr/?no=23492", "start_at": "2026-11-13T10:00", "end_at": "2026-11-23T17:00", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}], "posted": "2026-11-13T10:00"}, {"id": "samsung:23440", "company": "삼성전자 DX부문", "title": "경력사원 채용(Visual Display, Digital Appliances, 생산기술연구소, Global CS센터, Global EHS실, 한국총괄)", "url": "https://www.samsungcareers.com/hr/?no=23440", "start_at": "2026-11-11T09:00", "end_at": "2026-11-23T17:00", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": ["[VD] 광고 서비스 데이터 엔지니어", "[G-CS] 양산 공정·설비 검증 및 데이터 분석"], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}, {"sido": "경기도", "sigungu": "수원시"}, {"sido": "경기도", "sigungu": "광주시"}], "posted": "2026-11-11T09:00"}, {"id": "lg:1001907", "company": "LG유플러스", "title": "[정보보안센터] 클라우드 보안 구축 및 운영 경력채용", "url": "https://careers.lg.com/apply/detail?id=1001907", "start_at": "2026-11-10T09:00", "end_at": "2026-11-22T23:00", "career_type": "경력", "employment_type": "수시", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["클라우드 및 AI 보안 아키텍쳐 설계"], "regions": [{"sido": "서울특별시", "sigungu": "강서구"}], "posted": "2026-11-10T09:00"}, {"id": "samsung:23409", "company": "삼성물산 건설부문", "title": "경력사원 채용(AI서비스개발, 정보기술, 데이터)", "url": "https://www.samsungcareers.com/hr/?no=23409", "start_at": "2026-11-04T00:00", "end_at": "2026-11-16T23:59", "career_type": "경력", "employment_type": null, "status": "접수마감", "open": false, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강동구"}], "posted": "2026-11-04T00:00"}, {"id": "lg:1000409", "company": "LG CNS", "title": "[LG CNS] Global 해외 석박사 AX 인재 상시 등록 공고", "url": "https://careers.lg.com/apply/detail?id=1000409", "start_at": "2025-05-07T06:00", "end_at": "2026-12-31T23:00", "career_type": "신입/경력", "employment_type": "상시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-05-07T06:00"}, {"id": "lg:1000834", "company": "LG CNS", "title": "[인턴] LG CNS Global Internship(외국인) 상시 인재 등록 공고", "url": "https://careers.lg.com/apply/detail?id=1000834", "start_at": "2025-09-01T06:00", "end_at": "2026-12-31T18:00", "career_type": "인턴", "employment_type": "상시", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["AI"], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-09-01T06:00"}, {"id": "lg:1001432", "company": "LG CNS", "title": "[LG CNS] 어플리케이션 아키텍트/AI 아키텍트 모집(경력)", "url": "https://careers.lg.com/apply/detail?id=1001432", "start_at": "2026-03-11T09:00", "end_at": "2026-11-30T23:00", "career_type": "경력", "employment_type": "수시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강서구"}], "posted": "2026-03-11T09:00"}, {"id": "lg:1002176", "company": "LG에너지솔루션", "title": "[CDO] AI/빅데이터 분야 상시 모집", "url": "https://careers.lg.com/apply/detail?id=1002176", "start_at": "2026-09-07T09:00", "end_at": "2027-03-31T18:00", "career_type": "신입/경력", "employment_type": "상시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}, {"sido": "충청북도", "sigungu": "청주시"}], "posted": "2026-09-07T09:00"}, {"id": "lg:1001889", "company": "LG유플러스", "title": "[정보보안센터] AI보안 담당자 경력채용", "url": "https://careers.lg.com/apply/detail?id=1001889", "start_at": "2026-11-10T09:00", "end_at": "2026-11-22T23:00", "career_type": "경력", "employment_type": "수시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강서구"}], "posted": "2026-11-10T09:00"}]</script>
+</div></footer>
+
+<script id="data" type="application/json">[{"b": "krafton", "id": "krafton:8929574002", "company": "크래프톤", "title": "[AI Frontier Div.] AI Business Development (10년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8929574002", "start_at": "2026-11-06T15:11", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-06T15:11"}, {"b": "krafton", "id": "krafton:8883195002", "company": "크래프톤", "title": "[AI Frontier Div.] AI Inference Platform & Operations Engineer (5년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8883195002", "start_at": "2026-10-21T20:53", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-21T20:53"}, {"b": "krafton", "id": "krafton:8835112002", "company": "크래프톤", "title": "[AI Frontier Div.] AI Inference Platform & Operations Lead (10년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8835112002", "start_at": "2026-11-02T18:54", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-02T18:54"}, {"b": "krafton", "id": "krafton:8524447002", "company": "크래프톤", "title": "[AI Frontier Div.] AI Native Full Stack Engineer (10년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8524447002", "start_at": "2026-05-07T11:11", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-05-07T11:11"}, {"b": "krafton", "id": "krafton:8815857002", "company": "크래프톤", "title": "[AI Frontier Div.] AI Native Full Stack Engineer (5년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8815857002", "start_at": "2026-09-17T10:25", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-17T10:25"}, {"b": "krafton", "id": "krafton:8931514002", "company": "크래프톤", "title": "[AI Frontier Div.] Head of AI Product Dev Chapter Dept. (10년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8931514002", "start_at": "2026-11-06T18:33", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-06T18:33"}, {"b": "krafton", "id": "krafton:8465450002", "company": "크래프톤", "title": "[AI Frontier Div.] Product Owner (7년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8465450002", "start_at": "2026-04-20T11:33", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-04-20T11:33"}, {"b": "krafton", "id": "krafton:8908312002", "company": "크래프톤", "title": "[AI Frontier Div.] Research Assistant (일본어 능통자, 인턴)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8908312002", "start_at": "2026-10-31T00:53", "end_at": null, "career_type": "인턴", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-31T00:53"}, {"b": "krafton", "id": "krafton:8636227002", "company": "크래프톤", "title": "[AI Research Div.] '26, '27년 전문연구요원 신규편입 (경력무관)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8636227002", "start_at": "2026-07-16T11:18", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-07-16T11:18"}, {"b": "krafton", "id": "krafton:8125444002", "company": "크래프톤", "title": "[AI Research Div.] AI Companion Team Internship (2년 이상 / 인턴)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8125444002", "start_at": "2025-08-20T10:34", "end_at": null, "career_type": "인턴", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-08-20T10:34"}, {"b": "krafton", "id": "krafton:8883198002", "company": "크래프톤", "title": "[AI Research Div.] AI Infra Engineer Lead (8년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8883198002", "start_at": "2026-10-21T20:50", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-21T20:50"}, {"b": "krafton", "id": "krafton:8835156002", "company": "크래프톤", "title": "[AI Research Div.] AI Operation Manager (경력무관 / 인턴)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8835156002", "start_at": "2026-09-23T14:16", "end_at": null, "career_type": "인턴", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-23T14:16"}, {"b": "krafton", "id": "krafton:8632414002", "company": "크래프톤", "title": "[AI Research Div.] Foundation Model Evaluation Engineer - 독자 AI 파운데이션 모델 (2년 이상 / 인턴)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8632414002", "start_at": "2026-07-14T17:04", "end_at": null, "career_type": "인턴", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-07-14T17:04"}, {"b": "krafton", "id": "krafton:8339620002", "company": "크래프톤", "title": "[AI Research Div.] Postdoctoral Researcher - LLMs (계약직)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8339620002", "start_at": "2025-12-15T13:12", "end_at": null, "career_type": null, "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-12-15T13:12"}, {"b": "krafton", "id": "krafton:8360146002", "company": "크래프톤", "title": "[AI Research Div.] Research Engineer - Foundation Models (2년 이상 / 계약직)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8360146002", "start_at": "2026-01-06T17:54", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-01-06T17:54"}, {"b": "krafton", "id": "krafton:8417764002", "company": "크래프톤", "title": "[AI Research Div.] Research Engineer - Vision Language Action Game Agent (2년 이상 / 인턴)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8417764002", "start_at": "2026-02-11T11:35", "end_at": null, "career_type": "인턴", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-02-11T11:35"}, {"b": "krafton", "id": "krafton:8434572002", "company": "크래프톤", "title": "[AI Research Div.] Research Scientist - Foundation Models (2년 이상 / 계약직)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8434572002", "start_at": "2026-03-05T17:06", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-03-05T17:06"}, {"b": "krafton", "id": "krafton:8836426002", "company": "크래프톤", "title": "[AI Research Div.] Research Scientist - Specialized Model (2년 이상 / 인턴)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8836426002", "start_at": "2026-09-23T21:28", "end_at": null, "career_type": "인턴", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-23T21:28"}, {"b": "krafton", "id": "krafton:8401231002", "company": "크래프톤", "title": "[AI Research Div.] Research Scientist Intern - 독자 AI 파운데이션 모델 (2년 이상 / 인턴)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8401231002", "start_at": "2026-02-03T10:16", "end_at": null, "career_type": "인턴", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-02-03T10:16"}, {"b": "krafton", "id": "krafton:8908220002", "company": "크래프톤", "title": "[AI Transformation Dept.] AX Product builder (PO Lead) (10년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8908220002", "start_at": "2026-11-09T15:53", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-09T15:53"}, {"b": "krafton", "id": "krafton:8581491002", "company": "크래프톤", "title": "[AI Transformation Dept.] Sr. AI DevOps Engineer (7년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8581491002", "start_at": "2026-07-08T13:56", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-07-08T13:56"}, {"b": "krafton", "id": "krafton:8514459002", "company": "크래프톤", "title": "[AI Transformation Dept.] Sr. AI Transformation Specialist (FDE) (7년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8514459002", "start_at": "2026-06-26T15:01", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-06-26T15:01"}, {"b": "krafton", "id": "krafton:8819357002", "company": "크래프톤", "title": "[AI Transformation Dept.] Sr. Data Analytics Specialist (7년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8819357002", "start_at": "2026-10-12T10:42", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-12T10:42"}, {"b": "krafton", "id": "krafton:8581502002", "company": "크래프톤", "title": "[Publishing Platform Div.] Game Security Data Scientist (7년 이상)", "url": "https://job-boards.greenhouse.io/krafton/jobs/8581502002", "start_at": "2026-09-16T09:54", "end_at": null, "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-16T09:54"}, {"b": "coupang", "id": "coupang:8239021", "company": "쿠팡", "title": "Senior Staff Data Scientist", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8239021", "start_at": "2026-10-12T16:07", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-12T16:07"}, {"b": "coupang", "id": "coupang:8048155", "company": "쿠팡", "title": "Senior Staff Data Scientist", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8048155", "start_at": "2026-08-12T10:30", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-12T10:30"}, {"b": "coupang", "id": "coupang:8146344", "company": "쿠팡", "title": "Senior Staff, Machine Learning Engineer (Coupang Eats Search)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8146344", "start_at": "2026-08-21T10:15", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-21T10:15"}, {"b": "coupang", "id": "coupang:8354788", "company": "쿠팡", "title": "Senior~Staff, Data Analyst (Growth Marketing / Contract: 1년 6개월)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8354788", "start_at": "2026-11-09T11:24", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-09T11:24"}, {"b": "coupang", "id": "coupang:8130040", "company": "쿠팡", "title": "Sr. Staff, Machine Learning Engineer (Search & Discovery)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8130040", "start_at": "2026-08-18T12:38", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-18T12:38"}, {"b": "coupang", "id": "coupang:8302736", "company": "쿠팡", "title": "Staff Backend Engineer (Fintech Data Platform)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8302736", "start_at": "2026-11-12T17:35", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-12T17:35"}, {"b": "coupang", "id": "coupang:8273424", "company": "쿠팡", "title": "Staff Data Scientist - Fraud Strategy", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8273424", "start_at": "2026-11-03T09:17", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-03T09:17"}, {"b": "coupang", "id": "coupang:8352094", "company": "쿠팡", "title": "Staff Security Engineer(AI-Driven Vulnerability Discovery & Remediation)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8352094", "start_at": "2026-11-05T11:22", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-05T11:22"}, {"b": "coupang", "id": "coupang:8382373", "company": "쿠팡", "title": "Staff Software Engineer, AI Platform (GenAI & Agent Infrastructure)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8382373", "start_at": "2026-11-12T17:43", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-12T17:43"}, {"b": "coupang", "id": "coupang:8354858", "company": "쿠팡", "title": "Staff, Data Analyst (Analytics Team) - Coupang Play", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8354858", "start_at": "2026-11-05T15:30", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-05T15:30"}, {"b": "coupang", "id": "coupang:8130045", "company": "쿠팡", "title": "Staff, Machine Learning Engineer (Search & Discovery)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8130045", "start_at": "2026-10-27T17:57", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-27T17:57"}, {"b": "coupang", "id": "coupang:7927865", "company": "쿠팡", "title": "Staff, Machine Learning Engineer - Coupang Play", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=7927865", "start_at": "2026-05-19T23:06", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-05-19T23:06"}, {"b": "coupang", "id": "coupang:8188042", "company": "쿠팡", "title": "Staff, Security Data Platform Engineer", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8188042", "start_at": "2026-09-09T21:52", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-09T21:52"}, {"b": "coupang", "id": "coupang:8012236", "company": "쿠팡", "title": "Staff~Sr. Staff, Machine Learning Engineer (Ads Engineering)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8012236", "start_at": "2026-06-17T13:38", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-06-17T13:38"}, {"b": "coupang", "id": "coupang:8381980", "company": "쿠팡", "title": "[CFN] Staff Data Scientist (Credit Strategy)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8381980", "start_at": "2026-11-12T10:13", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-12T10:13"}, {"b": "coupang", "id": "coupang:8354675", "company": "쿠팡", "title": "[CPLB] 오퍼레이션 프로세스 자동화(AX) 담당자", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8354675", "start_at": "2026-11-06T16:28", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-06T16:28"}, {"b": "coupang", "id": "coupang:8260755", "company": "쿠팡", "title": "[Coupang Pay] Staff Data Analyst", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8260755", "start_at": "2026-10-12T10:17", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-12T10:17"}, {"b": "coupang", "id": "coupang:8364665", "company": "쿠팡", "title": "[쿠팡] CS 리드타임 데이터 분석 담당자", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8364665", "start_at": "2026-11-11T08:34", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-11T08:34"}, {"b": "coupang", "id": "coupang:8245169", "company": "쿠팡", "title": "[쿠팡] Principal, HR Advanced Analytics Analyst", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8245169", "start_at": "2026-10-09T10:55", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-09T10:55"}, {"b": "coupang", "id": "coupang:8275940", "company": "쿠팡", "title": "[쿠팡] Senior Program Manager (카탈로그 품질 및 데이터 분석)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8275940", "start_at": "2026-10-14T09:24", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-14T09:24"}, {"b": "coupang", "id": "coupang:8258122", "company": "쿠팡", "title": "[쿠팡] 로켓배송 상품 판매 콘텐츠 에디터 (AI 콘텐츠 제작 경험 우대, 상품 포트폴리오 필수)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8258122", "start_at": "2026-10-12T00:08", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-12T00:08"}, {"b": "coupang", "id": "coupang:8248619", "company": "쿠팡", "title": "[쿠팡] 리테일 운영기획 매니저 (프로세스 개선 및 AI 활용)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8248619", "start_at": "2026-10-12T00:49", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-12T00:49"}, {"b": "coupang", "id": "coupang:8242506", "company": "쿠팡", "title": "[쿠팡] 비즈니스 분석가 (Business Analyst_Compliance Analytics)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8242506", "start_at": "2026-10-01T17:14", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-01T17:14"}, {"b": "coupang", "id": "coupang:8175787", "company": "쿠팡", "title": "[쿠팡] 사업전략 및 비즈니스 분석 담당자 (Eats Business Strategy & Analytics)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8175787", "start_at": "2026-09-03T13:30", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-03T13:30"}, {"b": "coupang", "id": "coupang:8332845", "company": "쿠팡", "title": "[쿠팡] 이츠 카탈로그 데이터 분석 및 운영개선 담당자 (SQL/자동화) - 주니어", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8332845", "start_at": "2026-10-30T18:40", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-30T18:40"}, {"b": "coupang", "id": "coupang:8352169", "company": "쿠팡", "title": "[쿠팡] 판매자 데이터 분석 담당자", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8352169", "start_at": "2026-11-05T14:59", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-05T14:59"}, {"b": "coupang", "id": "coupang:8382219", "company": "쿠팡", "title": "[쿠팡] 패션 이커머스 Senior, Program Manager (사업운영·데이터분석_계약직)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8382219", "start_at": "2026-11-12T15:19", "end_at": null, "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-12T15:19"}, {"b": "coupang", "id": "coupang:8316768", "company": "쿠팡", "title": "[쿠팡로지스틱스서비스] 물류 데이터 분석 담당자 (신입 가능)", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8316768", "start_at": "2026-10-23T13:05", "end_at": null, "career_type": "신입/경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-23T13:05"}, {"b": "coupang", "id": "coupang:8312121", "company": "쿠팡", "title": "[쿠팡페이] IT & AI Compliance 담당자", "url": "https://www.coupang.jobs/en/jobs/?gh_jid=8312121", "start_at": "2026-10-22T19:02", "end_at": null, "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-22T19:02"}, {"b": "doosan", "id": "doosan:1000363504", "company": "두산로보틱스", "title": "Physical AI Engineer", "url": "https://career.doosan.com/dsp/sa/RecList.jsp", "start_at": "2026-10-08T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-10-08T00:00"}, {"b": "hanwha", "id": "hanwha:17596", "company": "한화시스템/ICT", "title": "[한화시스템/ICT] AI 인재Pool 등록", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=17596", "start_at": "2025-12-24T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규/계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-12-24T00:00"}, {"b": "hanwha", "id": "hanwha:19932", "company": "한화오션(주)", "title": "[인재풀 등록] NES사업부, AX사업부, 제품전략기술원, 제조총괄, 안전총괄 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=19932", "start_at": "2026-01-01T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-01-01T00:00"}, {"b": "hanwha", "id": "hanwha:20230", "company": "한화생명", "title": "[한화생명] AX지원팀 'AI 엔지니어(모델링)' 경력채용 (대리급)", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20230", "start_at": "2026-11-20T15:00", "end_at": "2026-12-03T15:00", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "영등포구"}], "posted": "2026-11-20T15:00"}, {"b": "hanwha", "id": "hanwha:20213", "company": "한화생명", "title": "[한화생명] 데이터전략팀 'Data Scientist' 경력채용 (대리~과장)", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20213", "start_at": "2026-11-18T15:00", "end_at": "2026-12-02T15:00", "career_type": "경력", "employment_type": "정규/계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "영등포구"}], "posted": "2026-11-18T15:00"}, {"b": "hanwha", "id": "hanwha:20196", "company": "한화시스템/ICT", "title": "VLM Project Manager 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20196", "start_at": "2026-11-17T15:00", "end_at": "2026-11-29T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "중구"}, {"sido": "경상남도", "sigungu": "창원시"}, {"sido": "경상남도", "sigungu": "거제시"}], "posted": "2026-11-17T15:00"}, {"b": "hanwha", "id": "hanwha:20197", "company": "한화시스템/ICT", "title": "AI Agent Project Manager 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20197", "start_at": "2026-11-17T15:00", "end_at": "2026-11-29T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "중구"}, {"sido": "경상남도", "sigungu": "창원시"}, {"sido": "경상남도", "sigungu": "거제시"}], "posted": "2026-11-17T15:00"}, {"b": "hanwha", "id": "hanwha:20201", "company": "한화시스템/ICT", "title": "AX 전략기획 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20201", "start_at": "2026-11-17T15:00", "end_at": "2026-11-29T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-17T15:00"}, {"b": "hanwha", "id": "hanwha:20077", "company": "한화시스템/방산", "title": "한화시스템 MRO사업부 IPS Engineer / Data Analyst 경력사원 채용", "url": "https://www.hanwhain.com/portal/apply/recruit/detail?rtSeq=20077", "start_at": "2026-10-29T00:00", "end_at": "2026-11-22T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-29T00:00"}, {"b": "hyundai", "id": "hyundai:2026-N2-209", "company": "현대자동차", "title": "NPU 딥러닝 컴파일러 개발", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=209", "start_at": "2026-06-15T09:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-06-15T09:00"}, {"b": "hyundai", "id": "hyundai:2026-N2-98", "company": "현대자동차", "title": "[AVP] 모빌리티 서비스 Data Engineer", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=98", "start_at": "2026-03-20T09:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-03-20T09:00"}, {"b": "hyundai", "id": "hyundai:2026-N2-99", "company": "현대자동차", "title": "[AVP] 모빌리티 플랫폼 Infra Engineer", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=99", "start_at": "2026-03-20T09:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": ["Data Engineering"], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-03-20T09:00"}, {"b": "hyundai", "id": "hyundai:2026-N2-413", "company": "현대자동차", "title": "[ICT] Backend Developer - MLOps 개발", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=413", "start_at": "2026-11-16T09:00", "end_at": "2026-11-30T17:05", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}], "posted": "2026-11-16T09:00"}, {"b": "hyundai", "id": "hyundai:2026-N2-414", "company": "현대자동차", "title": "[ICT] IT Project Manager - AX 과제 기획/관리/평가", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=414", "start_at": "2026-11-16T09:00", "end_at": "2026-11-30T17:05", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}], "posted": "2026-11-16T09:00"}, {"b": "hyundai", "id": "hyundai:2026-N2-322", "company": "현대자동차", "title": "[로보틱스랩] Perceptive AI 개발", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=322", "start_at": "2026-09-01T09:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "의왕시"}], "posted": "2026-09-01T09:00"}, {"b": "hyundai", "id": "hyundai:2026-N2-400", "company": "현대자동차", "title": "[제조AI] 제조 비전 AI 모델 운영 및 최적화", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=400", "start_at": "2026-11-16T09:00", "end_at": "2026-11-30T17:05", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "의왕시"}], "posted": "2026-11-16T09:00"}, {"b": "hyundai", "id": "hyundai:2026-N2-395", "company": "현대자동차", "title": "로보틱스 및 AI 기술 전략", "url": "https://talent.hyundai.com/apply/applyView.hc?recuYy=2026&recuType=N2&recuCls=395", "start_at": "2026-11-16T09:00", "end_at": "2026-11-30T17:05", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}], "posted": "2026-11-16T09:00"}, {"b": "hyundaicapital", "id": "hyundaicapital:RC20260828033736", "company": "현대캐피탈", "title": "AI Agent Ops Engineer", "url": "https://career.hyundaicapital.com/jobs/RC20260828033736", "start_at": null, "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-11-22T16:25"}, {"b": "hd", "id": "hd:271656", "company": "HD한국조선해양", "title": "[HD한국조선해양] 2026년 AIX 경력 채용", "url": "https://recruit.hd.com/kr/mainLayout/applyDetail/271656", "start_at": "2026-11-06T00:00", "end_at": "2026-11-30T14:00", "career_type": "경력", "employment_type": "일반채용", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["AI - 자율 작업 인지 기술 개발", "AI - 자율작업/주행 E2E 학습  알고리즘 개발", "AI - 자율작업/주행가상 환경 개발", "AI - 자율작업/주행 시스템 설계 및 개발환경 구축", "AI - 자율작업/주행 개발 Senior PM", "AI - 자율작업/주행 현장 및 장비 운용"], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-06T00:00"}, {"b": "shinsegae", "id": "shinsegae:5255", "company": "신세계아이앤씨", "title": "[신세계아이앤씨] AI서비스개발 직무 인재모집(채용 시 마감)", "url": "https://job.shinsegae.com/rcrut/detail/5255", "start_at": "2026-08-10T00:00", "end_at": "2026-12-31T16:46", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-10T00:00"}, {"b": "cj", "id": "cj:J20260915040092", "company": "CJ ENM", "title": "[CJ ENM] Mnet Plus Data Analyst", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20260915040092", "start_at": "2026-09-15T18:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-15T18:00"}, {"b": "cj", "id": "cj:J20261120040642", "company": "CJ ENM", "title": "[CJ ENM] 애널리틱스 엔지니어_경력채용", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20261120040642", "start_at": "2026-11-20T11:25", "end_at": "2026-12-06T23:00", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["데이터분석"], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-20T11:25"}, {"b": "cj", "id": "cj:J20250604030537", "company": "CJ대한통운", "title": "[TES물류기술연구소] 'AI모델개발자' 경력사원 모집", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20250604030537", "start_at": "2025-06-04T09:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-06-04T09:00"}, {"b": "cj", "id": "cj:J20250625031039", "company": "CJ대한통운", "title": "[TES물류기술연구소] 'Data Scientist' 경력사원 모집", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20250625031039", "start_at": "2026-05-15T09:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-05-15T09:00"}, {"b": "cj", "id": "cj:J20260629039137", "company": "CJ대한통운", "title": "[TES물류기술연구소] '데이터 엔지니어' 경력사원 모집", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20260629039137", "start_at": "2026-06-29T00:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-06-29T00:00"}, {"b": "cj", "id": "cj:J20260813039265", "company": "CJ대한통운", "title": "[TES물류기술연구소] 로봇 S/W Engineer (Physical AI 개발) 경력사원 모집", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20260813039265", "start_at": "2026-08-13T09:00", "end_at": null, "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-13T09:00"}, {"b": "cj", "id": "cj:J20241121027178", "company": "CJ올리브네트웍스", "title": "[경력] AX Tech Master", "url": "https://recruit.cj.net/recruit/ko/recruit/recruit/bestDetail.fo?direct=N&zz_jo_num=J20241121027178", "start_at": "2026-10-01T00:00", "end_at": "2026-12-07T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-01T00:00"}, {"b": "kakao", "id": "kakao:P-14469", "company": "카카오", "title": "AI Platform 추론 최적화 Engineer(경력)", "url": "https://careers.kakao.com/jobs/P-14469", "start_at": "2026-06-11T09:34", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-06-11T09:34"}, {"b": "kakao", "id": "kakao:P-14519", "company": "카카오", "title": "AI Research Engineer (Search & Agent) (경력)", "url": "https://careers.kakao.com/jobs/P-14519", "start_at": "2026-08-05T09:46", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-08-05T09:46"}, {"b": "kakao", "id": "kakao:P-14276", "company": "카카오", "title": "Data Analytics Engineer (경력)", "url": "https://careers.kakao.com/jobs/P-14276", "start_at": "2025-10-27T18:44", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2025-10-27T18:44"}, {"b": "kakao", "id": "kakao:P-14324", "company": "카카오", "title": "Data Scientist (경력)", "url": "https://careers.kakao.com/jobs/P-14324", "start_at": "2025-12-04T19:11", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2025-12-04T19:11"}, {"b": "kakao", "id": "kakao:P-14558", "company": "카카오", "title": "LLM Research Engineer (Post-training) (신입/경력)", "url": "https://careers.kakao.com/jobs/P-14558", "start_at": "2026-09-30T13:05", "end_at": null, "career_type": "신입/경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-09-30T13:05"}, {"b": "kakao", "id": "kakao:P-14559", "company": "카카오", "title": "LLM Research Engineer (Pre-training) (신입/경력)", "url": "https://careers.kakao.com/jobs/P-14559", "start_at": "2026-09-30T13:09", "end_at": null, "career_type": "신입/경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-09-30T13:09"}, {"b": "kakao", "id": "kakao:P-14402", "company": "카카오", "title": "Multimodal LLM Research Engineer (경력)", "url": "https://careers.kakao.com/jobs/P-14402", "start_at": "2026-03-16T18:37", "end_at": null, "career_type": "경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-03-16T18:37"}, {"b": "kakao", "id": "kakao:P-14581", "company": "카카오", "title": "생성형 모델 Research Engineer (Post-training) (신입/경력)", "url": "https://careers.kakao.com/jobs/P-14581", "start_at": "2026-11-04T13:29", "end_at": null, "career_type": "신입/경력", "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-04T13:29"}, {"b": "kakaomobility", "id": "kakao:S-4306", "company": "카카오모빌리티", "title": "[공동체] 카카오모빌리티 머신러닝 research scientist (R&D)", "url": "https://careers.kakao.com/jobs/S-4306", "start_at": "2025-02-26T19:14", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2025-02-26T19:14"}, {"b": "kakaomobility", "id": "kakao:S-4725", "company": "카카오모빌리티", "title": "[공동체] 카카오모빌리티 자율주행 AI Perception 엔지니어 (R&D)", "url": "https://careers.kakao.com/jobs/S-4725", "start_at": "2026-07-01T18:50", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-07-01T18:50"}, {"b": "kakaomobility", "id": "kakao:S-4680", "company": "카카오모빌리티", "title": "[공동체] 카카오모빌리티 자율주행 AI 엔지니어 (R&D)", "url": "https://careers.kakao.com/jobs/S-4680", "start_at": "2026-03-11T15:33", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-03-11T15:33"}, {"b": "kakao", "id": "kakao:S-4788", "company": "카카오스타일", "title": "[공동체] 카카오스타일 MLOps 엔지니어", "url": "https://careers.kakao.com/jobs/S-4788", "start_at": "2026-11-18T14:31", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-11-18T14:31"}, {"b": "kakao", "id": "kakao:S-4706", "company": "카카오페이", "title": "[공동체] 카카오페이 데이터 엔지니어 - 데이터 플랫폼", "url": "https://careers.kakao.com/jobs/S-4706", "start_at": "2026-05-06T18:49", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-05-06T18:49"}, {"b": "kakao", "id": "kakao:S-4750", "company": "카카오페이", "title": "[공동체] 카카오페이 서버 개발자 - 데이터 플랫폼", "url": "https://careers.kakao.com/jobs/S-4750", "start_at": "2026-09-03T16:28", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-09-03T16:28"}, {"b": "kakao", "id": "kakao:S-4699", "company": "카카오헬스케어", "title": "[공동체] 카카오헬스케어 AI Native EHR 개발", "url": "https://careers.kakao.com/jobs/S-4699", "start_at": "2026-03-31T18:46", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-03-31T18:46"}, {"b": "kakao", "id": "kakao:S-4689", "company": "카카오헬스케어", "title": "[공동체] 카카오헬스케어 Data Engineer(Healthcare)", "url": "https://careers.kakao.com/jobs/S-4689", "start_at": "2026-03-18T18:48", "end_at": null, "career_type": null, "employment_type": "정규직", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-03-18T18:48"}, {"b": "naver", "id": "naver:30005739", "company": "네이버웹툰", "title": "[네이버웹툰] AI Engineer (체험형 인턴)", "url": "https://recruit.navercorp.com/rcrt/view.do?annoId=30005739&lang=ko", "start_at": "2026-11-20T10:00", "end_at": "2026-12-13T23:59", "career_type": "신입", "employment_type": "인턴", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-20T10:00"}, {"b": "naver", "id": "naver:30005685", "company": "네이버클라우드", "title": "[NAVER Cloud/한국에이아이컴퓨팅센터] 클라우드·AI 세일즈 담당자 (경력)", "url": "https://recruit.navercorp.com/rcrt/view.do?annoId=30005685&lang=ko", "start_at": "2026-11-09T10:00", "end_at": "2026-11-25T17:00", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-09T10:00"}, {"b": "autoever", "id": "autoever:245510", "company": "현대오토에버", "title": "[HMG AI 팩토리] 분야별 전문가 집중 채용 (~11/30)", "url": "https://career.hyundai-autoever.com/ko/o/245510", "start_at": "2026-11-19T09:21", "end_at": "2026-11-30T23:59", "career_type": null, "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [], "posted": "2026-11-19T09:21"}, {"b": "autoever", "id": "autoever:229073", "company": "현대오토에버", "title": "[SDx] Data Engineer - Robot Data Engineer", "url": "https://career.hyundai-autoever.com/ko/o/229073", "start_at": "2026-11-04T10:29", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:29"}, {"b": "autoever", "id": "autoever:210269", "company": "현대오토에버", "title": "[Tech] AI Engineer - AI Agent 엔지니어", "url": "https://career.hyundai-autoever.com/ko/o/210269", "start_at": "2026-11-04T10:26", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:26"}, {"b": "autoever", "id": "autoever:210274", "company": "현대오토에버", "title": "[Tech] AI Engineer - AI Researcher", "url": "https://career.hyundai-autoever.com/ko/o/210274", "start_at": "2026-11-04T10:26", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:26"}, {"b": "autoever", "id": "autoever:210263", "company": "현대오토에버", "title": "[Tech] AI Engineer - LLM 엔지니어", "url": "https://career.hyundai-autoever.com/ko/o/210263", "start_at": "2026-11-04T10:26", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:26"}, {"b": "autoever", "id": "autoever:229348", "company": "현대오토에버", "title": "[Tech] AI Engineer - Physical AI Engineer", "url": "https://career.hyundai-autoever.com/ko/o/229348", "start_at": "2026-11-04T13:33", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T13:33"}, {"b": "autoever", "id": "autoever:233221", "company": "현대오토에버", "title": "[Tech] RX 기술 리더(팀장)", "url": "https://career.hyundai-autoever.com/ko/o/233221", "start_at": "2026-11-04T10:29", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["Data/AI(인공지능)"], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-04T10:29"}, {"b": "autoever", "id": "autoever:243073", "company": "현대오토에버", "title": "[Tech] Solution Architect - AI플랫폼 연구개발 아키텍트", "url": "https://career.hyundai-autoever.com/ko/o/243073", "start_at": "2026-11-03T14:08", "end_at": "2026-11-26T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}], "posted": "2026-11-03T14:08"}, {"b": "sk", "id": "sk:R262457", "company": "SK주식회사(AX)", "title": "제조 AI · Data 분야 AI Studio(AI/ML DevOps 플랫폼) 개발/운영 PL 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262457", "start_at": "2026-11-10T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-11-10T00:00"}, {"b": "sk", "id": "sk:R262455", "company": "SK주식회사(AX)", "title": "반도체 Utility AX 시스템 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262455", "start_at": "2026-11-10T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-11-10T00:00"}, {"b": "tmap", "id": "sk:R262339", "company": "티맵모빌리티", "title": "Data Platform Engineer", "url": "https://www.skcareers.com/Recruit/Detail/R262339", "start_at": "2026-10-26T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-26T00:00"}, {"b": "tmap", "id": "sk:R262196", "company": "티맵모빌리티", "title": "AI Agent Engineer", "url": "https://www.skcareers.com/Recruit/Detail/R262196", "start_at": "2026-10-12T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-12T00:00"}, {"b": "tmap", "id": "sk:R262169", "company": "티맵모빌리티", "title": "Data Analytics (리더)", "url": "https://www.skcareers.com/Recruit/Detail/R262169", "start_at": "2026-10-07T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-07T00:00"}, {"b": "tmap", "id": "sk:R262015", "company": "티맵모빌리티", "title": "LLMOps Engineer", "url": "https://www.skcareers.com/Recruit/Detail/R262015", "start_at": "2026-09-17T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-09-17T00:00"}, {"b": "tmap", "id": "sk:R261800", "company": "티맵모빌리티", "title": "AI Agent TPM (Technical Project Manager)", "url": "https://www.skcareers.com/Recruit/Detail/R261800", "start_at": "2026-08-18T00:00", "end_at": "2026-12-31T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-08-18T00:00"}, {"b": "sk", "id": "sk:R262527", "company": "SK주식회사(AX)", "title": "증권사 IT 및 AX 시스템 전문가 영입 (계약직)", "url": "https://www.skcareers.com/Recruit/Detail/R262527", "start_at": "2026-11-17T00:00", "end_at": "2026-12-29T23:59", "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": null}, {"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-17T00:00"}, {"b": "sk", "id": "sk:R262526", "company": "SK주식회사(AX)", "title": "반도체 Cloud/AI Platform 개발/운영 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262526", "start_at": "2026-11-16T00:00", "end_at": "2026-12-29T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-11-16T00:00"}, {"b": "sk", "id": "sk:R262417", "company": "SK주식회사(AX)", "title": "AI 기반 차세대 통신 BSS/OSS(NOVA) 응용개발 분야 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262417", "start_at": "2026-11-04T00:00", "end_at": "2026-12-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "중구"}], "posted": "2026-11-04T00:00"}, {"b": "sk", "id": "sk:R262415", "company": "SK주식회사(AX)", "title": "제조 AI · Data 분야 [Data Engineer / DevOps(k8s)] 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262415", "start_at": "2026-11-04T00:00", "end_at": "2026-12-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-04T00:00"}, {"b": "sk", "id": "sk:R262392", "company": "SK주식회사(AX)", "title": "SAP BW/BDC/BI/Data Analytics 분야 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262392", "start_at": "2026-10-30T00:00", "end_at": "2026-12-18T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-10-30T00:00"}, {"b": "sk", "id": "sk:R262283", "company": "SK주식회사(AX)", "title": "AX/AI 프로젝트 PM/PL 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262283", "start_at": "2026-10-21T00:00", "end_at": "2026-12-01T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-21T00:00"}, {"b": "sk", "id": "sk:R262275", "company": "SK주식회사(AX)", "title": "AX/AI 프로젝트 PM/PL 영입 (계약직)", "url": "https://www.skcareers.com/Recruit/Detail/R262275", "start_at": "2026-10-21T00:00", "end_at": "2026-12-01T23:59", "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-10-21T00:00"}, {"b": "sk", "id": "sk:R262529", "company": "SK바이오사이언스", "title": "AX Engineering (AI Application 개발) 경력사원 채용", "url": "https://www.skcareers.com/Recruit/Detail/R262529", "start_at": "2026-11-17T00:00", "end_at": "2026-11-30T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": null}, {"sido": "인천광역시", "sigungu": null}], "posted": "2026-11-17T00:00"}, {"b": "sk", "id": "sk:R262266", "company": "SK주식회사(AX)", "title": "반도체 Cloud/AI Platform 개발/운영 전문가 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262266", "start_at": "2026-10-16T00:00", "end_at": "2026-11-30T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-10-16T00:00"}, {"b": "sk", "id": "sk:R262252", "company": "SK주식회사(AX)", "title": "전사 통합 Image 솔루션 제공 플랫폼 Application PL 및 ML 엔지니어 모집 (계약직)", "url": "https://www.skcareers.com/Recruit/Detail/R262252", "start_at": "2026-10-15T00:00", "end_at": "2026-11-27T23:59", "career_type": "경력", "employment_type": "계약", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}, {"sido": "경기도", "sigungu": "용인시"}, {"sido": "경기도", "sigungu": "이천시"}], "posted": "2026-10-15T00:00"}, {"b": "sk", "id": "sk:R262476", "company": "SK바이오팜", "title": "AI Platform Operation 구성원 영입", "url": "https://www.skcareers.com/Recruit/Detail/R262476", "start_at": "2026-11-11T00:00", "end_at": "2026-11-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "성남시"}], "posted": "2026-11-11T00:00"}, {"b": "sk", "id": "sk:R262456", "company": "SK온", "title": "SK온 AI 인프라 구축 및 운영 담당자 채용", "url": "https://www.skcareers.com/Recruit/Detail/R262456", "start_at": "2026-11-11T00:00", "end_at": "2026-11-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2026-11-11T00:00"}, {"b": "sk", "id": "sk:R262159", "company": "SK주식회사(AX)", "title": "제조 에너지/화학 계열 AI/DT 및 시스템 담당자 영입 (울산 근무)", "url": "https://www.skcareers.com/Recruit/Detail/R262159", "start_at": "2026-10-06T00:00", "end_at": "2026-11-24T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "울산광역시", "sigungu": null}], "posted": "2026-10-06T00:00"}, {"b": "wooricard", "id": "wooricard:244674", "company": "우리카드", "title": "정보보안 경력직 채용", "url": "https://wooricard.career.greetinghr.com/ko/o/244674", "start_at": "2026-11-13T13:38", "end_at": "2026-11-25T23:59", "career_type": "경력", "employment_type": "정규", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-11-13T13:38"}, {"b": "kbcard", "id": "kbcard:RC20261103038715", "company": "KB국민카드", "title": "계약직원 채용 (단기채권 SV)", "url": "https://kbcard.careerlink.kr/jobs/RC20261103038715", "start_at": "2026-11-03T13:24", "end_at": "2026-11-22T23:59", "career_type": "경력", "employment_type": "계약직", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-11-03T13:24"}, {"b": "kbcard", "id": "kbcard:RC20261103038723", "company": "KB국민카드", "title": "계약직원 채용 (단기채권 상담원 교육 SV)", "url": "https://kbcard.careerlink.kr/jobs/RC20261103038723", "start_at": "2026-11-03T13:29", "end_at": "2026-11-22T23:59", "career_type": "경력", "employment_type": "계약직", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-11-03T13:29"}, {"b": "kbcard", "id": "kbcard:RC20261103038735", "company": "KB국민카드", "title": "보훈제한채용(상품판매 모니터링 등 업무지원)", "url": "https://kbcard.careerlink.kr/jobs/RC20261103038735", "start_at": "2026-11-03T13:45", "end_at": "2026-11-25T23:59", "career_type": "무관", "employment_type": "계약직", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "종로구"}], "posted": "2026-11-03T13:45"}, {"b": "lg", "id": "lg:1002421", "company": "LG이노텍", "title": "[광학솔루션] R&D분야(개발기획/AI ISP/광기구설계) 경력사원 모집", "url": "https://careers.lg.com/apply/detail?id=1002421", "start_at": "2026-11-17T13:00", "end_at": "2026-11-30T23:00", "career_type": "경력", "employment_type": "수시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "경기도", "sigungu": "안산시"}, {"sido": "경기도", "sigungu": "파주시"}], "posted": "2026-11-17T13:00"}, {"b": "hyundaicard", "id": "hyundaicard:134649", "company": "현대카드", "title": "[현대카드] 대손 충당금 관리", "url": "https://careerhyundai.recruiter.co.kr/career/jobs/134649", "start_at": "2026-11-16T19:00", "end_at": "2026-11-30T23:59", "career_type": "경력", "employment_type": "경력", "status": "접수중", "open": true, "cats": ["card"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "영등포구"}], "posted": "2026-11-16T19:00"}, {"b": "samsung", "id": "samsung:23523", "company": "삼성디스플레이", "title": "경력사원 채용(연구개발, 제조기술, 상품기획/영업, 품질, 건설/환경안전)", "url": "https://www.samsungcareers.com/hr/?no=23523", "start_at": "2026-11-16T08:00", "end_at": "2026-12-07T17:00", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": ["SW/AI/Automation"], "regions": [{"sido": "경기도", "sigungu": "용인시"}, {"sido": "충청남도", "sigungu": "아산시"}], "posted": "2026-11-16T08:00"}, {"b": "samsung", "id": "samsung:23492", "company": "삼성화재", "title": "경력사원 채용(AI, IT, 경영기획, 경영지원, 상품/계리, 언더라이팅, 손해사정, 방재연구)", "url": "https://www.samsungcareers.com/hr/?no=23492", "start_at": "2026-11-13T10:00", "end_at": "2026-11-23T17:00", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}], "posted": "2026-11-13T10:00"}, {"b": "samsung", "id": "samsung:23440", "company": "삼성전자 DX부문", "title": "경력사원 채용(Visual Display, Digital Appliances, 생산기술연구소, Global CS센터, Global EHS실, 한국총괄)", "url": "https://www.samsungcareers.com/hr/?no=23440", "start_at": "2026-11-11T09:00", "end_at": "2026-11-23T17:00", "career_type": "경력", "employment_type": null, "status": "접수중", "open": true, "cats": ["ai"], "roles": ["[VD] 광고 서비스 데이터 엔지니어", "[G-CS] 양산 공정·설비 검증 및 데이터 분석"], "regions": [{"sido": "서울특별시", "sigungu": "강남구"}, {"sido": "경기도", "sigungu": "수원시"}, {"sido": "경기도", "sigungu": "광주시"}], "posted": "2026-11-11T09:00"}, {"b": "lguplus", "id": "lg:1001907", "company": "LG유플러스", "title": "[정보보안센터] 클라우드 보안 구축 및 운영 경력채용", "url": "https://careers.lg.com/apply/detail?id=1001907", "start_at": "2026-11-10T09:00", "end_at": "2026-11-22T23:00", "career_type": "경력", "employment_type": "수시", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["클라우드 및 AI 보안 아키텍쳐 설계"], "regions": [{"sido": "서울특별시", "sigungu": "강서구"}], "posted": "2026-11-10T09:00"}, {"b": "samsung", "id": "samsung:23409", "company": "삼성물산 건설부문", "title": "경력사원 채용(AI서비스개발, 정보기술, 데이터)", "url": "https://www.samsungcareers.com/hr/?no=23409", "start_at": "2026-11-04T00:00", "end_at": "2026-11-16T23:59", "career_type": "경력", "employment_type": null, "status": "접수마감", "open": false, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강동구"}], "posted": "2026-11-04T00:00"}, {"b": "lg", "id": "lg:1000409", "company": "LG CNS", "title": "[LG CNS] Global 해외 석박사 AX 인재 상시 등록 공고", "url": "https://careers.lg.com/apply/detail?id=1000409", "start_at": "2025-05-07T06:00", "end_at": "2026-12-31T23:00", "career_type": "신입/경력", "employment_type": "상시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-05-07T06:00"}, {"b": "lg", "id": "lg:1000834", "company": "LG CNS", "title": "[인턴] LG CNS Global Internship(외국인) 상시 인재 등록 공고", "url": "https://careers.lg.com/apply/detail?id=1000834", "start_at": "2025-09-01T06:00", "end_at": "2026-12-31T18:00", "career_type": "인턴", "employment_type": "상시", "status": "접수중", "open": true, "cats": ["ai"], "roles": ["AI"], "regions": [{"sido": "서울특별시", "sigungu": null}], "posted": "2025-09-01T06:00"}, {"b": "lg", "id": "lg:1001432", "company": "LG CNS", "title": "[LG CNS] 어플리케이션 아키텍트/AI 아키텍트 모집(경력)", "url": "https://careers.lg.com/apply/detail?id=1001432", "start_at": "2026-03-11T09:00", "end_at": "2026-11-30T23:00", "career_type": "경력", "employment_type": "수시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강서구"}], "posted": "2026-03-11T09:00"}, {"b": "lg", "id": "lg:1002176", "company": "LG에너지솔루션", "title": "[CDO] AI/빅데이터 분야 상시 모집", "url": "https://careers.lg.com/apply/detail?id=1002176", "start_at": "2026-09-07T09:00", "end_at": "2027-03-31T18:00", "career_type": "신입/경력", "employment_type": "상시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "서초구"}, {"sido": "충청북도", "sigungu": "청주시"}], "posted": "2026-09-07T09:00"}, {"b": "lguplus", "id": "lg:1001889", "company": "LG유플러스", "title": "[정보보안센터] AI보안 담당자 경력채용", "url": "https://careers.lg.com/apply/detail?id=1001889", "start_at": "2026-11-10T09:00", "end_at": "2026-11-22T23:00", "career_type": "경력", "employment_type": "수시", "status": "접수중", "open": true, "cats": ["ai"], "roles": [], "regions": [{"sido": "서울특별시", "sigungu": "강서구"}], "posted": "2026-11-10T09:00"}]</script>
 <script>
 (function () {
   var data = JSON.parse(document.getElementById('data').textContent);
   var LABELS = {"ai": "AI·데이터", "card": "카드사"};
+  var BRANDS = {"hyundaicard": {"name": "현대카드", "logo": "logos/hyundaicard.png", "mono": "현대", "color": "#111111", "group": "hyundaicard", "groupName": "현대카드"}, "samsungcard": {"name": "삼성카드", "logo": "logos/samsungcard.ico", "mono": "삼성", "color": "#1428a0", "group": "samsungcard", "groupName": "삼성카드"}, "kbcard": {"name": "KB국민카드", "logo": "logos/kbcard.png", "mono": "KB", "color": "#60584c", "group": "kbcard", "groupName": "KB국민카드"}, "shinhancard": {"name": "신한카드", "logo": "logos/shinhancard.png", "mono": "신한", "color": "#0046ff", "group": "shinhancard", "groupName": "신한카드"}, "wooricard": {"name": "우리카드", "logo": null, "mono": "우리", "color": "#0067ac", "group": "wooricard", "groupName": "우리카드"}, "nhcard": {"name": "NH농협카드", "logo": null, "mono": "NH", "color": "#00843d", "group": "nhcard", "groupName": "NH농협카드"}, "bccard": {"name": "BC카드", "logo": "logos/bccard.png", "mono": "BC", "color": "#e8384f", "group": "bccard", "groupName": "BC카드"}, "samsung": {"name": "삼성", "logo": "logos/samsung.ico", "mono": "삼성", "color": "#1428a0", "group": "samsung", "groupName": "삼성"}, "lguplus": {"name": "LG유플러스", "logo": "logos/lguplus.png", "mono": "U+", "color": "#e6007e", "group": "lg", "groupName": "LG"}, "lg": {"name": "LG", "logo": "logos/lg.ico", "mono": "LG", "color": "#a50034", "group": "lg", "groupName": "LG"}, "tmap": {"name": "티맵모빌리티", "logo": "logos/tmap.ico", "mono": "T", "color": "#3b6cff", "group": "sk", "groupName": "SK"}, "sk": {"name": "SK", "logo": "logos/sk.png", "mono": "SK", "color": "#ea002c", "group": "sk", "groupName": "SK"}, "hyundai": {"name": "현대자동차", "logo": "logos/hyundai.png", "mono": "현대", "color": "#002c5f", "group": "hyundai", "groupName": "현대자동차"}, "kia": {"name": "기아", "logo": "logos/kia.png", "mono": "KIA", "color": "#05141f", "group": "kia", "groupName": "기아"}, "autoever": {"name": "현대오토에버", "logo": "logos/autoever.ico", "mono": "오토", "color": "#002c5f", "group": "autoever", "groupName": "현대오토에버"}, "hyundaicapital": {"name": "현대캐피탈", "logo": "logos/hyundaicapital.ico", "mono": "캐피", "color": "#2a6fdb", "group": "hyundaicapital", "groupName": "현대캐피탈"}, "glovis": {"name": "현대글로비스", "logo": null, "mono": "글로", "color": "#003a8c", "group": "glovis", "groupName": "현대글로비스"}, "hyundaicommercial": {"name": "현대커머셜", "logo": null, "mono": "커머", "color": "#111111", "group": "hyundaicommercial", "groupName": "현대커머셜"}, "naver": {"name": "네이버", "logo": "logos/naver.ico", "mono": "N", "color": "#03c75a", "group": "naver", "groupName": "네이버"}, "kakaomobility": {"name": "카카오모빌리티", "logo": "logos/kakaomobility.png", "mono": "T", "color": "#1c2340", "group": "kakao", "groupName": "카카오"}, "kakao": {"name": "카카오", "logo": "logos/kakao.ico", "mono": "k", "color": "#fae100", "group": "kakao", "groupName": "카카오"}, "kt": {"name": "KT", "logo": "logos/kt.png", "mono": "KT", "color": "#e4002b", "group": "kt", "groupName": "KT"}, "coupang": {"name": "쿠팡", "logo": null, "mono": "쿠팡", "color": "#e52528", "group": "coupang", "groupName": "쿠팡"}, "krafton": {"name": "크래프톤", "logo": null, "mono": "KR", "color": "#111111", "group": "krafton", "groupName": "크래프톤"}, "lotte": {"name": "롯데", "logo": "logos/lotte.png", "mono": "롯데", "color": "#da291c", "group": "lotte", "groupName": "롯데"}, "hanwha": {"name": "한화", "logo": "logos/hanwha.ico", "mono": "한화", "color": "#f37321", "group": "hanwha", "groupName": "한화"}, "cj": {"name": "CJ", "logo": "logos/cj.svg", "mono": "CJ", "color": "#00a3e0", "group": "cj", "groupName": "CJ"}, "shinsegae": {"name": "신세계", "logo": "logos/shinsegae.svg", "mono": "신세", "color": "#b12536", "group": "shinsegae", "groupName": "신세계"}, "hd": {"name": "HD현대", "logo": "logos/hd.png", "mono": "HD", "color": "#00ad1d", "group": "hd", "groupName": "HD현대"}, "doosan": {"name": "두산", "logo": "logos/doosan.png", "mono": "두산", "color": "#005eb8", "group": "doosan", "groupName": "두산"}, "kbstar": {"name": "KB국민은행", "logo": "logos/kbstar.png", "mono": "KB", "color": "#60584c", "group": "kbstar", "groupName": "KB국민은행"}, "shinhanbank": {"name": "신한은행", "logo": "logos/shinhanbank.png", "mono": "신한", "color": "#0046ff", "group": "shinhanbank", "groupName": "신한은행"}};
   function $(id) { return document.getElementById(id); }
-  var qs = { q: $('q'), company: $('company'), career: $('career'), sido: $('sido'), openOnly: $('openOnly') };
-  var sortSel = $('sort');
+  var el = { q: $('q'), career: $('career'), sido: $('sido'), openOnly: $('openOnly') };
   var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
-  var cat = '';
+  var sortBtns = Array.prototype.slice.call(document.querySelectorAll('.seg button'));
+  // 누르는 단추로 고르는 조건. 드롭다운·검색·접수중만은 입력 요소의 값을 그대로 쓴다
+  var state = { cat: '', group: '', day: '', fresh: false, soon: false, sort: 'new' };
   var CAREER_ORDER = ['신입', '경력', '인턴', '기타'];
-  var MAX_REGIONS = 4;
+  var DOW = ['일', '월', '화', '수', '목', '금', '토'];
+  var MAX_REGIONS = 3;
+  var PIN = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.3"/></svg>';
 
   // 페이지를 연 시각 기준으로 마감 여부를 다시 계산한다(사이트 생성 이후 마감된 공고가 접수중으로 남지 않게).
-  // end_at 은 한국 시각(KST) 자연 시각 문자열이라 KST 현재 시각 문자열과 그대로 비교한다.
-  function nowKst() { return new Date(Date.now() + 9 * 3600 * 1000).toISOString().slice(0, 16); }
-  var NOW = nowKst();
-  var NEW_SINCE = new Date(Date.now() + 9 * 3600 * 1000 - 3 * 86400 * 1000).toISOString().slice(0, 16);   // 3일 전(KST)
+  // end_at 은 한국 시각(KST) 자연 시각 문자열이라, KST 현재 시각을 같은 꼴의 문자열로 만들어 비교한다.
+  var kstNow = Date.now() + 9 * 3600 * 1000;
+  var NOW = new Date(kstNow).toISOString().slice(0, 16);
+  var TODAY = NOW.slice(0, 10);
+  var NEW_SINCE = new Date(kstNow - 3 * 86400 * 1000).toISOString().slice(0, 16);
+  function dayOffset(n) { return new Date(Date.parse(TODAY) + n * 86400000).toISOString().slice(0, 10); }
+  function daysLeft(iso) { return Math.round((Date.parse(iso.slice(0, 10)) - Date.parse(TODAY)) / 86400000); }
 
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
+  // 카드에는 시·도를 줄여서 쓴다: 경상남도 → 경남, 서울특별시 → 서울
+  var SIDO_SHORT = { '경기도': '경기', '충청북도': '충북', '충청남도': '충남', '전라남도': '전남', '경상북도': '경북', '경상남도': '경남' };
+  function shortSido(s) { return SIDO_SHORT[s] || s.replace(/(특별시|광역시|특별자치시|특별자치도)$/, ''); }
   // '신입/경력' 처럼 섞인 표기를 신입·경력·인턴 태그로 나눈다
   function careerTags(p) {
     var t = p.career_type || '';
     var tags = CAREER_ORDER.slice(0, 3).filter(function (k) { return t.indexOf(k) >= 0; });
     return tags.length ? tags : ['기타'];
   }
+
+  var groups = {};   // 묶음 키 → 모아보기 단추에 쓰는 이름·로고
   data.forEach(function (p) {
+    var b = BRANDS[p.b] || { name: p.company, logo: null, mono: p.bm || p.company.slice(0, 2), color: p.bc || '#64748b', group: 'c:' + p.company, groupName: p.company };
+    p._brand = b;
+    p._group = b.group;
+    if (!groups[b.group]) groups[b.group] = BRANDS[b.group] || b;
     p._tags = careerTags(p);
-    p._q = (p.title + ' ' + p.company + ' ' + p.roles.join(' ')).toLowerCase();
+    p._q = (p.title + ' ' + p.company + ' ' + p.roles.join(' ') + ' ' + (b.groupName || '')).toLowerCase();
     p._open = p.open && !(p.end_at && p.end_at < NOW);
     p._sidos = Array.from(new Set(p.regions.map(function (r) { return r.sido; })));
     p._new = p.posted > NEW_SINCE && p.posted <= NOW;
+    p._left = p.end_at ? daysLeft(p.end_at) : null;            // 마감까지 남은 날
+    p._soon = p._open && p._left !== null && p._left <= 7;
+    p._endDay = p.end_at ? p.end_at.slice(0, 10) : '';
   });
   data.sort(function (a, b) { return b.posted.localeCompare(a.posted); });   // 기본 순서: 최근 게시순
 
-  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; }); }
-  function shortSido(s) { return s.replace(/(특별시|광역시|특별자치시|특별자치도)$/, ''); }
-  function fmt(iso) { return iso ? iso.replace('T', ' ').slice(0, 16) : ''; }
-  function dday(p) {
-    if (!p.end_at) return '';
-    var days = Math.floor((new Date(p.end_at.slice(0, 10)) - new Date(NOW.slice(0, 10))) / 86400000);
-    if (days < 0 || days > 30) return '';
-    return days === 0 ? '오늘 마감' : 'D-' + days;
-  }
-
-  // except: 이 필터는 무시하고 판정한다 (해당 선택지의 목록·건수를 만들 때 사용)
+  // except: 이 조건은 빼고 판정한다 (그 조건의 선택지와 건수를 만들 때 쓴다)
   function matches(p, except) {
-    if (except !== 'cat' && cat && p.cats.indexOf(cat) < 0) return false;
-    if (except !== 'openOnly' && qs.openOnly.checked && !p._open) return false;
-    if (except !== 'company' && qs.company.value && p.company !== qs.company.value) return false;
-    if (except !== 'career' && qs.career.value && p._tags.indexOf(qs.career.value) < 0) return false;
-    if (except !== 'sido' && qs.sido.value && p._sidos.indexOf(qs.sido.value) < 0) return false;
-    var q = qs.q.value.trim().toLowerCase();
+    if (except !== 'cat' && state.cat && p.cats.indexOf(state.cat) < 0) return false;
+    if (except !== 'openOnly' && el.openOnly.checked && !p._open) return false;
+    if (except !== 'group' && state.group && p._group !== state.group) return false;
+    if (except !== 'fresh' && state.fresh && !p._new) return false;
+    if (except !== 'soon' && state.soon && !p._soon) return false;
+    if (except !== 'day' && state.day && p._endDay !== state.day) return false;
+    if (except !== 'career' && el.career.value && p._tags.indexOf(el.career.value) < 0) return false;
+    if (except !== 'sido' && el.sido.value && p._sidos.indexOf(el.sido.value) < 0) return false;
+    var q = el.q.value.trim().toLowerCase();
     if (except !== 'q' && q && p._q.indexOf(q) < 0) return false;
     return true;
   }
+  function rowsFor(except) { return data.filter(function (p) { return matches(p, except); }); }
+
+  function logoHtml(b) {
+    var dark = /^#(f|e)/i.test(b.color) ? ' dark' : '';
+    var mono = '<span class="logo mono' + dark + '" style="background:' + esc(b.color) + '">' + esc(b.mono) + '</span>';
+    if (!b.logo) return mono;
+    // 로고 파일을 못 불러오면 글자 타일로 바꾼다
+    return '<span class="logo" data-mono="' + esc(b.mono) + '" data-color="' + esc(b.color) + '"><img src="' + esc(b.logo) + '" alt="" loading="lazy"></span>';
+  }
+  document.addEventListener('error', function (e) {
+    var img = e.target;
+    if (!img || img.tagName !== 'IMG' || !img.parentNode || !img.parentNode.classList.contains('logo')) return;
+    var box = img.parentNode;
+    box.classList.add('mono');
+    if (/^#(f|e)/i.test(box.getAttribute('data-color'))) box.classList.add('dark');
+    box.style.background = box.getAttribute('data-color');
+    box.textContent = box.getAttribute('data-mono');
+  }, true);
 
   function fill(sel, values, sorter) {
     var cur = sel.value;
@@ -306,77 +503,141 @@
     var arr = Array.from(values);
     arr.sort(sorter || function (a, b) { return a.localeCompare(b, 'ko'); });
     arr.forEach(function (v) { var o = document.createElement('option'); o.value = v; o.textContent = v; sel.appendChild(o); });
-    // 선택해 둔 값이 더 이상 없으면 전체로 되돌린다
-    sel.value = arr.indexOf(cur) >= 0 ? cur : '';
+    sel.value = arr.indexOf(cur) >= 0 ? cur : '';   // 고른 값이 더는 없으면 전체로 되돌린다
   }
 
-  // 각 선택지는 나머지 필터를 적용한 결과에 실제로 있는 값만 보여준다
-  function refreshOptions() {
-    fill(qs.company, new Set(data.filter(function (p) { return matches(p, 'company'); }).map(function (p) { return p.company; })));
-    fill(qs.career, new Set(data.filter(function (p) { return matches(p, 'career'); }).flatMap(function (p) { return p._tags; })),
+  // 각 선택지는 나머지 조건을 적용한 결과에 실제로 있는 값만 보여준다
+  function refreshFacets() {
+    fill(el.career, new Set(rowsFor('career').flatMap(function (p) { return p._tags; })),
       function (a, b) { return CAREER_ORDER.indexOf(a) - CAREER_ORDER.indexOf(b); });
-    fill(qs.sido, new Set(data.filter(function (p) { return matches(p, 'sido'); }).flatMap(function (p) { return p._sidos; })));
-    var base = data.filter(function (p) { return matches(p, 'cat'); });
+    fill(el.sido, new Set(rowsFor('sido').flatMap(function (p) { return p._sidos; })));
+
+    var base = rowsFor('cat');
     tabs.forEach(function (t) {
       var c = t.getAttribute('data-cat');
-      var n = c ? base.filter(function (p) { return p.cats.indexOf(c) >= 0; }).length : base.length;
-      t.querySelector('.n').textContent = n;
-      t.setAttribute('aria-pressed', String(c === cat));
+      t.querySelector('.n').textContent = c ? base.filter(function (p) { return p.cats.indexOf(c) >= 0; }).length : base.length;
+      t.setAttribute('aria-pressed', String(c === state.cat));
     });
+
+    $('fresh').querySelector('.n').textContent = rowsFor('fresh').filter(function (p) { return p._new; }).length;
+    $('fresh').setAttribute('aria-pressed', String(state.fresh));
+    $('soon').querySelector('.n').textContent = rowsFor('soon').filter(function (p) { return p._soon; }).length;
+    $('soon').setAttribute('aria-pressed', String(state.soon));
+
+    // 이번 주 마감: 오늘부터 7일
+    var byDay = {};
+    rowsFor('day').forEach(function (p) { if (p._open && p._endDay) byDay[p._endDay] = (byDay[p._endDay] || 0) + 1; });
+    var week = '';
+    for (var i = 0; i < 7; i++) {
+      var d = dayOffset(i), n = byDay[d] || 0;
+      var dow = i === 0 ? '오늘' : i === 1 ? '내일' : DOW[new Date(d).getUTCDay()];
+      week += '<button type="button" class="day' + (n ? '' : ' zero') + (i === 0 ? ' today' : '') + '" data-day="' + d + '" aria-pressed="' + (state.day === d) + '"'
+        + (n || state.day === d ? '' : ' disabled') + ' aria-label="' + d + ' 마감 ' + n + '건">'
+        + '<span class="dow">' + dow + '</span><span class="date">' + Number(d.slice(5, 7)) + '.' + Number(d.slice(8, 10)) + '</span>'
+        + '<span class="cnt">' + n + '<small>건</small></span></button>';
+    }
+    $('week').innerHTML = week;
+
+    // 회사 모아보기: 공고가 많은 순
+    var byGroup = {};
+    rowsFor('group').forEach(function (p) { byGroup[p._group] = (byGroup[p._group] || 0) + 1; });
+    var keys = Object.keys(byGroup);
+    if (state.group && keys.indexOf(state.group) < 0) keys.push(state.group);
+    keys.sort(function (a, b) { return (byGroup[b] || 0) - (byGroup[a] || 0) || groups[a].groupName.localeCompare(groups[b].groupName, 'ko'); });
+    $('brands').innerHTML = keys.map(function (k) {
+      var g = groups[k];
+      return '<button type="button" class="bchip" data-group="' + esc(k) + '" aria-pressed="' + (state.group === k) + '">'
+        + logoHtml(g) + '<span>' + esc(g.groupName || g.name) + '</span><span class="n">' + (byGroup[k] || 0) + '</span></button>';
+    }).join('');
+
+    sortBtns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.getAttribute('data-sort') === state.sort)); });
   }
 
   function regionText(p) {
-    if (!p.regions.length) return '근무지 미확인';
-    if (p.regions.length > MAX_REGIONS) return p._sidos.map(shortSido).join(', ');
-    return p.regions.map(function (r) { return shortSido(r.sido) + (r.sigungu ? ' ' + r.sigungu : ''); }).join(', ');
+    if (!p.regions.length) return '';
+    if (p.regions.length > MAX_REGIONS) return p._sidos.map(shortSido).join(' · ');
+    return p.regions.map(function (r) { return shortSido(r.sido) + (r.sigungu ? ' ' + r.sigungu : ''); }).join(' · ');
+  }
+  function ddayHtml(p) {
+    if (!p._open) return '<span class="dday">마감</span>';
+    if (p.status === '접수예정') return '<span class="dday">접수 예정</span>';
+    if (p._left === null) return '<span class="dday always">상시</span>';
+    if (p._left <= 0) return '<span class="dday urgent">오늘 마감</span>';
+    var cls = p._left <= 3 ? ' urgent' : p._left <= 7 ? ' soon' : '';
+    return '<span class="dday' + cls + '">D-' + p._left + '</span>';
+  }
+  function dueText(p) {
+    if (!p.end_at) return '채용 시 마감';
+    var d = p.end_at.slice(0, 10), t = p.end_at.slice(11, 16);
+    return '~ ' + Number(d.slice(5, 7)) + '.' + Number(d.slice(8, 10)) + '(' + DOW[new Date(d).getUTCDay()] + ')' + (t && t !== '23:59' ? ' ' + t : '');
   }
 
   function render() {
-    var rows = data.filter(function (p) { return matches(p, null); });
-    if (sortSel.value === 'end') {
+    var rows = rowsFor(null);
+    if (state.sort === 'end') {
       rows.sort(function (a, b) { return (a.end_at || '9999').localeCompare(b.end_at || '9999'); });
     }
-    $('count').textContent = rows.length + '건';
+    $('heroCount').textContent = data.filter(function (p) { return p._open; }).length;
+    $('count').textContent = rows.length;
+    var active = state.cat || state.group || state.day || state.fresh || state.soon || el.career.value || el.sido.value || el.q.value.trim() || !el.openOnly.checked;
+    $('reset').hidden = !active;
     var list = $('list');
-    list.innerHTML = '';
-    if (!rows.length) { list.innerHTML = '<div class="empty">조건에 맞는 공고가 없습니다.</div>'; return; }
-    rows.forEach(function (p) {
-      var a = document.createElement('a');
-      a.className = 'card' + (p._open ? '' : ' is-closed'); a.href = p.url; a.target = '_blank'; a.rel = 'noopener';
-      var d = p._open ? dday(p) : '';
-      var badge = p._open
-        ? '<span class="badge open">' + esc(d || p.status || '접수중') + '</span>'
-        : '<span class="badge closed">접수마감</span>';
+    if (!rows.length) {
+      list.innerHTML = '<div class="empty"><b>조건에 맞는 공고가 없습니다</b>필터를 줄이거나 초기화해 보세요.</div>';
+      return;
+    }
+    list.innerHTML = rows.map(function (p) {
       var chips = p.cats.map(function (c) { return '<span class="chip c-' + c + '">' + esc(LABELS[c] || c) + '</span>'; }).join('')
         + (p._new && p._open ? '<span class="chip c-new">NEW</span>' : '');
-      var metas = [p._tags.join('/'), p.employment_type].filter(Boolean).join(' · ');
-      // 마감일이 없는 공고는 채용이 끝나면 내려가는 상시 공고다
-      var period = (p.start_at || p.end_at) ? fmt(p.start_at).slice(0, 10) + ' ~ ' + (p.end_at ? fmt(p.end_at) : '채용 시 마감') : '';
-      a.innerHTML = '<div class="row1"><div class="who"><span class="company">' + esc(p.company) + '</span>' + chips + '</div>' + badge + '</div>'
-        + '<div class="title">' + esc(p.title) + '</div>'
-        + (p.roles.length ? '<div class="roles">AI·데이터 직무: ' + esc(p.roles.join(', ')) + '</div>' : '')
-        + '<div class="meta"><span class="region">📍 ' + esc(regionText(p)) + '</span>'
-        + (period ? '<span>📅 ' + esc(period) + '</span>' : '')
-        + (metas ? '<span>' + esc(metas) + '</span>' : '') + '</div>';
-      list.appendChild(a);
-    });
+      var region = regionText(p);
+      // 신입·경력 구분을 모르는 공고('기타')와, 구분과 똑같은 고용 형태 표기는 꼬리표로 달지 않는다
+      var career = p._tags[0] === '기타' ? '' : p._tags.join('/');
+      var employ = p.employment_type && p.employment_type !== career ? p.employment_type : '';
+      var tags = (region ? '<span class="tag loc">' + PIN + esc(region) + '</span>' : '')
+        + (career ? '<span class="tag">' + esc(career) + '</span>' : '')
+        + (employ ? '<span class="tag">' + esc(employ) + '</span>' : '');
+      return '<a class="card' + (p._open ? '' : ' is-closed') + '" href="' + esc(p.url) + '" target="_blank" rel="noopener">'
+        + '<div class="chead">' + logoHtml(p._brand)
+        + '<div class="who"><span class="company">' + esc(p.company) + '</span><div class="chips">' + chips + '</div></div>'
+        + ddayHtml(p) + '</div>'
+        + '<h3 class="title">' + esc(p.title) + '</h3>'
+        + (p.roles.length ? '<p class="roles">AI·데이터 직무 · ' + esc(p.roles.join(', ')) + '</p>' : '')
+        + '<div class="cfoot">' + tags + '<span class="due">' + esc(dueText(p)) + '</span></div></a>';
+    }).join('');
   }
 
   function update() {
-    refreshOptions();
-    refreshOptions();   // 한 선택지가 초기화되면 다른 선택지의 목록도 달라지므로 한 번 더 계산한다
+    refreshFacets();
+    refreshFacets();   // 한 선택지가 초기화되면 다른 선택지의 목록도 달라지므로 한 번 더 계산한다
     render();
   }
 
   function setCat(c, fromHash) {
-    cat = LABELS[c] ? c : '';
-    if (!fromHash) { try { history.replaceState(null, '', cat ? '#' + cat : location.pathname + location.search); } catch (e) {} }
+    state.cat = LABELS[c] ? c : '';
+    if (!fromHash) { try { history.replaceState(null, '', state.cat ? '#' + state.cat : location.pathname + location.search); } catch (e) {} }
     update();
   }
   tabs.forEach(function (t) { t.addEventListener('click', function () { setCat(t.getAttribute('data-cat')); }); });
-  Object.keys(qs).forEach(function (k) { qs[k].addEventListener(k === 'q' ? 'input' : 'change', update); });
-  sortSel.addEventListener('change', render);
+  $('week').addEventListener('click', function (e) {
+    var b = e.target.closest('.day'); if (!b || b.disabled) return;
+    state.day = state.day === b.getAttribute('data-day') ? '' : b.getAttribute('data-day'); update();
+  });
+  $('brands').addEventListener('click', function (e) {
+    var b = e.target.closest('.bchip'); if (!b) return;
+    state.group = state.group === b.getAttribute('data-group') ? '' : b.getAttribute('data-group'); update();
+  });
+  $('fresh').addEventListener('click', function () { state.fresh = !state.fresh; update(); });
+  $('soon').addEventListener('click', function () { state.soon = !state.soon; update(); });
+  sortBtns.forEach(function (b) { b.addEventListener('click', function () { state.sort = b.getAttribute('data-sort'); update(); }); });
+  Object.keys(el).forEach(function (k) { el[k].addEventListener(k === 'q' ? 'input' : 'change', update); });
+  $('reset').addEventListener('click', function () {
+    state.group = ''; state.day = ''; state.fresh = false; state.soon = false;
+    el.q.value = ''; el.career.value = ''; el.sido.value = ''; el.openOnly.checked = true;
+    setCat('');
+  });
   window.addEventListener('hashchange', function () { setCat(location.hash.slice(1), true); });
+  var sticky = $('sticky');
+  window.addEventListener('scroll', function () { sticky.classList.toggle('stuck', sticky.getBoundingClientRect().top <= 0 && window.scrollY > 8); }, { passive: true });
   setCat(location.hash.slice(1), true);   // 주소 끝에 #ai 또는 #card 를 붙이면 그 분야로 바로 열린다
 })();
 </script>
