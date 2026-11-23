@@ -30,7 +30,7 @@
   "company": "신한카드",
   "title": "[신한카드] 발급실- 공카드,봉입 업무",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55466891",
-  "start_at": "2026-11-04T00:00",
+  "start_at": "2026-11-03T00:00",
   "end_at": "2026-12-03T23:59",
   "career_type": "신입/경력",
   "employment_type": "계약직",
@@ -46,7 +46,7 @@
     "sigungu": "동작구"
    }
   ],
-  "posted": "2026-11-04T00:00",
+  "posted": "2026-11-03T00:00",
   "via": "사람인"
  },
  {
@@ -55,7 +55,7 @@
   "company": "신한카드",
   "title": "신한카드 외국인 고객 전담 신용카드 모집",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55234532",
-  "start_at": "2026-10-09T00:00",
+  "start_at": "2026-10-08T00:00",
   "end_at": "2026-12-07T23:59",
   "career_type": "신입/경력",
   "employment_type": "위촉직",
@@ -71,7 +71,7 @@
     "sigungu": "중구"
    }
   ],
-  "posted": "2026-10-09T00:00",
+  "posted": "2026-10-08T00:00",
   "via": "사람인"
  },
  {
@@ -3656,6 +3656,31 @@
    }
   ],
   "posted": "2026-09-07T09:00",
+  "via": ""
+ },
+ {
+  "b": "lguplus",
+  "id": "lg:1002062",
+  "company": "LG유플러스",
+  "title": "[CTO] Speech AI 경력 채용",
+  "url": "https://careers.lg.com/apply/detail?id=1002062",
+  "start_at": "2026-11-23T09:00",
+  "end_at": "2026-12-06T23:00",
+  "career_type": "경력",
+  "employment_type": "수시",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "강서구"
+   }
+  ],
+  "posted": "2026-11-23T09:00",
   "via": ""
  },
  {
