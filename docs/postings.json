@@ -1,5 +1,80 @@
 [
  {
+  "b": "krafton",
+  "id": "krafton:8503653002",
+  "company": "크래프톤",
+  "title": "[AI Transformation Dept.] Sr. AI Data Pipeline Specialist (7년 이상)",
+  "url": "https://job-boards.greenhouse.io/krafton/jobs/8503653002",
+  "start_at": "2026-06-26T15:02",
+  "end_at": null,
+  "career_type": "경력",
+  "employment_type": "계약",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "posted": "2026-06-26T15:02",
+  "via": ""
+ },
+ {
+  "b": "sk",
+  "id": "sk:R262509",
+  "company": "SK텔레콤",
+  "title": "초대형 AI 모델 연구원",
+  "url": "https://www.skcareers.com/Recruit/Detail/R262509",
+  "start_at": "2026-11-23T00:00",
+  "end_at": "2026-12-20T23:59",
+  "career_type": "경력",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "posted": "2026-11-23T00:00",
+  "via": ""
+ },
+ {
+  "b": "shinhancard",
+  "id": "saramin_shinhancard:55646900",
+  "company": "신한카드",
+  "title": "[신한카드] 발급실-공카드, 카드 봉입 분류",
+  "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55646900",
+  "start_at": null,
+  "end_at": "2026-12-23T23:59",
+  "career_type": "신입/경력",
+  "employment_type": "계약직",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "card"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": "동작구"
+   }
+  ],
+  "posted": "2026-11-23T19:37",
+  "via": "사람인"
+ },
+ {
   "b": "hanacard",
   "id": "jobkorea_hanacard:50397091",
   "company": "하나카드",
@@ -80,7 +155,7 @@
   "company": "하나카드",
   "title": "2026 하나카드 애플리케이션 아키텍트 경력직 채용",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55342364",
-  "start_at": "2026-10-21T00:00",
+  "start_at": "2026-10-20T00:00",
   "end_at": null,
   "career_type": "경력",
   "employment_type": "정규직",
@@ -96,7 +171,7 @@
     "sigungu": "서해구"
    }
   ],
-  "posted": "2026-10-21T00:00",
+  "posted": "2026-10-20T00:00",
   "via": "사람인"
  },
  {
@@ -3449,8 +3524,8 @@
   "end_at": "2026-11-23T17:00",
   "career_type": "경력",
   "employment_type": null,
-  "status": "접수중",
-  "open": true,
+  "status": "접수마감",
+  "open": false,
   "cats": [
    "ai"
   ],
@@ -3474,8 +3549,8 @@
   "end_at": "2026-11-23T17:00",
   "career_type": "경력",
   "employment_type": null,
-  "status": "접수중",
-  "open": true,
+  "status": "접수마감",
+  "open": false,
   "cats": [
    "ai"
   ],
