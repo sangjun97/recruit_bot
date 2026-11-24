@@ -1,5 +1,108 @@
 [
  {
+  "b": "krafton",
+  "id": "krafton:8950930002",
+  "company": "크래프톤",
+  "title": "[AI Frontier Div.] ML Engineer - Vertical Model (2년 이상)",
+  "url": "https://job-boards.greenhouse.io/krafton/jobs/8950930002",
+  "start_at": "2026-11-24T17:54",
+  "end_at": null,
+  "career_type": "경력",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "posted": "2026-11-24T17:54",
+  "via": ""
+ },
+ {
+  "b": "sk",
+  "id": "sk:R262569",
+  "company": "SK주식회사(AX)",
+  "title": "제조 AI 장비/품질 자동화 시스템 전문가 영입 (계약직)",
+  "url": "https://www.skcareers.com/Recruit/Detail/R262569",
+  "start_at": "2026-11-24T00:00",
+  "end_at": "2027-01-28T23:59",
+  "career_type": "경력",
+  "employment_type": "계약",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "이천시"
+   }
+  ],
+  "posted": "2026-11-24T00:00",
+  "via": ""
+ },
+ {
+  "b": "sk",
+  "id": "sk:R262568",
+  "company": "SK주식회사(AX)",
+  "title": "제조AI 장비/품질 자동화 시스템 전문가 영입",
+  "url": "https://www.skcareers.com/Recruit/Detail/R262568",
+  "start_at": "2026-11-24T00:00",
+  "end_at": "2027-01-28T23:59",
+  "career_type": "경력",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "이천시"
+   }
+  ],
+  "posted": "2026-11-24T00:00",
+  "via": ""
+ },
+ {
+  "b": "nhcard",
+  "id": "nhcard:91324",
+  "company": "NH농협카드",
+  "title": "NH농협은행 NH카드분사 카드마케팅2팀 전문계약직 직원 채용공고",
+  "url": "https://with.nonghyup.com/jbnf/jbnfDtl.do?jbnfSqno=91324",
+  "start_at": "2026-11-24T00:00",
+  "end_at": "2026-12-13T23:59",
+  "career_type": null,
+  "employment_type": "전문직",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "card"
+  ],
+  "roles": [],
+  "regions": [],
+  "posted": "2026-11-24T00:00",
+  "via": ""
+ },
+ {
   "b": "sk",
   "id": "sk:R262558",
   "company": "SK하이닉스",
@@ -86,7 +189,7 @@
   "company": "신한카드",
   "title": "[신한카드] 발급실-공카드, 카드 봉입 분류",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55646900",
-  "start_at": "2026-11-23T00:00",
+  "start_at": "2026-11-24T00:00",
   "end_at": "2026-12-23T23:59",
   "career_type": "신입/경력",
   "employment_type": "계약직",
@@ -102,7 +205,7 @@
     "sigungu": "동작구"
    }
   ],
-  "posted": "2026-11-23T00:00",
+  "posted": "2026-11-24T00:00",
   "via": "사람인"
  },
  {
@@ -136,7 +239,7 @@
   "company": "신한카드",
   "title": "[신한카드] 발급실- 공카드,봉입 업무",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55466891",
-  "start_at": "2026-11-03T00:00",
+  "start_at": "2026-11-04T00:00",
   "end_at": "2026-11-23T23:59",
   "career_type": "신입/경력",
   "employment_type": "계약직",
@@ -152,7 +255,7 @@
     "sigungu": "동작구"
    }
   ],
-  "posted": "2026-11-03T00:00",
+  "posted": "2026-11-04T00:00",
   "via": "사람인"
  },
  {
@@ -161,7 +264,7 @@
   "company": "신한카드",
   "title": "신한카드 외국인 고객 전담 신용카드 모집",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55234532",
-  "start_at": "2026-10-08T00:00",
+  "start_at": "2026-10-09T00:00",
   "end_at": "2026-12-07T23:59",
   "career_type": "신입/경력",
   "employment_type": "위촉직",
@@ -177,7 +280,7 @@
     "sigungu": "중구"
    }
   ],
-  "posted": "2026-10-08T00:00",
+  "posted": "2026-10-09T00:00",
   "via": "사람인"
  },
  {
@@ -186,7 +289,7 @@
   "company": "하나카드",
   "title": "2026 하나카드 애플리케이션 아키텍트 경력직 채용",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55342364",
-  "start_at": "2026-10-20T00:00",
+  "start_at": "2026-10-21T00:00",
   "end_at": null,
   "career_type": "경력",
   "employment_type": "정규직",
@@ -202,7 +305,7 @@
     "sigungu": "서해구"
    }
   ],
-  "posted": "2026-10-20T00:00",
+  "posted": "2026-10-21T00:00",
   "via": "사람인"
  },
  {
@@ -3345,8 +3448,8 @@
   "end_at": "2026-11-24T23:59",
   "career_type": "경력",
   "employment_type": "정규",
-  "status": "접수중",
-  "open": true,
+  "status": "접수마감",
+  "open": false,
   "cats": [
    "ai"
   ],
