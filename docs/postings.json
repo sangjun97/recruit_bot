@@ -1,5 +1,36 @@
 [
  {
+  "b": "sk",
+  "id": "sk:R262558",
+  "company": "SK하이닉스",
+  "title": "[11월] 월간 hy-way(경력)",
+  "url": "https://www.skcareers.com/Recruit/Detail/R262558",
+  "start_at": "2026-11-24T00:00",
+  "end_at": "2026-12-07T17:00",
+  "career_type": "경력",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [
+   "Tech R&D/HBM Digital Design(RTL design),HBM Digital Design(SoC Design),HBM Digital Design(검증),HBM Digital Design(Front-end),HBM Digital Design(Back-end),HBM Digital Design(Strategy),회로설계(HBM),SoC Design,High-Speed Interface,Digital IP Design,SoC Design Verification,SoC Silicon Validation,Logical Implementation,AI Research"
+  ],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "이천시"
+   }
+  ],
+  "posted": "2026-11-24T00:00",
+  "via": ""
+ },
+ {
   "b": "krafton",
   "id": "krafton:8503653002",
   "company": "크래프톤",
@@ -55,7 +86,7 @@
   "company": "신한카드",
   "title": "[신한카드] 발급실-공카드, 카드 봉입 분류",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55646900",
-  "start_at": null,
+  "start_at": "2026-11-23T00:00",
   "end_at": "2026-12-23T23:59",
   "career_type": "신입/경력",
   "employment_type": "계약직",
@@ -71,7 +102,7 @@
     "sigungu": "동작구"
    }
   ],
-  "posted": "2026-11-23T19:37",
+  "posted": "2026-11-23T00:00",
   "via": "사람인"
  },
  {
@@ -105,7 +136,7 @@
   "company": "신한카드",
   "title": "[신한카드] 발급실- 공카드,봉입 업무",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55466891",
-  "start_at": "2026-11-04T00:00",
+  "start_at": "2026-11-03T00:00",
   "end_at": "2026-11-23T23:59",
   "career_type": "신입/경력",
   "employment_type": "계약직",
@@ -121,7 +152,7 @@
     "sigungu": "동작구"
    }
   ],
-  "posted": "2026-11-04T00:00",
+  "posted": "2026-11-03T00:00",
   "via": "사람인"
  },
  {
@@ -130,7 +161,7 @@
   "company": "신한카드",
   "title": "신한카드 외국인 고객 전담 신용카드 모집",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55234532",
-  "start_at": "2026-10-09T00:00",
+  "start_at": "2026-10-08T00:00",
   "end_at": "2026-12-07T23:59",
   "career_type": "신입/경력",
   "employment_type": "위촉직",
@@ -146,7 +177,7 @@
     "sigungu": "중구"
    }
   ],
-  "posted": "2026-10-09T00:00",
+  "posted": "2026-10-08T00:00",
   "via": "사람인"
  },
  {
@@ -155,7 +186,7 @@
   "company": "하나카드",
   "title": "2026 하나카드 애플리케이션 아키텍트 경력직 채용",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55342364",
-  "start_at": "2026-10-21T00:00",
+  "start_at": "2026-10-20T00:00",
   "end_at": null,
   "career_type": "경력",
   "employment_type": "정규직",
@@ -171,7 +202,7 @@
     "sigungu": "서해구"
    }
   ],
-  "posted": "2026-10-21T00:00",
+  "posted": "2026-10-20T00:00",
   "via": "사람인"
  },
  {
