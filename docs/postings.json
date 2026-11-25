@@ -1,5 +1,141 @@
 [
  {
+  "b": "krafton",
+  "id": "krafton:8798984002",
+  "company": "크래프톤",
+  "title": "[AI Research Div.] Data Project Manager (경력무관 / 인턴)",
+  "url": "https://job-boards.greenhouse.io/krafton/jobs/8798984002",
+  "start_at": "2026-09-14T10:30",
+  "end_at": null,
+  "career_type": "인턴",
+  "employment_type": "인턴",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "posted": "2026-09-14T10:30",
+  "via": ""
+ },
+ {
+  "b": "naver",
+  "id": "naver:30005757",
+  "company": "네이버웹툰",
+  "title": "[2027 상반기 채용연계형 인턴십] 네이버웹툰 AI Researcher",
+  "url": "https://recruit.navercorp.com/rcrt/view.do?annoId=30005757&lang=ko",
+  "start_at": "2026-11-25T10:00",
+  "end_at": "2026-12-06T23:59",
+  "career_type": "신입",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   }
+  ],
+  "posted": "2026-11-25T10:00",
+  "via": ""
+ },
+ {
+  "b": "naver",
+  "id": "naver:30005756",
+  "company": "네이버웹툰",
+  "title": "[2027 상반기 채용연계형 인턴십] 네이버웹툰 Search Intelligence Engineer",
+  "url": "https://recruit.navercorp.com/rcrt/view.do?annoId=30005756&lang=ko",
+  "start_at": "2026-11-25T10:00",
+  "end_at": "2026-12-06T23:59",
+  "career_type": "신입",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [
+   "AI/ML",
+   "AI/ML·Data Engineering·Data Science (네이버 직무 분류)"
+  ],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   }
+  ],
+  "posted": "2026-11-25T10:00",
+  "via": ""
+ },
+ {
+  "b": "sk",
+  "id": "sk:R262584",
+  "company": "SK주식회사(AX)",
+  "title": "제조 시스템 모니터링 AI 전환 과제 PM/PL 영입",
+  "url": "https://www.skcareers.com/Recruit/Detail/R262584",
+  "start_at": "2026-11-25T00:00",
+  "end_at": "2027-01-28T23:59",
+  "career_type": "경력",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   },
+   {
+    "sido": "경기도",
+    "sigungu": "이천시"
+   }
+  ],
+  "posted": "2026-11-25T00:00",
+  "via": ""
+ },
+ {
+  "b": "sk",
+  "id": "sk:R262580",
+  "company": "SK주식회사(AX)",
+  "title": "울산 AI DC B동 신축공사 보건관리자 영입 (계약직, 울산 근무)",
+  "url": "https://www.skcareers.com/Recruit/Detail/R262580",
+  "start_at": "2026-11-25T00:00",
+  "end_at": "2027-01-28T23:59",
+  "career_type": "경력",
+  "employment_type": "계약",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "울산광역시",
+    "sigungu": "남구"
+   },
+   {
+    "sido": "서울특별시",
+    "sigungu": "성동구"
+   }
+  ],
+  "posted": "2026-11-25T00:00",
+  "via": ""
+ },
+ {
   "b": "sk",
   "id": "sk:R262571",
   "company": "SK주식회사(AX)",
@@ -239,7 +375,7 @@
   "company": "신한카드",
   "title": "[신한카드] 발급실-공카드, 카드 봉입 분류",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55646900",
-  "start_at": "2026-11-24T00:00",
+  "start_at": "2026-11-23T00:00",
   "end_at": "2026-12-23T23:59",
   "career_type": "신입/경력",
   "employment_type": "계약직",
@@ -255,7 +391,7 @@
     "sigungu": "동작구"
    }
   ],
-  "posted": "2026-11-24T00:00",
+  "posted": "2026-11-23T00:00",
   "via": "사람인"
  },
  {
@@ -339,7 +475,7 @@
   "company": "하나카드",
   "title": "2026 하나카드 애플리케이션 아키텍트 경력직 채용",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55342364",
-  "start_at": "2026-10-21T00:00",
+  "start_at": "2026-10-20T00:00",
   "end_at": null,
   "career_type": "경력",
   "employment_type": "정규직",
@@ -355,7 +491,7 @@
     "sigungu": "서해구"
    }
   ],
-  "posted": "2026-10-21T00:00",
+  "posted": "2026-10-20T00:00",
   "via": "사람인"
  },
  {
@@ -887,7 +1023,7 @@
   "b": "krafton",
   "id": "krafton:8514459002",
   "company": "크래프톤",
-  "title": "[AI Transformation Dept.] Sr. AI Transformation Specialist (FDE) (7년 이상)",
+  "title": "[AI Transformation Dept.] Sr. AI Transformation Specialist (7년 이상)",
   "url": "https://job-boards.greenhouse.io/krafton/jobs/8514459002",
   "start_at": "2026-06-26T15:01",
   "end_at": null,
@@ -2765,8 +2901,8 @@
   "end_at": "2026-11-25T17:00",
   "career_type": "경력",
   "employment_type": "정규",
-  "status": "접수중",
-  "open": true,
+  "status": "접수마감",
+  "open": false,
   "cats": [
    "ai"
   ],
