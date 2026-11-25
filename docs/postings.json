@@ -1,5 +1,55 @@
 [
  {
+  "b": "sk",
+  "id": "sk:R262571",
+  "company": "SK주식회사(AX)",
+  "title": "제조 P&T AI, MES 전문가 영입 (계약직)",
+  "url": "https://www.skcareers.com/Recruit/Detail/R262571",
+  "start_at": "2026-11-25T00:00",
+  "end_at": "2027-01-28T23:59",
+  "career_type": "경력",
+  "employment_type": "계약",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "이천시"
+   }
+  ],
+  "posted": "2026-11-25T00:00",
+  "via": ""
+ },
+ {
+  "b": "sk",
+  "id": "sk:R262570",
+  "company": "SK주식회사(AX)",
+  "title": "제조 P&T AI, MES 전문가 영입",
+  "url": "https://www.skcareers.com/Recruit/Detail/R262570",
+  "start_at": "2026-11-25T00:00",
+  "end_at": "2027-01-28T23:59",
+  "career_type": "경력",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "이천시"
+   }
+  ],
+  "posted": "2026-11-25T00:00",
+  "via": ""
+ },
+ {
   "b": "krafton",
   "id": "krafton:8950930002",
   "company": "크래프톤",
@@ -239,7 +289,7 @@
   "company": "신한카드",
   "title": "[신한카드] 발급실- 공카드,봉입 업무",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55466891",
-  "start_at": "2026-11-04T00:00",
+  "start_at": "2026-11-03T00:00",
   "end_at": "2026-11-23T23:59",
   "career_type": "신입/경력",
   "employment_type": "계약직",
@@ -255,7 +305,7 @@
     "sigungu": "동작구"
    }
   ],
-  "posted": "2026-11-04T00:00",
+  "posted": "2026-11-03T00:00",
   "via": "사람인"
  },
  {
@@ -264,7 +314,7 @@
   "company": "신한카드",
   "title": "신한카드 외국인 고객 전담 신용카드 모집",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55234532",
-  "start_at": "2026-10-09T00:00",
+  "start_at": "2026-10-08T00:00",
   "end_at": "2026-12-07T23:59",
   "career_type": "신입/경력",
   "employment_type": "위촉직",
@@ -280,7 +330,7 @@
     "sigungu": "중구"
    }
   ],
-  "posted": "2026-10-09T00:00",
+  "posted": "2026-10-08T00:00",
   "via": "사람인"
  },
  {
