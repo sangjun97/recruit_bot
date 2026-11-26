@@ -1,5 +1,30 @@
 [
  {
+  "b": "naver",
+  "id": "naver:30005755",
+  "company": "네이버웹툰",
+  "title": "[네이버웹툰] AI Engineer (웹툰/웹소설 자동 번역) (경력)",
+  "url": "https://recruit.navercorp.com/rcrt/view.do?annoId=30005755&lang=ko",
+  "start_at": "2026-11-26T10:00",
+  "end_at": "2026-12-13T23:59",
+  "career_type": "경력",
+  "employment_type": "정규",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   }
+  ],
+  "posted": "2026-11-26T10:00",
+  "via": ""
+ },
+ {
   "b": "krafton",
   "id": "krafton:8798984002",
   "company": "크래프톤",
@@ -425,7 +450,7 @@
   "company": "신한카드",
   "title": "[신한카드] 발급실- 공카드,봉입 업무",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55466891",
-  "start_at": "2026-11-04T00:00",
+  "start_at": "2026-11-03T00:00",
   "end_at": "2026-11-23T23:59",
   "career_type": "신입/경력",
   "employment_type": "계약직",
@@ -441,7 +466,7 @@
     "sigungu": "동작구"
    }
   ],
-  "posted": "2026-11-04T00:00",
+  "posted": "2026-11-03T00:00",
   "via": "사람인"
  },
  {
@@ -450,7 +475,7 @@
   "company": "신한카드",
   "title": "신한카드 외국인 고객 전담 신용카드 모집",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55234532",
-  "start_at": "2026-10-09T00:00",
+  "start_at": "2026-10-08T00:00",
   "end_at": "2026-12-07T23:59",
   "career_type": "신입/경력",
   "employment_type": "위촉직",
@@ -466,7 +491,7 @@
     "sigungu": "중구"
    }
   ],
-  "posted": "2026-10-09T00:00",
+  "posted": "2026-10-08T00:00",
   "via": "사람인"
  },
  {
@@ -3680,12 +3705,12 @@
   "company": "KB국민카드",
   "title": "계약직원 채용 (단기채권 SV)",
   "url": "https://kbcard.careerlink.kr/jobs/RC20261103038715",
-  "start_at": "2026-11-03T13:24",
-  "end_at": "2026-11-22T23:59",
+  "start_at": "2026-11-25T13:24",
+  "end_at": "2026-12-02T23:59",
   "career_type": "경력",
   "employment_type": "계약직",
-  "status": "접수마감",
-  "open": false,
+  "status": "접수중",
+  "open": true,
   "cats": [
    "card"
   ],
@@ -3696,7 +3721,7 @@
     "sigungu": "종로구"
    }
   ],
-  "posted": "2026-11-03T13:24",
+  "posted": "2026-11-25T13:24",
   "via": ""
  },
  {
@@ -3705,12 +3730,12 @@
   "company": "KB국민카드",
   "title": "계약직원 채용 (단기채권 상담원 교육 SV)",
   "url": "https://kbcard.careerlink.kr/jobs/RC20261103038723",
-  "start_at": "2026-11-03T13:29",
-  "end_at": "2026-11-22T23:59",
+  "start_at": "2026-11-25T13:29",
+  "end_at": "2026-12-02T23:59",
   "career_type": "경력",
   "employment_type": "계약직",
-  "status": "접수마감",
-  "open": false,
+  "status": "접수중",
+  "open": true,
   "cats": [
    "card"
   ],
@@ -3721,7 +3746,7 @@
     "sigungu": "종로구"
    }
   ],
-  "posted": "2026-11-03T13:29",
+  "posted": "2026-11-25T13:29",
   "via": ""
  },
  {
