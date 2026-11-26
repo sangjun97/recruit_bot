@@ -1,5 +1,55 @@
 [
  {
+  "b": "krafton",
+  "id": "krafton:8963319002",
+  "company": "크래프톤",
+  "title": "[CNTD Dept.] AI Investment & Strategy Analyst (7년 이상)",
+  "url": "https://job-boards.greenhouse.io/krafton/jobs/8963319002",
+  "start_at": "2026-11-26T19:18",
+  "end_at": null,
+  "career_type": "경력",
+  "employment_type": "계약",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "서울특별시",
+    "sigungu": null
+   }
+  ],
+  "posted": "2026-11-26T19:18",
+  "via": ""
+ },
+ {
+  "b": "kakao",
+  "id": "kakao:P-14595",
+  "company": "카카오",
+  "title": "Multimodal LLM Application Research Engineer_인턴",
+  "url": "https://careers.kakao.com/jobs/P-14595",
+  "start_at": "2026-11-26T13:38",
+  "end_at": null,
+  "career_type": null,
+  "employment_type": "인턴",
+  "status": "접수중",
+  "open": true,
+  "cats": [
+   "ai"
+  ],
+  "roles": [],
+  "regions": [
+   {
+    "sido": "경기도",
+    "sigungu": "성남시"
+   }
+  ],
+  "posted": "2026-11-26T13:38",
+  "via": ""
+ },
+ {
   "b": "naver",
   "id": "naver:30005755",
   "company": "네이버웹툰",
@@ -500,7 +550,7 @@
   "company": "하나카드",
   "title": "2026 하나카드 애플리케이션 아키텍트 경력직 채용",
   "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55342364",
-  "start_at": "2026-10-21T00:00",
+  "start_at": "2026-10-20T00:00",
   "end_at": null,
   "career_type": "경력",
   "employment_type": "정규직",
@@ -516,7 +566,7 @@
     "sigungu": "서해구"
    }
   ],
-  "posted": "2026-10-21T00:00",
+  "posted": "2026-10-20T00:00",
   "via": "사람인"
  },
  {
